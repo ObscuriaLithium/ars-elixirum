@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:lily_of_the_valley",
+  "properties": {
+    "elixirum:poison": 1
+  }
+}

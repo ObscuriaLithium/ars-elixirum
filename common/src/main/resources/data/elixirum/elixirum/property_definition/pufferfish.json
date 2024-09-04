@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:pufferfish",
+  "properties": {
+    "elixirum:water_breathing": 2
+  }
+}

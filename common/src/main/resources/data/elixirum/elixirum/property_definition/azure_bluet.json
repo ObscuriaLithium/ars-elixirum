@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:azure_bluet",
+  "properties": {
+    "elixirum:blindness": 1
+  }
+}

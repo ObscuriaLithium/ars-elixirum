@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:glistering_melon_slice",
+  "properties": {
+    "elixirum:instant_health": 2
+  }
+}

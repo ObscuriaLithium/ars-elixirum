@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:white_tulip",
+  "properties": {
+    "elixirum:weakness": 1
+  }
+}

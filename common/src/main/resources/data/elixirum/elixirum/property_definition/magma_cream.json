@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:magma_cream",
+  "properties": {
+    "elixirum:fire_resistance": 2
+  }
+}

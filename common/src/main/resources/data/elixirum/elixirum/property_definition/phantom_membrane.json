@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:phantom_membrane",
+  "properties": {
+    "elixirum:slow_falling": 2
+  }
+}

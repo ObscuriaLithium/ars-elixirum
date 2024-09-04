@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:sugar",
+  "properties": {
+    "elixirum:speed": 2
+  }
+}

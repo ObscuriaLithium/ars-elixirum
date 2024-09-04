@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:fermented_spider_eye",
+  "properties": {
+    "elixirum:weakness": 2
+  }
+}

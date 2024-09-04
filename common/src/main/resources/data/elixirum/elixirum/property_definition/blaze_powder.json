@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:blaze_powder",
+  "properties": {
+    "elixirum:strength": 2
+  }
+}

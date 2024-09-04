@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:blue_orchid",
+  "properties": {
+    "elixirum:saturation": 1
+  }
+}

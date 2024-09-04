@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:golden_carrot",
+  "properties": {
+    "elixirum:night_vision": 2
+  }
+}

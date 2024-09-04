@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:torchflower",
+  "properties": {
+    "elixirum:night_vision": 1
+  }
+}

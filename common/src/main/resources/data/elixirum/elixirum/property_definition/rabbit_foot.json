@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:rabbit_foot",
+  "properties": {
+    "elixirum:jump_boost": 2
+  }
+}

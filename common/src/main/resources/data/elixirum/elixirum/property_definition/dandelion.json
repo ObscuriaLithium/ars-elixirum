@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:dandelion",
+  "properties": {
+    "elixirum:saturation": 1
+  }
+}

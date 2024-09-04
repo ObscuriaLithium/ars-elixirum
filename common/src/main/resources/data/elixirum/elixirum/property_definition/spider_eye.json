@@ -1,0 +1,6 @@
+{
+  "target": "minecraft:spider_eye",
+  "properties": {
+    "elixirum:poison": 2
+  }
+}
