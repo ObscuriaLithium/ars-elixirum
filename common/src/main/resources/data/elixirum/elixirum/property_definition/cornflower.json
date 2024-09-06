@@ -1,6 +1,0 @@
-{
-  "target": "minecraft:cornflower",
-  "properties": {
-    "elixirum:jump_boost": 1
-  }
-}

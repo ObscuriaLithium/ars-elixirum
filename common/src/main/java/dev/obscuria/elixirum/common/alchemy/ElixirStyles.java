@@ -19,7 +19,7 @@ public final class ElixirStyles {
         final var index = new AtomicInteger(1);
         return Arrays.stream(Shape.values())
                 .flatMap(shape -> Arrays.stream(Cap.values())
-                        .map(cap -> new Variant(index.incrementAndGet(), shape, cap)))
+                        .map(cap -> new Variant(index.getAndIncrement(), shape, cap)))
                 .collect(Collectors.toList());
     }
 
@@ -30,17 +30,17 @@ public final class ElixirStyles {
         BOTTLE_4(4, "shape/bottle_4", "overlay/bottle_4"),
         BOTTLE_5(5, "shape/bottle_5", "overlay/bottle_5"),
         BOTTLE_6(6, "shape/bottle_6", "overlay/bottle_6"),
-        FLASK_1(101, "shape/flask_1", "overlay/flask_1"),
-        FLASK_2(102, "shape/flask_2", "overlay/flask_2"),
-        FLASK_3(103, "shape/flask_3", "overlay/flask_3"),
-        FLASK_4(104, "shape/flask_4", "overlay/flask_4"),
-        FLASK_5(105, "shape/flask_5", "overlay/flask_5"),
-        FLASK_6(106, "shape/flask_6", "overlay/flask_6"),
-        TUBE(201, "shape/tube", "overlay/tube"),
-        HEART(202, "shape/heart", "overlay/heart"),
-        SKULL(203, "shape/skull", "overlay/skull"),
-        STAR_1(204, "shape/star_1", "overlay/star_1"),
-        STAR_2(205, "shape/star_2", "overlay/star_2");
+        FLASK_1(21, "shape/flask_1", "overlay/flask_1"),
+        FLASK_2(22, "shape/flask_2", "overlay/flask_2"),
+        FLASK_3(23, "shape/flask_3", "overlay/flask_3"),
+        FLASK_4(24, "shape/flask_4", "overlay/flask_4"),
+        FLASK_5(25, "shape/flask_5", "overlay/flask_5"),
+        FLASK_6(26, "shape/flask_6", "overlay/flask_6"),
+        TUBE(41, "shape/tube", "overlay/tube"),
+        HEART(42, "shape/heart", "overlay/heart"),
+        SKULL(43, "shape/skull", "overlay/skull"),
+        STAR_1(44, "shape/star_1", "overlay/star_1"),
+        STAR_2(45, "shape/star_2", "overlay/star_2");
 
         private final int id;
         private final String texture;
@@ -61,6 +61,10 @@ public final class ElixirStyles {
 
         public int getId() {
             return this.id;
+        }
+
+        public double getPredicate() {
+            return getId() / 100.0;
         }
 
         public String getTexture() {
@@ -102,6 +106,10 @@ public final class ElixirStyles {
 
         public int getId() {
             return this.id;
+        }
+
+        public double getPredicate() {
+            return getId() / 100.0;
         }
 
         public String getTexture() {

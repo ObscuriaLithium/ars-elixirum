@@ -3,9 +3,10 @@
   "minVersion": "0.8",
   "package": "dev.obscuria.elixirum.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "MixinMinecraftServer"
+  ],
   "client": [
-    "MixinTitleScreen"
   ],
   "server": [],
   "injectors": {

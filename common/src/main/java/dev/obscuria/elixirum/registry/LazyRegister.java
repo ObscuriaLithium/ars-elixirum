@@ -20,11 +20,11 @@ public final class LazyRegister<TSource> {
         return new LazyRegister<>(registry, namespace);
     }
 
-    public <TValue extends TSource> LazyHolder<TSource, TValue>
+    public <TValue extends TSource> LazyValue<TSource, TValue>
     register(final String name, Supplier<TValue> supplier) {
         final var location = ResourceLocation.fromNamespaceAndPath(this.namespace, name);
         this.values.put(location, supplier);
-        return LazyHolder.create(this.registryKey, location);
+        return LazyValue.create(this.registryKey, location);
     }
 
     @SuppressWarnings("unchecked")

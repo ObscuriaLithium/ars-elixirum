@@ -1,8 +1,9 @@
 package dev.obscuria.elixirum.platform;
 
-import dev.obscuria.elixirum.network.FabricS2CAlchemyMapPayload;
-import dev.obscuria.elixirum.network.S2CAlchemyMapMessage;
+import dev.obscuria.elixirum.network.FabricClientboundItemEssencesPayload;
+import dev.obscuria.elixirum.network.ClientboundItemEssencesPacket;
 import dev.obscuria.elixirum.registry.LazyRegister;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
@@ -21,9 +22,9 @@ public class FabricPlatform implements IPlatform {
     }
 
     @Override
-    public void sendToClient(ServerPlayer player, Object message) {
-        if (message instanceof S2CAlchemyMapMessage typed)
-            ServerPlayNetworking.send(player, new FabricS2CAlchemyMapPayload(typed));
+    public void sendToPlayer(ServerPlayer player, Object packet) {
+        if (packet instanceof ClientboundItemEssencesPacket typed)
+            ServerPlayNetworking.send(player, new FabricClientboundItemEssencesPayload(typed));
     }
 
     @Override
@@ -39,5 +40,10 @@ public class FabricPlatform implements IPlatform {
     @Override
     public boolean isDevelopmentEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
+
+    @Override
+    public boolean isClient() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }
 }

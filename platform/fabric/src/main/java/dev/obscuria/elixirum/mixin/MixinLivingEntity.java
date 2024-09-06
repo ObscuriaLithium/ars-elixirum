@@ -15,7 +15,7 @@ public abstract class MixinLivingEntity {
     @Inject(method = "createLivingAttributes", require = 1, allow = 1, at = @At("RETURN"))
     private static void OnCreateAttributes(final CallbackInfoReturnable<AttributeSupplier.Builder> info) {
         Elixirum.initRegistries();
-        info.getReturnValue().add(ElixirumAttributes.POTION_MASTERY.sourceHolder());
-        info.getReturnValue().add(ElixirumAttributes.POTION_IMMUNITY.sourceHolder());
+        info.getReturnValue().add(ElixirumAttributes.POTION_MASTERY.holder());
+        info.getReturnValue().add(ElixirumAttributes.POTION_IMMUNITY.holder());
     }
 }

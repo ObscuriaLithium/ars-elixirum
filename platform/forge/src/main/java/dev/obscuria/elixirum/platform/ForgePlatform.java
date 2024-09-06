@@ -3,6 +3,7 @@ package dev.obscuria.elixirum.platform;
 import dev.obscuria.elixirum.registry.LazyRegister;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 
 public class ForgePlatform implements IPlatform {
@@ -18,25 +19,27 @@ public class ForgePlatform implements IPlatform {
     }
 
     @Override
-    public void sendToClient(ServerPlayer player, Object message) {
+    public void sendToPlayer(ServerPlayer player, Object packet) {
 
     }
 
     @Override
     public String getPlatformName() {
-
         return "Forge";
     }
 
     @Override
     public boolean isModLoaded(String modId) {
-
         return ModList.get().isLoaded(modId);
     }
 
     @Override
     public boolean isDevelopmentEnvironment() {
-
         return !FMLLoader.isProduction();
+    }
+
+    @Override
+    public boolean isClient() {
+        return FMLEnvironment.dist.isClient();
     }
 }

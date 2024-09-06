@@ -9,7 +9,7 @@ public interface IPlatform {
 
     void sendToServer(Object packet);
 
-    void sendToClient(ServerPlayer player, Object message);
+    void sendToPlayer(ServerPlayer player, Object packet);
 
     String getPlatformName();
 
@@ -17,8 +17,5 @@ public interface IPlatform {
 
     boolean isDevelopmentEnvironment();
 
-    default String getEnvironmentName() {
-
-        return isDevelopmentEnvironment() ? "development" : "production";
-    }
+    boolean isClient();
 }

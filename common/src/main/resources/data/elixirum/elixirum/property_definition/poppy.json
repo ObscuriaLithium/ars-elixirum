@@ -1,6 +1,0 @@
-{
-  "target": "minecraft:poppy",
-  "properties": {
-    "elixirum:night_vision": 1
-  }
-}

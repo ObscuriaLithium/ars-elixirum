@@ -1,8 +1,0 @@
-{
-  "commands.elixirum.property.success.set": "Applied essence %s (x%s) to %s",
-  "commands.elixirum.property.success.remove": "Removed essence %s from %s",
-  "commands.elixirum.property.success.clear": "Removed all essences from %s",
-  "commands.elixirum.property.failed.no_essence": "%s has no essence %s",
-  "commands.elixirum.property.failed.already_exists": "%s already has essence %s (x%s)",
-  "commands.elixirum.property.failed.already_empty": "%s has no essences"
-}

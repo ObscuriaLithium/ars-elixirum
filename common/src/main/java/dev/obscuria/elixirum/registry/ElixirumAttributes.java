@@ -8,15 +8,15 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import java.util.function.Supplier;
 
 public interface ElixirumAttributes {
-    LazyRegister<Attribute> REGISTER = LazyRegister.create(BuiltInRegistries.ATTRIBUTE, Elixirum.MODID);
+    LazyRegister<Attribute> SOURCE = LazyRegister.create(BuiltInRegistries.ATTRIBUTE, Elixirum.MODID);
 
-    LazyHolder<Attribute, Attribute> POTION_MASTERY = simple("potion_mastery",
+    LazyValue<Attribute, Attribute> POTION_MASTERY = simple("potion_mastery",
             () -> new RangedAttribute("attribute.elixirum.potion_mastery", 0, 0, 3600));
-    LazyHolder<Attribute, Attribute> POTION_IMMUNITY = simple("potion_immunity",
+    LazyValue<Attribute, Attribute> POTION_IMMUNITY = simple("potion_immunity",
             () -> new RangedAttribute("attribute.elixirum.potion_immunity", 0, 0, 3600));
 
-    private static LazyHolder<Attribute, Attribute>
+    private static LazyValue<Attribute, Attribute>
     simple(final String name, Supplier<Attribute> supplier) {
-        return REGISTER.register(name, supplier);
+        return SOURCE.register(name, supplier);
     }
 }

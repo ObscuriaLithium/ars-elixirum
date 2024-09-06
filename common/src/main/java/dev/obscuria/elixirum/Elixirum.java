@@ -3,6 +3,8 @@ package dev.obscuria.elixirum;
 import dev.obscuria.elixirum.platform.IPlatform;
 import dev.obscuria.elixirum.registry.ElixirumAttributes;
 import dev.obscuria.elixirum.registry.ElixirumDataComponents;
+import dev.obscuria.elixirum.registry.ElixirumItems;
+import dev.obscuria.elixirum.registry.ElixirumMobEffects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +20,7 @@ public class Elixirum {
     public static final String DISPLAY_NAME = "Ars Elixirum";
     public static final Logger LOG = LoggerFactory.getLogger(DISPLAY_NAME);
     public static final IPlatform PLATFORM = load(IPlatform.class);
+    public static final int WATER_COLOR = -13083194;
 
     public static ResourceLocation key(String name) {
         return ResourceLocation.fromNamespaceAndPath(MODID, name);
@@ -25,21 +28,22 @@ public class Elixirum {
 
     public static double getPotionMastery(@Nullable Entity entity) {
         return entity instanceof LivingEntity living
-                ? living.getAttributeValue(ElixirumAttributes.POTION_MASTERY)
+                ? living.getAttributeValue(ElixirumAttributes.POTION_MASTERY.holder())
                 : 0.0;
     }
 
     public static double getPotionImmunity(@Nullable Entity entity) {
         return entity instanceof LivingEntity living
-                ? living.getAttributeValue(ElixirumAttributes.POTION_IMMUNITY)
+                ? living.getAttributeValue(ElixirumAttributes.POTION_IMMUNITY.holder())
                 : 0.0;
     }
 
     @ApiStatus.Internal
     public static void initRegistries() {
-        PLATFORM.register(ElixirumAttributes.REGISTER);
-        //PLATFORM.register(ElixirumEssences.REGISTER);
-        PLATFORM.register(ElixirumDataComponents.REGISTER);
+        PLATFORM.register(ElixirumAttributes.SOURCE);
+        PLATFORM.register(ElixirumDataComponents.SOURCE);
+        PLATFORM.register(ElixirumMobEffects.SOURCE);
+        PLATFORM.register(ElixirumItems.SOURCE);
     }
 
     @ApiStatus.Internal

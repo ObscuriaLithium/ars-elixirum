@@ -1,6 +1,0 @@
-{
-  "target": "minecraft:ghast_tear",
-  "properties": {
-    "elixirum:regeneration": 2
-  }
-}

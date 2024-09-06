@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.common.alchemy.properties.AlchemyProperties;
+import dev.obscuria.elixirum.common.alchemy.essence.ItemEssences;
 import net.minecraft.FileUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,10 +27,10 @@ import java.util.Optional;
 public final class ServerAlchemy {
     static final LevelResource ALCHEMY_DIR = createResource();
     static final Logger LOG = LoggerFactory.getLogger(Elixirum.DISPLAY_NAME + "/Server");
-    static final ServerAlchemyPropertyMap properties = new ServerAlchemyPropertyMap();
+    static final ServerItemEssenceMap properties = new ServerItemEssenceMap();
     static @Nullable MinecraftServer server;
 
-    public static ServerAlchemyPropertyMap getPropertyMap() {
+    public static ServerItemEssenceMap getPropertyMap() {
         return properties;
     }
 
@@ -38,7 +38,7 @@ public final class ServerAlchemy {
         return properties.hasProperties(item);
     }
 
-    public static AlchemyProperties getProperties(Item item) {
+    public static ItemEssences getProperties(Item item) {
         return properties.getProperties(item);
     }
 
@@ -55,7 +55,7 @@ public final class ServerAlchemy {
     }
 
     @ApiStatus.Internal
-    public static void whenServerReloaded(MinecraftServer server) {
+    public static void whenResourcesReloaded(MinecraftServer server) {
         properties.load();
         for (var player : server.getPlayerList().getPlayers())
             properties.syncWith(player);

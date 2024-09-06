@@ -20,6 +20,9 @@
         ],
         "client": [
             "dev.obscuria.elixirum.FabricElixirumClient"
+        ],
+        "fabric-datagen": [
+            "dev.obscuria.elixirum.datagen.ElixirumDataGenerator"
         ]
     },
     "mixins": [

@@ -1,6 +1,0 @@
-{
-  "target": "minecraft:wither_rose",
-  "properties": {
-    "elixirum:wither": 1
-  }
-}
