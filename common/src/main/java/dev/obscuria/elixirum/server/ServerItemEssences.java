@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 public final class ServerItemEssences extends ItemEssences {
-    private static final ImmutableList<Item> BUILT_IN_BLACKLIST;
+    private static final ImmutableList<Item> BUILTIN_BLACKLIST;
 
     void syncWith(ServerPlayer player) {
         Elixirum.PLATFORM.sendToPlayer(player, ClientboundItemEssencesPacket.create(this.pack()));
@@ -134,14 +134,14 @@ public final class ServerItemEssences extends ItemEssences {
     }
 
     private boolean canHoldEssences(Item item) {
-        if (BUILT_IN_BLACKLIST.contains(item)) return false;
+        if (BUILTIN_BLACKLIST.contains(item)) return false;
         if (Essence.isBlacklisted(item)) return false;
         if (Essence.isWhitelisted(item)) return true;
         return !(item instanceof BlockItem block) || block.getBlock() instanceof FlowerBlock;
     }
 
     static {
-        BUILT_IN_BLACKLIST = ImmutableList.<Item>builder()
+        BUILTIN_BLACKLIST = ImmutableList.<Item>builder()
                 .add(Items.AIR)
                 .add(Items.POTION)
                 .add(Items.SPLASH_POTION)

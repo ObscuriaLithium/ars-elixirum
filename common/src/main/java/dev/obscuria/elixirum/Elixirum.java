@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ServiceLoader;
 
-public class Elixirum {
+public final class Elixirum {
     public static final String MODID = "elixirum";
     public static final String DISPLAY_NAME = "Ars Elixirum";
     public static final Logger LOG = LoggerFactory.getLogger(DISPLAY_NAME);

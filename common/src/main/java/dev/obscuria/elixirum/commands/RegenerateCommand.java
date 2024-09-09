@@ -8,7 +8,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-public class RegenerateCommand {
+public final class RegenerateCommand {
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         dispatcher.register(Commands.literal(Elixirum.MODID).requires(source -> source.hasPermission(3))
                 .then(Commands.literal("regenerate")
