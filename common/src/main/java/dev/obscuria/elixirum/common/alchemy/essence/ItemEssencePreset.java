@@ -20,20 +20,17 @@ public record ItemEssencePreset(Item target, Map<ResourceLocation, Integer> esse
         return new ItemEssencePreset(item, Util.make(Maps.newHashMap(), map -> map.put(essence, weight)));
     }
 
-    public ItemEssences build(RegistryAccess access) {
+    public ItemEssenceHolder build(RegistryAccess access) {
         final var registry = access.registry(ElixirumRegistries.ESSENCE).orElseThrow();
-        return ItemEssences.create(this.essences.entrySet().stream()
+        return ItemEssenceHolder.create(this.essences.entrySet().stream()
                 .filter(entry -> registry.containsKey(entry.getKey()))
-                .collect(Collectors.toMap(
-                        entry -> registry.getHolder(entry.getKey()).orElseThrow(),
-                        Map.Entry::getValue)));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     static {
-
         DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BuiltInRegistries.ITEM.byNameCodec().fieldOf("target").forGetter(ItemEssencePreset::target),
-                Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).stable().fieldOf("essences").forGetter(ItemEssencePreset::essences)
+                Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("essences").forGetter(ItemEssencePreset::essences)
         ).apply(instance, ItemEssencePreset::new));
     }
 }

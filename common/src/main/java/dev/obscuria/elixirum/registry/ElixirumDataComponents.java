@@ -1,8 +1,9 @@
 package dev.obscuria.elixirum.registry;
 
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.common.alchemy.ElixirContents;
-import dev.obscuria.elixirum.common.alchemy.ElixirStyle;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirContents;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyle;
+import dev.obscuria.elixirum.common.alchemy.ExtractContents;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -20,6 +21,12 @@ public interface ElixirumDataComponents {
             simple("elixir_contents", builder -> builder
                     .persistent(ElixirContents.CODEC)
                     .networkSynchronized(ElixirContents.STREAM_CODEC)
+                    .cacheEncoding());
+
+    LazyValue<DataComponentType<?>, DataComponentType<ExtractContents>> EXTRACT_CONTENTS =
+            simple("extract_contents", builder -> builder
+                    .persistent(ExtractContents.CODEC)
+                    .networkSynchronized(ExtractContents.STREAM_CODEC)
                     .cacheEncoding());
 
     private static <TValue> LazyValue<DataComponentType<?>, DataComponentType<TValue>>

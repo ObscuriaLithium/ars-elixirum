@@ -5,11 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.common.alchemy.essence.ItemEssences;
 import net.minecraft.FileUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -27,54 +25,46 @@ import java.util.Optional;
 public final class ServerAlchemy {
     static final LevelResource ALCHEMY_DIR = createResource();
     static final Logger LOG = LoggerFactory.getLogger(Elixirum.DISPLAY_NAME + "/Server");
-    static final ServerItemEssenceMap properties = new ServerItemEssenceMap();
+    static final ServerItemEssences itemEssences = new ServerItemEssences();
     static @Nullable MinecraftServer server;
 
-    public static ServerItemEssenceMap getPropertyMap() {
-        return properties;
+    public static ServerItemEssences getItemEssences() {
+        return itemEssences;
     }
 
-    public static boolean hasProperties(Item item) {
-        return properties.hasProperties(item);
-    }
-
-    public static ItemEssences getProperties(Item item) {
-        return properties.getProperties(item);
-    }
-
-    public static void syncPropertyMap() {
+    public static void syncItemEssences() {
         if (server == null) return;
         for (var player : server.getPlayerList().getPlayers())
-            properties.syncWith(player);
+            itemEssences.syncWith(player);
     }
 
     @ApiStatus.Internal
     public static void whenServerStarted(MinecraftServer server) {
         ServerAlchemy.server = server;
-        properties.load();
+        itemEssences.load();
     }
 
     @ApiStatus.Internal
     public static void whenResourcesReloaded(MinecraftServer server) {
-        properties.load();
+        itemEssences.load();
         for (var player : server.getPlayerList().getPlayers())
-            properties.syncWith(player);
+            itemEssences.syncWith(player);
     }
 
     @ApiStatus.Internal
     public static void whenServerSaved(MinecraftServer server) {
-        properties.save();
+        itemEssences.save();
     }
 
     @ApiStatus.Internal
     public static void whenServerStopped(MinecraftServer server) {
-        properties.save();
+        itemEssences.save();
         ServerAlchemy.server = null;
     }
 
     @ApiStatus.Internal
     public static void whenPlayerLoggedIn(ServerPlayer player) {
-        properties.syncWith(player);
+        itemEssences.syncWith(player);
     }
 
     @ApiStatus.Internal

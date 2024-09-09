@@ -1,0 +1,198 @@
+package dev.obscuria.elixirum.common.alchemy.elixir;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.obscuria.elixirum.Elixirum;
+import dev.obscuria.elixirum.registry.ElixirumDataComponents;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringUtil;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Consumer;
+
+public record ElixirContents(ImmutableList<ElixirEffect> effects, int color) implements TooltipProvider {
+    public static final Codec<ElixirContents> CODEC;
+    public static final StreamCodec<RegistryFriendlyByteBuf, ElixirContents> STREAM_CODEC;
+    public static final ElixirContents WATER = new ElixirContents(List.of(), Elixirum.WATER_COLOR);
+
+    public static Builder create() {
+        return new Builder();
+    }
+
+    public static Builder create(ElixirContents byOther) {
+        return new Builder(byOther);
+    }
+
+    public ElixirContents(List<ElixirEffect> effects, int color) {
+        this(ImmutableList.copyOf(effects), color);
+    }
+
+    public ElixirContents(ImmutableList<ElixirEffect> effects, int color) {
+        this.effects = ImmutableList.copyOf(effects.stream()
+                .sorted(Comparator.comparingInt(ElixirEffect::getQuality).reversed())
+                .toList());
+        this.color = color;
+    }
+
+    public static ElixirContents get(ItemStack stack) {
+        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_CONTENTS.value(), WATER);
+    }
+
+    public static int getOverlayColor(ItemStack stack, int layer) {
+        return layer != 1 ? -1 : ElixirContents.get(stack).color();
+    }
+
+    public static void setRarityByContent(ItemStack stack) {
+        if (!stack.has(ElixirumDataComponents.ELIXIR_CONTENTS.value())) return;
+        var contents = get(stack);
+        if (contents.isEmpty()) return;
+        final var quality = contents.effects().getFirst().getQuality();
+        if (quality >= 100) {
+            stack.set(DataComponents.RARITY, Rarity.EPIC);
+        } else if (quality >= 90) {
+            stack.set(DataComponents.RARITY, Rarity.RARE);
+        } else if (quality >= 80) {
+            stack.set(DataComponents.RARITY, Rarity.UNCOMMON);
+        } else {
+            stack.set(DataComponents.RARITY, Rarity.COMMON);
+        }
+    }
+
+    public boolean isEmpty() {
+        return this.effects.isEmpty();
+    }
+
+    public boolean hasInstantEffects() {
+        return effects.stream().anyMatch(ElixirEffect::isInstantenous);
+    }
+
+    public int getQuality() {
+        return this.effects.stream().mapToInt(ElixirEffect::getQuality).sum();
+    }
+
+    public ElixirContents split(int count) {
+        return this.scale(1.0 / count);
+    }
+
+    public ElixirContents scale(double scale) {
+        return new ElixirContents(scale != 1.0
+                ? effects().stream().map(effect -> effect.scale(scale)).toList()
+                : effects(), this.color);
+    }
+
+    private static final Component NO_EFFECT;
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+
+        if (this.isEmpty()) {
+            consumer.accept(NO_EFFECT);
+            return;
+        }
+
+        final var attributes = Lists.<Pair<Holder<Attribute>, AttributeModifier>>newArrayList();
+
+        this.effects().forEach(effect -> {
+            final var mobEffect = effect.getEssence().getEffect();
+            final var amplifier = effect.getAmplifier();
+            final var duration = effect.getDuration();
+            var line = Component.translatable(mobEffect.getDescriptionId());
+
+            if (effect.isPale()) {
+                consumer.accept(line.append(" (Pale)").withStyle(ChatFormatting.GRAY));
+            } else if (effect.isWeak()) {
+                consumer.accept(line.append(" (Weak)").withStyle(ChatFormatting.GRAY));
+            } else {
+                if (amplifier > 0)
+                    line = Component.translatable("potion.withAmplifier", line,
+                            Component.translatable("potion.potency." + amplifier));
+                if (duration > 0)
+                    line = Component.translatable("potion.withDuration", line,
+                            formatDuration(20 * duration, 1, context.tickRate()));
+                consumer.accept(line.withStyle(mobEffect.getCategory().getTooltipFormatting()));
+            }
+        });
+    }
+
+    public static Component formatDuration(float duration, float durationFactor, float ticksPerSecond) {
+        final var ticks = Mth.floor(duration * durationFactor);
+        return Component.literal(StringUtil.formatTickDuration(ticks, ticksPerSecond));
+    }
+
+    static {
+        CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ElixirEffect.CODEC.listOf().fieldOf("effects").forGetter(ElixirContents::effects),
+                Codec.INT.fieldOf("color").forGetter(ElixirContents::color)
+        ).apply(instance, ElixirContents::new));
+        STREAM_CODEC = StreamCodec.composite(
+                ElixirEffect.STREAM_CODEC.apply(ByteBufCodecs.list()), ElixirContents::effects,
+                ByteBufCodecs.INT, ElixirContents::color,
+                ElixirContents::new);
+
+        NO_EFFECT = Component.translatable("effect.none").withStyle(ChatFormatting.GRAY);
+    }
+
+    public static class Builder {
+        private final List<ElixirEffect> effects = Lists.newArrayList();
+        private int color = Elixirum.WATER_COLOR;
+
+        public Builder(ElixirContents byOther) {
+            this.effects.addAll(byOther.effects);
+            this.color = byOther.color;
+        }
+
+        public Builder() {}
+
+        public Builder addEffect(ElixirEffect effect) {
+            this.effects.add(effect);
+            return this;
+        }
+
+        public Builder setCustomColor(int color) {
+            this.color = color;
+            return this;
+        }
+
+        public Builder computeContentColor() {
+            if (effects.isEmpty()) {
+                this.color = Elixirum.WATER_COLOR;
+                return this;
+            }
+            var total = effects.size();
+            var red = 0;
+            var green = 0;
+            var blue = 0;
+            for (var effect : effects) {
+                var color = FastColor.ARGB32.opaque(effect.getEssence().getEffect().getColor());
+                red += FastColor.ARGB32.red(color);
+                green += FastColor.ARGB32.green(color);
+                blue += FastColor.ARGB32.blue(color);
+            }
+            this.color = FastColor.ARGB32.color(0xff, red / total, green / total, blue / total);
+            return this;
+        }
+
+        public ElixirContents build() {
+            return new ElixirContents(ImmutableList.copyOf(this.effects), this.color);
+        }
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "elixirum:item/elixir/shape/star_2",
+    "layer1": "elixirum:item/elixir/overlay/star_2",
+    "layer2": "elixirum:item/elixir/cap/wood"
+  }
+}

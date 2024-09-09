@@ -7,11 +7,14 @@ public class ElixirumDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
+
         var pack = generator.createPack();
+
         pack.addProvider(ModelGenerator::new);
         pack.addProvider(LanguageGenerator::new);
 
         pack.addProvider(EssenceGenerator::new);
         pack.addProvider(EssencePresetGenerator::new);
+        pack.addProvider(ItemTagGenerator::new);
     }
 }

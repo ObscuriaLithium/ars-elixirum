@@ -3,7 +3,7 @@ package dev.obscuria.elixirum.datagen;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.common.alchemy.ElixirStyles;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyles;
 import dev.obscuria.elixirum.registry.ElixirumItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -30,6 +30,9 @@ final class ModelGenerator extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerators generators) {
         generateElixirVariants(generators);
         generateBaseElixir(generators);
+        generators.generateLayeredItem(ModelLocationUtils.getModelLocation(ElixirumItems.EXTRACT.value()),
+                Elixirum.key("item/extract"),
+                Elixirum.key("item/extract_overlay"));
     }
 
     private void generateElixirVariants(ItemModelGenerators generators) {
@@ -51,8 +54,8 @@ final class ModelGenerator extends FabricModelProvider {
                         var override = new JsonObject();
                         override.addProperty("model", Elixirum.key(ELIXIR_DIR + variant.index()).toString());
                         var predicate = new JsonObject();
-                        predicate.addProperty(Elixirum.key("shape").toString(), (double) variant.shape().getPredicate());
-                        predicate.addProperty(Elixirum.key("cap").toString(), (double) variant.cap().getPredicate());
+                        predicate.addProperty(Elixirum.key("shape").toString(), variant.shape().getPredicate());
+                        predicate.addProperty(Elixirum.key("cap").toString(), variant.cap().getPredicate());
                         override.add("predicate", predicate);
                         overrides.add(override);
                     }

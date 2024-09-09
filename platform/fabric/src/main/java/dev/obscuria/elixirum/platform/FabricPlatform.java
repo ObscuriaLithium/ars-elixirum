@@ -1,5 +1,6 @@
 package dev.obscuria.elixirum.platform;
 
+import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.network.FabricClientboundItemEssencesPayload;
 import dev.obscuria.elixirum.network.ClientboundItemEssencesPacket;
 import dev.obscuria.elixirum.registry.LazyRegister;
@@ -9,11 +10,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerPlayer;
 
-public class FabricPlatform implements IPlatform {
+public final class FabricPlatform implements IPlatform {
 
     @Override
     public <TValue> void register(LazyRegister<TValue> registrar) {
-        registrar.register((registry, name, supplier) -> Registry.registerForHolder(registry, name, supplier.get()));
+        registrar.register((registry, id, factory) -> Registry.registerForHolder(registry, id, factory.get()));
     }
 
     @Override

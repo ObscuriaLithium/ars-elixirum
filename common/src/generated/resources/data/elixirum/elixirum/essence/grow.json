@@ -1,0 +1,14 @@
+{
+  "amplifier": {
+    "max_value": 4,
+    "max_weight": 100.0,
+    "min_weight": 10.0
+  },
+  "duration": {
+    "max_value": 600,
+    "max_weight": 100.0,
+    "min_weight": 10.0
+  },
+  "mob_effect": "elixirum:grow",
+  "required_ingredients": 3
+}

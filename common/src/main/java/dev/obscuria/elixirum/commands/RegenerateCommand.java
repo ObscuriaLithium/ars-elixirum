@@ -16,8 +16,8 @@ public class RegenerateCommand {
     }
 
     private static int regenerate(CommandSourceStack source) {
-        ServerAlchemy.getPropertyMap().regenerate();
-        ServerAlchemy.syncPropertyMap();
+        ServerAlchemy.getItemEssences().regenerate();
+        ServerAlchemy.syncItemEssences();
         source.sendSuccess(() -> Component.literal("Regenerating..."), true);
         return 1;
     }

@@ -1,86 +1,68 @@
 package dev.obscuria.elixirum.common.alchemy.essence;
 
+import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipProvider;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
-public final class ItemEssences implements TooltipProvider {
-    public static final Codec<ItemEssences> DIRECT_CODEC;
-    public static final StreamCodec<RegistryFriendlyByteBuf, ItemEssences> STREAM_CODEC;
-    public static final ItemEssences EMPTY = new ItemEssences(Map.of());
-    private final Object2IntMap<Holder<Essence>> essences;
+public abstract class ItemEssences {
+    protected final HashMap<Item, ItemEssenceHolder> holders = Maps.newHashMap();
 
-    public static ItemEssences create(Map<Holder<Essence>, Integer> essences) {
-        return new ItemEssences(essences);
+    public boolean hasHolder(Item item) {
+        return this.holders.containsKey(item);
     }
 
-    public static ItemEssences single(Holder<Essence> essence, int weight) {
-        return new ItemEssences(Map.of(essence, weight));
+    public ItemEssenceHolder getHolder(Item item) {
+        return this.holders.getOrDefault(item, ItemEssenceHolder.EMPTY);
     }
 
-    private ItemEssences(Map<Holder<Essence>, Integer> essences) {
-        this.essences = new Object2IntOpenHashMap<>(essences);
+    public void setHolder(Item item, ItemEssenceHolder holder) {
+        this.holders.put(item, holder);
+        this.whenExternallyModified();
     }
 
-    public boolean isEmpty() {
-        return this.essences.isEmpty();
+    public void removeHolder(Item item) {
+        this.holders.remove(item);
+        this.whenExternallyModified();
     }
 
-    public Object2IntMap<Holder<Essence>> getEssences() {
-        return new Object2IntOpenHashMap<>(this.essences);
+    public void removeAllHolders() {
+        this.holders.clear();
+        this.whenExternallyModified();
     }
 
-    public boolean contains(Holder<Essence> essence) {
-        return this.essences.containsKey(essence);
+    public Packed pack() {
+        return new Packed(Maps.newHashMap(this.holders));
     }
 
-    public int getWeight(Holder<Essence> essence) {
-        return this.essences.getOrDefault(essence, 0);
+    public void unpack(Packed packed) {
+        this.holders.clear();
+        this.holders.putAll(packed.holders);
     }
 
-    public ItemEssences with(Holder<Essence> essence, int weight) {
-        var result = this.getEssences();
-        result.put(essence, weight);
-        return create(result);
-    }
+    protected abstract void whenExternallyModified();
 
-    public ItemEssences exclude(Holder<Essence> essence) {
-        var result = this.getEssences();
-        result.removeInt(essence);
-        return create(result);
-    }
+    public record Packed(Map<Item, ItemEssenceHolder> holders) {
+        public static final Codec<Packed> CODEC;
+        public static final StreamCodec<RegistryFriendlyByteBuf, Packed> STREAM_CODEC;
 
-    @Override
-    public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
-        if (isEmpty()) return;
-        consumer.accept(Component.literal("Essences:").withStyle(ChatFormatting.GRAY));
-        this.essences.object2IntEntrySet().forEach(entry ->
-                consumer.accept(Component.literal(" ")
-                        .append(Component.literal("x" + entry.getIntValue()))
-                        .append(Component.literal(" "))
-                        .append(entry.getKey().value().getName())
-                        .withStyle(ChatFormatting.LIGHT_PURPLE)));
-    }
-
-    static {
-        DIRECT_CODEC = Codec
-                .unboundedMap(Essence.CODEC, Codec.INT).stable()
-                .xmap(ItemEssences::create, ItemEssences::getEssences);
-        STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.map(HashMap::new, Essence.STREAM_CODEC, ByteBufCodecs.INT), ItemEssences::getEssences,
-                ItemEssences::create);
+        static {
+            CODEC = Codec
+                    .unboundedMap(BuiltInRegistries.ITEM.byNameCodec(), ItemEssenceHolder.CODEC)
+                    .xmap(Packed::new, Packed::holders);
+            STREAM_CODEC = StreamCodec.composite(
+                    ByteBufCodecs.map(
+                            HashMap::new,
+                            ByteBufCodecs.registry(Registries.ITEM),
+                            ItemEssenceHolder.STREAM_CODEC), Packed::holders,
+                    Packed::new);
+        }
     }
 }

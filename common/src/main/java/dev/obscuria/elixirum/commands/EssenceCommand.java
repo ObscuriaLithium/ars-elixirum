@@ -48,16 +48,16 @@ public final class EssenceCommand {
                                                 ItemArgument.getItem(command, "target").getItem()))))));
     }
 
-    private static int set(CommandSourceStack source, Item item, Holder<Essence> essence, int weight) throws CommandSyntaxException {
-        var map = ServerAlchemy.getPropertyMap();
-        var properties = map.getProperties(item);
-        if (properties.getWeight(essence) == weight)
+    private static int set(CommandSourceStack source, Item item, Holder.Reference<Essence> essence, int weight) throws CommandSyntaxException {
+        var map = ServerAlchemy.getItemEssences();
+        var properties = map.getHolder(item);
+        if (properties.getWeight(essence.key().location()) == weight)
             throw ERROR_ALREADY_EXISTS.create(
                     Component.translatableEscape(item.getDescriptionId()).getString(),
                     essence.value().getName().getString(),
                     weight);
-        map.setProperties(item, properties.with(essence, weight));
-        ServerAlchemy.syncPropertyMap();
+        map.setHolder(item, properties.with(essence.key().location(), weight));
+        ServerAlchemy.syncItemEssences();
         source.sendSuccess(() -> Component.translatableEscape("commands.elixirum.essence.success.set",
                 essence.value().getName().getString(),
                 weight,
@@ -65,15 +65,15 @@ public final class EssenceCommand {
         return 1;
     }
 
-    private static int remove(CommandSourceStack source, Item item, Holder<Essence> essence) throws CommandSyntaxException {
-        var map = ServerAlchemy.getPropertyMap();
-        var properties = map.getProperties(item);
-        if (!properties.contains(essence))
+    private static int remove(CommandSourceStack source, Item item, Holder.Reference<Essence> essence) throws CommandSyntaxException {
+        var map = ServerAlchemy.getItemEssences();
+        var properties = map.getHolder(item);
+        if (!properties.contains(essence.key().location()))
             throw ERROR_NO_ESSENCE.create(
                     Component.translatableEscape(item.getDescriptionId()).getString(),
                     essence.value().getName().getString());
-        map.setProperties(item, properties.exclude(essence));
-        ServerAlchemy.syncPropertyMap();
+        map.setHolder(item, properties.exclude(essence));
+        ServerAlchemy.syncItemEssences();
         source.sendSuccess(() -> Component.translatableEscape("commands.elixirum.essence.success.remove",
                 essence.value().getName().getString(),
                 Component.translatableEscape(item.getDescriptionId()).getString()), true);
@@ -81,12 +81,12 @@ public final class EssenceCommand {
     }
 
     private static int clear(CommandSourceStack source, Item item) throws CommandSyntaxException {
-        var map = ServerAlchemy.getPropertyMap();
-        map.removeProperties(item);
-        if (!map.getProperties(item).isEmpty())
+        var map = ServerAlchemy.getItemEssences();
+        map.removeHolder(item);
+        if (!map.getHolder(item).isEmpty())
             throw ERROR_ALREADY_EMPTY.create(
                     Component.translatableEscape(item.getDescriptionId()).getString());
-        ServerAlchemy.syncPropertyMap();
+        ServerAlchemy.syncItemEssences();
         source.sendSuccess(() -> Component.translatableEscape("commands.elixirum.essence.success.clear",
                 Component.translatableEscape(item.getDescriptionId()).getString()), true);
         return 1;

@@ -2,7 +2,6 @@ package dev.obscuria.elixirum.registry;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -32,28 +31,20 @@ public final class LazyValue<TSource, TValue extends TSource> {
     }
 
     private final ResourceKey<TSource> key;
-    private @Nullable Holder<TSource> holder;
+    private @Nullable Holder.Reference<TSource> holder;
 
     private LazyValue(ResourceKey<TSource> key) {
         this.key = Objects.requireNonNull(key);
-        this.bind(false);
     }
 
     @SuppressWarnings("unchecked")
     public TValue value() {
-        bind(true);
-        if (this.holder == null) {
-            throw new NullPointerException("Trying to access unbound value: " + this.key);
-        }
-
+        if (this.holder == null) throw new NullPointerException("Trying to access unbound value: " + this.key);
         return (TValue) this.holder.value();
     }
 
     public Holder<TSource> holder() {
-        bind(true);
-        if (this.holder == null) {
-            throw new NullPointerException("Trying to access unbound value: " + this.key);
-        }
+        if (this.holder == null) throw new NullPointerException("Trying to access unbound value: " + this.key);
         return this.holder;
     }
 
@@ -75,7 +66,6 @@ public final class LazyValue<TSource, TValue extends TSource> {
     }
 
     public boolean isBound() {
-        bind(false);
         return this.holder != null && this.holder.isBound();
     }
 
@@ -92,29 +82,15 @@ public final class LazyValue<TSource, TValue extends TSource> {
     }
 
     public boolean is(TagKey<TSource> tag) {
-        bind(false);
         return this.holder != null && this.holder.is(tag);
     }
 
     public Stream<TagKey<TSource>> tags() {
-        bind(false);
         return this.holder != null ? this.holder.tags() : Stream.empty();
     }
 
-    @Nullable
-    @SuppressWarnings("unchecked")
-    private Registry<TSource> getRegistry() {
-        return (Registry<TSource>) BuiltInRegistries.REGISTRY.get(this.key.registry());
-    }
-
-    private void bind(boolean throwIfMissing) {
+    void bind(Holder.Reference<TSource> holder) {
         if (this.holder != null) return;
-
-        Registry<TSource> registry = getRegistry();
-        if (registry != null) {
-            this.holder = registry.getHolder(this.key).orElse(null);
-        } else if (throwIfMissing) {
-            throw new IllegalStateException("Registry not present for " + this + ": " + this.key.registry());
-        }
+        this.holder = holder;
     }
 }

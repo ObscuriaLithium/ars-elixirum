@@ -1,11 +1,9 @@
 package dev.obscuria.elixirum;
 
 import dev.obscuria.elixirum.platform.IPlatform;
-import dev.obscuria.elixirum.registry.ElixirumAttributes;
-import dev.obscuria.elixirum.registry.ElixirumDataComponents;
-import dev.obscuria.elixirum.registry.ElixirumItems;
-import dev.obscuria.elixirum.registry.ElixirumMobEffects;
+import dev.obscuria.elixirum.registry.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.ApiStatus;
@@ -20,7 +18,7 @@ public class Elixirum {
     public static final String DISPLAY_NAME = "Ars Elixirum";
     public static final Logger LOG = LoggerFactory.getLogger(DISPLAY_NAME);
     public static final IPlatform PLATFORM = load(IPlatform.class);
-    public static final int WATER_COLOR = -13083194;
+    public static final int WATER_COLOR = FastColor.ARGB32.opaque(-13083194);
 
     public static ResourceLocation key(String name) {
         return ResourceLocation.fromNamespaceAndPath(MODID, name);
@@ -44,6 +42,7 @@ public class Elixirum {
         PLATFORM.register(ElixirumDataComponents.SOURCE);
         PLATFORM.register(ElixirumMobEffects.SOURCE);
         PLATFORM.register(ElixirumItems.SOURCE);
+        PLATFORM.register(ElixirumCreativeTabs.SOURCE);
     }
 
     @ApiStatus.Internal

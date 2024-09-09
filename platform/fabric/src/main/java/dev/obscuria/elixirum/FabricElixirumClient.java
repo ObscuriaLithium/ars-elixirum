@@ -1,7 +1,8 @@
 package dev.obscuria.elixirum;
 
-import dev.obscuria.elixirum.common.alchemy.ElixirContents;
-import dev.obscuria.elixirum.common.alchemy.ElixirStyle;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirContents;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyle;
+import dev.obscuria.elixirum.common.alchemy.ExtractContents;
 import dev.obscuria.elixirum.network.ClientNetworkHandler;
 import dev.obscuria.elixirum.network.FabricClientboundItemEssencesPayload;
 import dev.obscuria.elixirum.registry.ElixirumItems;
@@ -21,6 +22,7 @@ public class FabricElixirumClient implements ClientModInitializer {
         ItemProperties.registerGeneric(Elixirum.key("cap"), ElixirStyle::getCapPredicate);
 
         ColorProviderRegistry.ITEM.register(ElixirContents::getOverlayColor, ElixirumItems.ELIXIR.value());
+        ColorProviderRegistry.ITEM.register(ExtractContents::getOverlayColor, ElixirumItems.EXTRACT.value());
 
         PayloadTypeRegistry.playS2C().register(FabricClientboundItemEssencesPayload.TYPE, FabricClientboundItemEssencesPayload.STREAM_CODEC);
         ClientPlayNetworking.registerGlobalReceiver(FabricClientboundItemEssencesPayload.TYPE,

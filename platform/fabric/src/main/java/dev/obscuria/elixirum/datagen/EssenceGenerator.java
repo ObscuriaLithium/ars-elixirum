@@ -27,38 +27,106 @@ final class EssenceGenerator implements DataProvider {
         this.registryLookup = registryLookup;
     }
 
-    private void generateEssence(HolderLookup.Provider registryLookup, Consumer<Essence> consumer) {
-        consumer.accept(new Essence(ElixirumMobEffects.GROW.holder(), 3));
-        consumer.accept(new Essence(ElixirumMobEffects.SHRINK.holder(), 3));
+    private void generateEssence(HolderLookup.Provider lookup, Consumer<Essence> consumer) {
+        consumer.accept(new Essence(ElixirumMobEffects.GROW.holder(),
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(ElixirumMobEffects.SHRINK.holder(),
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
 
-        consumer.accept(new Essence(MobEffects.ABSORPTION, 3));
-        consumer.accept(new Essence(MobEffects.BLINDNESS, 3));
-        consumer.accept(new Essence(MobEffects.FIRE_RESISTANCE, 3));
-        consumer.accept(new Essence(MobEffects.GLOWING, 3));
-        consumer.accept(new Essence(MobEffects.DIG_SPEED, 3));
-        consumer.accept(new Essence(MobEffects.HEALTH_BOOST, 3));
-        consumer.accept(new Essence(MobEffects.HUNGER, 3));
-        consumer.accept(new Essence(MobEffects.HARM, 3));
-        consumer.accept(new Essence(MobEffects.HEAL, 3));
-        consumer.accept(new Essence(MobEffects.INVISIBILITY, 3));
-        consumer.accept(new Essence(MobEffects.JUMP, 3));
-        consumer.accept(new Essence(MobEffects.LEVITATION, 3));
-        consumer.accept(new Essence(MobEffects.LUCK, 3));
-        consumer.accept(new Essence(MobEffects.DIG_SLOWDOWN, 3));
-        consumer.accept(new Essence(MobEffects.CONFUSION, 3));
-        consumer.accept(new Essence(MobEffects.NIGHT_VISION, 3));
-        consumer.accept(new Essence(MobEffects.POISON, 3));
-        consumer.accept(new Essence(MobEffects.REGENERATION, 3));
-        consumer.accept(new Essence(MobEffects.DAMAGE_RESISTANCE, 3));
-        consumer.accept(new Essence(MobEffects.SATURATION, 3));
-        consumer.accept(new Essence(MobEffects.SLOW_FALLING, 3));
-        consumer.accept(new Essence(MobEffects.MOVEMENT_SLOWDOWN, 3));
-        consumer.accept(new Essence(MobEffects.MOVEMENT_SPEED, 3));
-        consumer.accept(new Essence(MobEffects.DAMAGE_BOOST, 3));
-        consumer.accept(new Essence(MobEffects.UNLUCK, 3));
-        consumer.accept(new Essence(MobEffects.WATER_BREATHING, 3));
-        consumer.accept(new Essence(MobEffects.WEAKNESS, 3));
-        consumer.accept(new Essence(MobEffects.WITHER, 3));
+        consumer.accept(new Essence(MobEffects.ABSORPTION,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.BLINDNESS,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.FIRE_RESISTANCE,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.GLOWING,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.DIG_SPEED,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.HEALTH_BOOST,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.HUNGER,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.HARM,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.HEAL,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.INVISIBILITY,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.JUMP,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.LEVITATION,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.LUCK,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.DIG_SLOWDOWN,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.CONFUSION,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.NIGHT_VISION,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.POISON,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.REGENERATION,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.DAMAGE_RESISTANCE,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.SATURATION,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.SLOW_FALLING,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.MOVEMENT_SLOWDOWN,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.MOVEMENT_SPEED,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.DAMAGE_BOOST,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.UNLUCK,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.WATER_BREATHING,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.WEAKNESS,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+        consumer.accept(new Essence(MobEffects.WITHER,
+                amplifier(4, 10, 100),
+                duration(600, 10, 100), 3));
+    }
+
+    private Essence.Property amplifier(int maxValue, double minWeight, double maxWeight) {
+        return new Essence.Property(maxValue, minWeight, maxWeight);
+    }
+
+    private Essence.Property duration(int maxValue, double minWeight, double maxWeight) {
+        return new Essence.Property(maxValue, minWeight, maxWeight);
     }
 
     private ResourceLocation getId(Essence essence) {

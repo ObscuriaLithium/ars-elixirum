@@ -1,16 +1,16 @@
 package dev.obscuria.elixirum.registry;
 
 import com.google.common.collect.Maps;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.function.TriConsumer;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
 public final class LazyRegister<TSource> {
-    private final Map<ResourceLocation, Supplier<? extends TSource>> values = Maps.newHashMap();
+    private final Map<ResourceLocation, Entry<TSource>> values = Maps.newHashMap();
     private final ResourceKey<? extends Registry<TSource>> registryKey;
     private final Registry<TSource> registry;
     private final String namespace;
@@ -22,14 +22,14 @@ public final class LazyRegister<TSource> {
 
     public <TValue extends TSource> LazyValue<TSource, TValue>
     register(final String name, Supplier<TValue> supplier) {
-        final var location = ResourceLocation.fromNamespaceAndPath(this.namespace, name);
-        this.values.put(location, supplier);
-        return LazyValue.create(this.registryKey, location);
+        final var id = ResourceLocation.fromNamespaceAndPath(this.namespace, name);
+        var value = LazyValue.<TSource, TValue>create(this.registryKey, id);
+        this.values.put(id, new Entry<>(value, supplier));
+        return value;
     }
 
-    @SuppressWarnings("unchecked")
-    public void register(TriConsumer<Registry<TSource>, ResourceLocation, Supplier<TSource>> consumer) {
-        this.values.forEach((name, supplier) -> consumer.accept(this.registry, name, (Supplier<TSource>) supplier));
+    public void register(RegisterFunction<TSource> function) {
+        this.values.forEach((id, entry) -> function.register(this.registry, id, entry));
     }
 
     public ResourceKey<? extends Registry<TSource>> getRegistryKey() {
@@ -41,4 +41,18 @@ public final class LazyRegister<TSource> {
         this.registry = registry;
         this.namespace = namespace;
     }
+
+    @FunctionalInterface
+    public interface RegisterFunction<TSource> {
+
+        Holder.Reference<TSource> register(Registry<TSource> registry,
+                                           ResourceLocation id,
+                                           Supplier<? extends TSource> factory);
+
+        private void register(Registry<TSource> registry, ResourceLocation id, Entry<TSource> entry) {
+            entry.value.bind(this.register(registry, id, entry.factory));
+        }
+    }
+
+    private record Entry<TSource>(LazyValue<TSource, ?> value, Supplier<? extends TSource> factory) { }
 }

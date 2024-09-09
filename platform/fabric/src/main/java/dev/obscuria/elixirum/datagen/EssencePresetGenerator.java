@@ -26,7 +26,7 @@ final class EssencePresetGenerator implements DataProvider {
         this.registryLookup = registryLookup;
     }
 
-    private void generateEssence(HolderLookup.Provider registryLookup, Consumer<ItemEssencePreset> consumer) {
+    private void generateEssence(Consumer<ItemEssencePreset> consumer) {
 
         consumer.accept(ItemEssencePreset.single(Items.ALLIUM, Elixirum.key("fire_resistance"), 1));
         consumer.accept(ItemEssencePreset.single(Items.AZURE_BLUET, Elixirum.key("blindness"), 1));
@@ -71,7 +71,7 @@ final class EssencePresetGenerator implements DataProvider {
             final var identifiers = Sets.<ResourceLocation>newHashSet();
             final var essences = Sets.<ItemEssencePreset>newHashSet();
 
-            generateEssence(lookup, essences::add);
+            generateEssence(essences::add);
 
             final var ops = lookup.createSerializationContext(JsonOps.INSTANCE);
             final var futures = new ArrayList<CompletableFuture<?>>();

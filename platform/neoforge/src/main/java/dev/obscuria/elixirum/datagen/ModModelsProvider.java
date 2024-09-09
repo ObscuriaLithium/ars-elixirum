@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.datagen;
 
 
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.common.alchemy.ElixirStyles;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyles;
 import dev.obscuria.elixirum.registry.ElixirumItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
