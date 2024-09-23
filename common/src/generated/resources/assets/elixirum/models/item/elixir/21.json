@@ -3,6 +3,6 @@
   "textures": {
     "layer0": "elixirum:item/elixir/shape/bottle_2",
     "layer1": "elixirum:item/elixir/overlay/bottle_2",
-    "layer2": "elixirum:item/elixir/cap/skull"
+    "layer2": "elixirum:item/elixir/cap/open"
   }
 }

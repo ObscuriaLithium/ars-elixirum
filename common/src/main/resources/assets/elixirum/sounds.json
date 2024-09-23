@@ -1,0 +1,37 @@
+{
+  "ui.click_1": {
+    "sounds": [
+      { "name": "elixirum:ui/click_1", "pitch": 0.9 },
+      { "name": "elixirum:ui/click_1", "pitch": 1.0 },
+      { "name": "elixirum:ui/click_1", "pitch": 1.1 }
+    ]
+  },
+  "ui.click_2": {
+    "sounds": [
+      { "name": "elixirum:ui/click_2", "pitch": 0.9 },
+      { "name": "elixirum:ui/click_2", "pitch": 1.0 },
+      { "name": "elixirum:ui/click_2", "pitch": 1.1 }
+    ]
+  },
+  "ui.bell": {
+    "sounds": [
+      { "name": "elixirum:ui/bell", "pitch": 0.9 },
+      { "name": "elixirum:ui/bell", "pitch": 1.0 },
+      { "name": "elixirum:ui/bell", "pitch": 1.1 }
+    ]
+  },
+  "ui.scroll": {
+    "sounds": [
+      { "name": "elixirum:ui/scroll", "pitch": 0.9 },
+      { "name": "elixirum:ui/scroll", "pitch": 1.0 },
+      { "name": "elixirum:ui/scroll", "pitch": 1.1 }
+    ]
+  },
+  "music.elixirum": {
+    "sounds": [
+      { "name": "elixirum:music/numa_expandia", "stream": true },
+      { "name": "elixirum:music/numa_luzia", "stream": true },
+      { "name": "elixirum:music/numa_naima", "stream": true }
+    ]
+  }
+}

@@ -32,6 +32,11 @@ public final class LazyRegister<TSource> {
         this.values.forEach((id, entry) -> function.register(this.registry, id, entry));
     }
 
+    public void register() {
+        this.values.forEach((id, entry) -> entry.value.bind(
+                Registry.registerForHolder(this.registry, id, entry.factory.get())));
+    }
+
     public ResourceKey<? extends Registry<TSource>> getRegistryKey() {
         return this.registryKey;
     }

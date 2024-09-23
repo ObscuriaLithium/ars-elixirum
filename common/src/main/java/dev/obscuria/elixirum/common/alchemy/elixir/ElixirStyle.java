@@ -11,22 +11,26 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public record ElixirStyle(ElixirStyles.Shape shape, ElixirStyles.Cap cap) {
+public record ElixirStyle(ElixirShape shape, ElixirCap cap) {
     public static final Codec<ElixirStyle> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ElixirStyle> STREAM_CODEC;
-    public static final ElixirStyle DEFAULT = new ElixirStyle(ElixirStyles.defaultShape(), ElixirStyles.defaultCap());
+    public static final ElixirStyle DEFAULT = new ElixirStyle(ElixirShape.DEFAULT, ElixirCap.DEFAULT);
 
     public static ElixirStyle create(int shapeId, int capId) {
         return new ElixirStyle(
-                ElixirStyles.Shape.getById(shapeId),
-                ElixirStyles.Cap.getById(capId));
+                ElixirShape.getById(shapeId),
+                ElixirCap.getById(capId));
     }
 
-    public static ElixirStyles.Shape getShape(ItemStack stack) {
+    public static ElixirStyle get(ItemStack stack) {
+        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE.value(), DEFAULT);
+    }
+
+    public static ElixirShape getShape(ItemStack stack) {
         return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE.value(), DEFAULT).shape;
     }
 
-    public static ElixirStyles.Cap getCap(ItemStack stack) {
+    public static ElixirCap getCap(ItemStack stack) {
         return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE.value(), DEFAULT).cap;
     }
 
@@ -42,6 +46,14 @@ public record ElixirStyle(ElixirStyles.Shape shape, ElixirStyles.Cap cap) {
                                           @Nullable LivingEntity entity,
                                           int seed) {
         return (float) ElixirStyle.getCap(stack).getPredicate();
+    }
+
+    public ElixirStyle withShape(ElixirShape shape) {
+        return new ElixirStyle(shape, cap);
+    }
+
+    public ElixirStyle withCap(ElixirCap cap) {
+        return new ElixirStyle(shape, cap);
     }
 
     static {

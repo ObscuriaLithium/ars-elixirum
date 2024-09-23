@@ -32,12 +32,12 @@ public final class ElixirItem extends Item {
         return stack;
     }
 
-    private static String getContentQuality(ElixirContents contents) {
+    public static String getContentQuality(ElixirContents contents) {
         final var index = (int) Math.round(contents.effects().getFirst().getQuality() / 10.0);
         return Component.translatable("elixir.quality." + Math.clamp(index - 1, 1, 9)).getString();
     }
 
-    private static String getContentName(ElixirContents contents) {
+    public static String getContentName(ElixirContents contents) {
         return contents.effects().getFirst().getName().getString();
     }
 }

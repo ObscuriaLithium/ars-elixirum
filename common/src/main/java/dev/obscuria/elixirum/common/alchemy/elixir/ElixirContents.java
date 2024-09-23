@@ -17,6 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
@@ -27,7 +28,10 @@ import net.minecraft.world.item.component.TooltipProvider;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public record ElixirContents(ImmutableList<ElixirEffect> effects, int color) implements TooltipProvider {
     public static final Codec<ElixirContents> CODEC;
@@ -55,6 +59,10 @@ public record ElixirContents(ImmutableList<ElixirEffect> effects, int color) imp
 
     public static ElixirContents get(ItemStack stack) {
         return stack.getOrDefault(ElixirumDataComponents.ELIXIR_CONTENTS.value(), WATER);
+    }
+
+    public static Optional<ElixirContents> getOptional(ItemStack stack) {
+        return Optional.ofNullable(stack.get(ElixirumDataComponents.ELIXIR_CONTENTS.value()));
     }
 
     public static int getOverlayColor(ItemStack stack, int layer) {
@@ -103,34 +111,16 @@ public record ElixirContents(ImmutableList<ElixirEffect> effects, int color) imp
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
-
         if (this.isEmpty()) {
             consumer.accept(NO_EFFECT);
             return;
         }
-
         final var attributes = Lists.<Pair<Holder<Attribute>, AttributeModifier>>newArrayList();
-
-        this.effects().forEach(effect -> {
-            final var mobEffect = effect.getEssence().getEffect();
-            final var amplifier = effect.getAmplifier();
-            final var duration = effect.getDuration();
-            var line = Component.translatable(mobEffect.getDescriptionId());
-
-            if (effect.isPale()) {
-                consumer.accept(line.append(" (Pale)").withStyle(ChatFormatting.GRAY));
-            } else if (effect.isWeak()) {
-                consumer.accept(line.append(" (Weak)").withStyle(ChatFormatting.GRAY));
-            } else {
-                if (amplifier > 0)
-                    line = Component.translatable("potion.withAmplifier", line,
-                            Component.translatable("potion.potency." + amplifier));
-                if (duration > 0)
-                    line = Component.translatable("potion.withDuration", line,
-                            formatDuration(20 * duration, 1, context.tickRate()));
-                consumer.accept(line.withStyle(mobEffect.getCategory().getTooltipFormatting()));
-            }
-        });
+        this.effects().forEach(effect ->
+                consumer.accept(Component.translatable("potion.withDuration",
+                                effect.getDisplayName(),
+                                effect.getStatusOrDuration(context.tickRate()))
+                        .withStyle(effect.getColor())));
     }
 
     public static Component formatDuration(float duration, float durationFactor, float ticksPerSecond) {
@@ -177,17 +167,23 @@ public record ElixirContents(ImmutableList<ElixirEffect> effects, int color) imp
                 this.color = Elixirum.WATER_COLOR;
                 return this;
             }
-            var total = effects.size();
-            var red = 0;
-            var green = 0;
-            var blue = 0;
-            for (var effect : effects) {
-                var color = FastColor.ARGB32.opaque(effect.getEssence().getEffect().getColor());
-                red += FastColor.ARGB32.red(color);
-                green += FastColor.ARGB32.green(color);
-                blue += FastColor.ARGB32.blue(color);
+
+            final var colorWeights = effects.stream()
+                    .map(effect -> Pair.of(effect.getEssence().getEffect(), effect.getQuality()))
+                    .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+            final int totalWeight = colorWeights.values().stream().reduce(0, Integer::sum);
+
+            float red = 0, green = 0, blue = 0;
+            for (Map.Entry<MobEffect, Integer> entry : colorWeights.entrySet()) {
+                final var color = entry.getKey().getColor();
+                final var weight = entry.getValue();
+                final var weightRatio = weight / 1f / totalWeight;
+                red += FastColor.ARGB32.red(color) / 255f * weightRatio;
+                green += FastColor.ARGB32.green(color) / 255f * weightRatio;
+                blue += FastColor.ARGB32.blue(color) / 255f * weightRatio;
             }
-            this.color = FastColor.ARGB32.color(0xff, red / total, green / total, blue / total);
+
+            this.color = FastColor.ARGB32.colorFromFloat(1f, red, green, blue);
             return this;
         }
 

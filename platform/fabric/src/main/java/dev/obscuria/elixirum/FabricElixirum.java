@@ -1,9 +1,10 @@
 package dev.obscuria.elixirum;
 
-import dev.obscuria.elixirum.commands.EssenceCommand;
-import dev.obscuria.elixirum.commands.RegenerateCommand;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirPrefix;
+import dev.obscuria.elixirum.server.commands.EssenceCommand;
+import dev.obscuria.elixirum.server.commands.RegenerateCommand;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
-import dev.obscuria.elixirum.common.alchemy.essence.ItemEssencePreset;
+import dev.obscuria.elixirum.common.alchemy.ingredient.IngredientPreset;
 import dev.obscuria.elixirum.registry.ElixirumRegistries;
 import dev.obscuria.elixirum.server.ServerAlchemy;
 import net.fabricmc.api.ModInitializer;
@@ -18,12 +19,13 @@ public class FabricElixirum implements ModInitializer {
         Elixirum.init();
 
         DynamicRegistries.registerSynced(ElixirumRegistries.ESSENCE, Essence.DIRECT_CODEC);
-        DynamicRegistries.register(ElixirumRegistries.ESSENCE_PRESET, ItemEssencePreset.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(ElixirumRegistries.ELIXIR_PREFIX, ElixirPrefix.DIRECT_CODEC);
+        DynamicRegistries.register(ElixirumRegistries.INGREDIENT_PRESET, IngredientPreset.DIRECT_CODEC);
 
         ServerLifecycleEvents.SERVER_STARTED.register(ServerAlchemy::whenServerStarted);
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(((server, manager) -> ServerAlchemy.whenResourcesReloaded(server)));
         ServerLifecycleEvents.AFTER_SAVE.register(((server, flush, force) -> ServerAlchemy.whenServerSaved(server)));
-        ServerLifecycleEvents.SERVER_STOPPED.register(ServerAlchemy::whenServerStopped);
+        ServerLifecycleEvents.SERVER_STOPPING.register(ServerAlchemy::whenServerStopped);
 
         CommandRegistrationCallback.EVENT.register((dispatcher, context, environment) -> {
             EssenceCommand.register(dispatcher, context);

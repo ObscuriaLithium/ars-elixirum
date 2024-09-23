@@ -1,7 +1,11 @@
 package dev.obscuria.elixirum;
 
+import dev.obscuria.elixirum.client.ClientAlchemy;
+import dev.obscuria.elixirum.common.alchemy.ingredient.Ingredients;
 import dev.obscuria.elixirum.platform.IPlatform;
 import dev.obscuria.elixirum.registry.*;
+import dev.obscuria.elixirum.server.ServerAlchemy;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +23,7 @@ public final class Elixirum {
     public static final Logger LOG = LoggerFactory.getLogger(DISPLAY_NAME);
     public static final IPlatform PLATFORM = load(IPlatform.class);
     public static final int WATER_COLOR = FastColor.ARGB32.opaque(-13083194);
+    public static final Style STYLE = Style.EMPTY.withFont(Elixirum.key("elixirum"));
 
     public static ResourceLocation key(String name) {
         return ResourceLocation.fromNamespaceAndPath(MODID, name);
@@ -36,17 +41,28 @@ public final class Elixirum {
                 : 0.0;
     }
 
+    public static Ingredients getIngredients() {
+        return PLATFORM.isClient()
+                ? ClientAlchemy.getIngredients()
+                : ServerAlchemy.getIngredients();
+    }
+
     @ApiStatus.Internal
     public static void initRegistries() {
         PLATFORM.register(ElixirumAttributes.SOURCE);
         PLATFORM.register(ElixirumDataComponents.SOURCE);
-        PLATFORM.register(ElixirumMobEffects.SOURCE);
         PLATFORM.register(ElixirumItems.SOURCE);
+        PLATFORM.register(ElixirumMobEffects.SOURCE);
         PLATFORM.register(ElixirumCreativeTabs.SOURCE);
+        PLATFORM.register(ElixirumParticleTypes.SOURCE);
+        PLATFORM.register(ElixirumSounds.SOURCE);
     }
 
     @ApiStatus.Internal
-    public static void init() {}
+    public static void init() {
+        PLATFORM.register(ElixirumBlocks.SOURCE);
+        PLATFORM.register(ElixirumBlockEntityTypes.SOURCE);
+    }
 
     @ApiStatus.Internal
     public static <T> T load(Class<T> clazz) {

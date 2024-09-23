@@ -4,16 +4,19 @@ import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.alchemy.*;
 import dev.obscuria.elixirum.common.alchemy.elixir.*;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
+import dev.obscuria.elixirum.common.item.ElixirItem;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.List;
+import java.util.Optional;
 
 import static net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import static net.minecraft.world.item.CreativeModeTab.Output;
@@ -41,28 +44,14 @@ public interface ElixirumCreativeTabs {
     }
 
     private static void generateGeneric(ItemDisplayParameters params, Output output) {
-        final var essenceGetter = params.holders().lookupOrThrow(ElixirumRegistries.ESSENCE);
-        output.accept(ElixirumItems.ELIXIR.value().getDefaultInstance());
-        output.accept(testElixir(essenceGetter, 0));
-        output.accept(testElixir(essenceGetter, 10));
-        output.accept(testElixir(essenceGetter, 20));
-        output.accept(testElixir(essenceGetter, 30));
-        output.accept(testElixir(essenceGetter, 40));
-        output.accept(testElixir(essenceGetter, 50));
-        output.accept(testElixir(essenceGetter, 60));
-        output.accept(testElixir(essenceGetter, 70));
-        output.accept(testElixir(essenceGetter, 80));
-        output.accept(testElixir(essenceGetter, 90));
-        output.accept(testElixir(essenceGetter, 100));
-
-        output.accept(testByRecipe(params.holders()));
+        randomElixirs(params.holders(), output);
     }
 
     private static void generateExtracts(ItemDisplayParameters params, Output output) {
         params.holders().lookupOrThrow(ElixirumRegistries.ESSENCE).listElements().forEach(essence -> {
             for (var i = 1; i <= 9; i++) {
                 var stack = ElixirumItems.EXTRACT.value().getDefaultInstance();
-                stack.set(ElixirumDataComponents.EXTRACT_CONTENTS.value(), new ExtractContents(essence, i));
+                stack.set(ElixirumDataComponents.EXTRACT_CONTENTS.value(), new ExtractContents(Optional.empty(), essence, i));
                 output.accept(stack);
             }
         });
@@ -71,7 +60,7 @@ public interface ElixirumCreativeTabs {
     private static ItemStack testElixir(HolderGetter<Essence> getter, double weight) {
         final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
         stack.set(ElixirumDataComponents.ELIXIR_STYLE.value(),
-                new ElixirStyle(ElixirStyles.Shape.FLASK_2, ElixirStyles.Cap.AMETHYST));
+                new ElixirStyle(ElixirShape.FLASK_2, ElixirCap.AMETHYST));
 
         stack.set(ElixirumDataComponents.ELIXIR_CONTENTS.value(), ElixirContents.create()
                 .addEffect(ElixirEffect.byWeight(getter.getOrThrow(ElixirumEssences.ABSORPTION), weight, weight))
@@ -81,16 +70,50 @@ public interface ElixirumCreativeTabs {
         return stack;
     }
 
-    private static ItemStack testByRecipe(HolderLookup.Provider lookup) {
-        final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
-        final var recipe = new ElixirRecipe(List.of(
-                Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE,
-                Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE,
-                Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE,
-                Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE, Items.APPLE));
-        final var mixer = new ElixirMixer();
-        mixer.append(lookup, recipe);
-        stack.set(ElixirumDataComponents.ELIXIR_CONTENTS.value(), mixer.brew());
-        return stack;
+    private static void randomElixirs(HolderLookup.Provider lookupProvider, Output output) {
+        final var lookup = lookupProvider.lookupOrThrow(ElixirumRegistries.ESSENCE);
+        for (var i = 0; i < 90; i++) {
+            pickRandom(lookup.listElements().toList()).ifPresent(primaryEssence -> {
+                final var weight = 10 + RandomSource.create().nextInt(90);
+                final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
+                final var builder = ElixirContents.create();
+                builder.addEffect(ElixirEffect.byWeight(primaryEssence, weight, weight));
+                pickRandom(lookup.listElements()
+                        .filter(essence -> !essence.is(primaryEssence))
+                        .toList())
+                        .ifPresent(secondaryEssence -> builder.addEffect(ElixirEffect.byWeight(secondaryEssence, weight / 2.0, weight / 2.0)));
+                builder.computeContentColor();
+                stack.set(ElixirumDataComponents.ELIXIR_CONTENTS.value(), builder.build());
+                ElixirContents.setRarityByContent(stack);
+                randomizeName(lookupProvider, stack);
+                output.accept(stack);
+            });
+        }
+    }
+
+    private static <V> Optional<V> pickRandom(List<V> collection) {
+        if (collection.isEmpty()) return Optional.empty();
+        if (collection.size() == 1) return Optional.of(collection.getFirst());
+        return Optional.of(collection.get(RandomSource.create().nextInt(collection.size())));
+    }
+
+    private static void randomizeName(HolderLookup.Provider lookupProvider, ItemStack stack) {
+        final var lookup = lookupProvider.lookupOrThrow(ElixirumRegistries.ELIXIR_PREFIX);
+        ElixirContents.getOptional(stack)
+                .ifPresent(content -> pickRandom(lookup.listElements()
+                        .filter(prefix -> prefix.value().source()
+                                .map(source -> source.value().equals(content.effects().get(1).getEssence().getEffect()))
+                                .orElse(false))
+                        .toList()).ifPresentOrElse(
+                        prefix -> stack.set(DataComponents.ITEM_NAME, Component.literal(ElixirItem.getContentQuality(content)
+                                + " Elixir '"
+                                + Component.translatable(prefix.value().key()).getString()
+                                + " "
+                                + ElixirItem.getContentName(content)
+                                + "'")),
+                        () -> stack.set(DataComponents.ITEM_NAME, Component.literal(ElixirItem.getContentQuality(content)
+                                + " Elixir '"
+                                + ElixirItem.getContentName(content)
+                                + "'"))));
     }
 }

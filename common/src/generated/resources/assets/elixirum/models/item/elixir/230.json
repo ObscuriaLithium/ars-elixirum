@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "elixirum:item/elixir/shape/bubble",
+    "layer1": "elixirum:item/elixir/overlay/bubble",
+    "layer2": "elixirum:item/elixir/cap/holy"
+  }
+}

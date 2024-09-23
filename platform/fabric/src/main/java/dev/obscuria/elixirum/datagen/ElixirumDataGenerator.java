@@ -10,11 +10,13 @@ public class ElixirumDataGenerator implements DataGeneratorEntrypoint {
 
         var pack = generator.createPack();
 
-        pack.addProvider(ModelGenerator::new);
-        pack.addProvider(LanguageGenerator::new);
+        pack.addProvider(ModModelGenerator::new);
+        pack.addProvider(ModLanguageGenerator::new);
 
-        pack.addProvider(EssenceGenerator::new);
-        pack.addProvider(EssencePresetGenerator::new);
-        pack.addProvider(ItemTagGenerator::new);
+        pack.addProvider(ModEssenceGenerator::new);
+        pack.addProvider(ModIngredientPresetGenerator::new);
+        pack.addProvider(ModElixirPrefixGenerator::new);
+        pack.addProvider(ModTagItemGenerator::new);
+        pack.addProvider(ModTagBlockGenerator::new);
     }
 }

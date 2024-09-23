@@ -26,6 +26,9 @@ loom {
             setConfigName('Fabric Client')
             ideConfigGenerated(true)
             runDir('runs/client')
+
+            programArg "--username=ObscureFox"
+            programArg "--uuid=f2df884f-779c-4529-8c2f-a24f6ca2a482"
         }
         server {
             server()

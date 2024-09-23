@@ -1,11 +1,13 @@
 package dev.obscuria.elixirum.server;
 
+import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import dev.obscuria.elixirum.Elixirum;
 import net.minecraft.FileUtil;
+import net.minecraft.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
@@ -20,22 +22,29 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public final class ServerAlchemy {
     static final LevelResource ALCHEMY_DIR = createResource();
     static final Logger LOG = LoggerFactory.getLogger(Elixirum.DISPLAY_NAME + "/Server");
-    static final ServerItemEssences itemEssences = new ServerItemEssences();
+    static final ServerIngredients itemEssences = new ServerIngredients();
+    static final Map<UUID, ServerElixirumProfile> playerProfiles = Maps.newHashMap();
     static @Nullable MinecraftServer server;
 
-    public static ServerItemEssences getItemEssences() {
+    public static ServerIngredients getIngredients() {
         return itemEssences;
+    }
+
+    public static ServerElixirumProfile getProfile(ServerPlayer player) {
+        return playerProfiles.get(player.getUUID());
     }
 
     public static void syncItemEssences() {
         if (server == null) return;
         for (var player : server.getPlayerList().getPlayers())
-            itemEssences.syncWith(player);
+            itemEssences.syncWithPlayer(player);
     }
 
     @ApiStatus.Internal
@@ -48,7 +57,7 @@ public final class ServerAlchemy {
     public static void whenResourcesReloaded(MinecraftServer server) {
         itemEssences.load();
         for (var player : server.getPlayerList().getPlayers())
-            itemEssences.syncWith(player);
+            itemEssences.syncWithPlayer(player);
     }
 
     @ApiStatus.Internal
@@ -59,12 +68,27 @@ public final class ServerAlchemy {
     @ApiStatus.Internal
     public static void whenServerStopped(MinecraftServer server) {
         itemEssences.save();
+        server.getPlayerList().getPlayers().forEach(ServerAlchemy::unregisterPlayer);
         ServerAlchemy.server = null;
     }
 
     @ApiStatus.Internal
-    public static void whenPlayerLoggedIn(ServerPlayer player) {
-        itemEssences.syncWith(player);
+    public static void registerPlayer(ServerPlayer player) {
+        itemEssences.syncWithPlayer(player);
+        playerProfiles.compute(player.getUUID(), (key, value) -> Util.make(
+                value == null ? new ServerElixirumProfile(player) : value,
+                profile -> {
+                    profile.load();
+                    profile.syncWithPlayer();
+                }));
+    }
+
+    @ApiStatus.Internal
+    public static void unregisterPlayer(ServerPlayer player) {
+        playerProfiles.compute(player.getUUID(), (key, value) -> {
+            if (value != null) value.save();
+            return null;
+        });
     }
 
     @ApiStatus.Internal
@@ -84,8 +108,7 @@ public final class ServerAlchemy {
             try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
                 new GsonBuilder().setPrettyPrinting().create().toJson(element, writer);
             }
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) {}
     }
 
     private static LevelResource createResource() {

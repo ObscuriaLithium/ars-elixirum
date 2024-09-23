@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "elixirum:item/elixir/shape/flask_4",
-    "layer1": "elixirum:item/elixir/overlay/flask_4",
-    "layer2": "elixirum:item/elixir/cap/glass"
+    "layer0": "elixirum:item/elixir/shape/bottle_6",
+    "layer1": "elixirum:item/elixir/overlay/bottle_6",
+    "layer2": "elixirum:item/elixir/cap/crown"
   }
 }

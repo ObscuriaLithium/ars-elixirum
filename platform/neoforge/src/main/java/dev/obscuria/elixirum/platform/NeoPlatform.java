@@ -1,16 +1,27 @@
 package dev.obscuria.elixirum.platform;
 
 import com.google.common.collect.Sets;
+import com.mojang.serialization.MapCodec;
 import dev.obscuria.elixirum.network.ClientboundItemEssencesPacket;
 import dev.obscuria.elixirum.network.NeoClientboundItemEssencesPayload;
 import dev.obscuria.elixirum.registry.LazyRegister;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Set;
+import java.util.function.BiFunction;
 
 public class NeoPlatform implements IPlatform {
     public static final Set<LazyRegister<?>> registers = Sets.newHashSet();
@@ -18,6 +29,17 @@ public class NeoPlatform implements IPlatform {
     @Override
     public <TValue> void register(LazyRegister<TValue> register) {
         registers.add(register);
+    }
+
+    @Override
+    public <TValue extends BlockEntity> BlockEntityType.Builder<TValue>
+    createBlockEntityType(BiFunction<BlockPos, BlockState, TValue> factory, Block... blocks) {
+        return null;
+    }
+
+    @Override
+    public <TValue extends ParticleOptions> ParticleType<TValue> createParticleType(boolean alwaysSpawn, MapCodec<TValue> codec, StreamCodec<RegistryFriendlyByteBuf, TValue> streamCodec) {
+        return null;
     }
 
     @Override

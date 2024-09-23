@@ -3,11 +3,14 @@ package dev.obscuria.elixirum.common.alchemy.elixir;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringUtil;
 
 public record ElixirEffect(Holder<Essence> essenceHolder,
                            double amplifierWeight,
@@ -28,10 +31,6 @@ public record ElixirEffect(Holder<Essence> essenceHolder,
                 essence.value().amplifier().weightByValue(amplifier),
                 essence.value().duration().weightByValue(duration),
                 essence.value().requiredIngredients());
-    }
-
-    public Component getName() {
-        return getEssence().getName();
     }
 
     public Essence getEssence() {
@@ -70,6 +69,40 @@ public record ElixirEffect(Holder<Essence> essenceHolder,
         final var amplifier = instantenous ? amplifierWeight() * scale : amplifierWeight();
         final var duration = instantenous ? durationWeight() : durationWeight() * scale;
         return new ElixirEffect(essenceHolder(), amplifier, duration, ingredients());
+    }
+
+    public Component getName() {
+        return getEssence().getName();
+    }
+
+    public Component getDisplayName() {
+        final var amplifier = getAmplifier();
+        if (amplifier > 0) {
+            final var potency = Component.translatable("potion.potency." + amplifier);
+            return Component.translatable("potion.withAmplifier", getName(), potency);
+        }
+        return getName();
+    }
+
+    public Component getStatusOrDuration(float tickRate) {
+        return this.isPale()
+                ? Component.literal("Pale")
+                : this.isWeak()
+                ? Component.literal("Weak")
+                : this.isInstantenous()
+                ? Component.literal("Instantenous")
+                : this.getFormattedDuration(tickRate);
+    }
+
+    public Component getFormattedDuration(float tickRate) {
+        final var ticks = Mth.floor(20 * getDuration());
+        return Component.literal(StringUtil.formatTickDuration(ticks, tickRate));
+    }
+
+    public ChatFormatting getColor() {
+        return !isPale() && !isWeak()
+                ? getEssence().getEffect().getCategory().getTooltipFormatting()
+                : ChatFormatting.GRAY;
     }
 
     static {

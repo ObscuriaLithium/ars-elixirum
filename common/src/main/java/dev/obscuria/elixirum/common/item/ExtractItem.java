@@ -29,9 +29,13 @@ public final class ExtractItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
         ExtractContents.get(stack).ifPresent(contents -> {
-            final var name = contents.getEssence().getName();
-            final var weight = contents.weight();
-            components.add(Component.literal("x" + weight + " " + name.getString()).withStyle(ChatFormatting.GRAY));
+            components.add(Component
+                    .translatable("elixirum.extract.essence", contents.weight(), contents.getEssence().getName())
+                    .withStyle(ChatFormatting.GRAY));
+            contents.source().ifPresent(source ->
+                    components.add(Component
+                            .translatable("elixirum.extract.source", source.getDescription())
+                            .withStyle(ChatFormatting.GRAY)));
         });
     }
 

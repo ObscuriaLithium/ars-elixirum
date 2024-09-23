@@ -1,10 +1,9 @@
 package dev.obscuria.elixirum;
 
-import dev.obscuria.elixirum.commands.EssenceCommand;
-import dev.obscuria.elixirum.commands.RegenerateCommand;
+import dev.obscuria.elixirum.server.commands.EssenceCommand;
+import dev.obscuria.elixirum.server.commands.RegenerateCommand;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
-import dev.obscuria.elixirum.common.alchemy.essence.ItemEssencePreset;
-import dev.obscuria.elixirum.datagen.ModDatagens;
+import dev.obscuria.elixirum.common.alchemy.ingredient.IngredientPreset;
 import dev.obscuria.elixirum.network.ClientNetworkHandler;
 import dev.obscuria.elixirum.network.NeoClientboundItemEssencesPayload;
 import dev.obscuria.elixirum.platform.NeoPlatform;
@@ -31,7 +30,6 @@ public class NeoElixirum {
 
         NeoForge.EVENT_BUS.register(NeoEvents.class);
         bus.register(ModEvents.class);
-        bus.addListener(ModDatagens::onGatherData);
 
         if (Elixirum.PLATFORM.isClient())
             NeoElixirumClient.init();
@@ -42,14 +40,14 @@ public class NeoElixirum {
         @SubscribeEvent
         private static void onNewDataRegistry(DataPackRegistryEvent.NewRegistry event) {
             event.dataPackRegistry(ElixirumRegistries.ESSENCE, Essence.DIRECT_CODEC, Essence.DIRECT_CODEC);
-            event.dataPackRegistry(ElixirumRegistries.ESSENCE_PRESET, ItemEssencePreset.DIRECT_CODEC);
+            event.dataPackRegistry(ElixirumRegistries.INGREDIENT_PRESET, IngredientPreset.DIRECT_CODEC);
         }
 
         @SubscribeEvent
         public static void onRegister(final RegisterEvent event) {
             NeoPlatform.registers.removeIf(register -> {
                 if (!event.getRegistryKey().equals(register.getRegistryKey())) return false;
-                register.register((registry, key, value) -> event.register(registry.key(), key, value));
+                register.register();
                 return true;
             });
         }

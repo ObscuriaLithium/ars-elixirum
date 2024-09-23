@@ -6,15 +6,18 @@ import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.registry.ElixirumDataComponents;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public record ExtractContents(Holder<Essence> essenceHolder, int weight) {
+public record ExtractContents(Optional<Item> source, Holder<Essence> essenceHolder, int weight) {
     public static final Codec<ExtractContents> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ExtractContents> STREAM_CODEC;
 
@@ -34,10 +37,12 @@ public record ExtractContents(Holder<Essence> essenceHolder, int weight) {
 
     static {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("source").forGetter(ExtractContents::source),
                 Essence.CODEC.fieldOf("essence").forGetter(ExtractContents::essenceHolder),
                 Codec.INT.fieldOf("weight").forGetter(ExtractContents::weight)
         ).apply(instance, ExtractContents::new));
         STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.ITEM)), ExtractContents::source,
                 Essence.STREAM_CODEC, ExtractContents::essenceHolder,
                 ByteBufCodecs.INT, ExtractContents::weight,
                 ExtractContents::new);
