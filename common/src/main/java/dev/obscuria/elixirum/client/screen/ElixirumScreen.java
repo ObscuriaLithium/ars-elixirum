@@ -3,7 +3,7 @@ package dev.obscuria.elixirum.client.screen;
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.client.ClientAlchemy;
 import dev.obscuria.elixirum.client.screen.section.AbstractSection;
-import dev.obscuria.elixirum.client.screen.section.SectionCollection;
+import dev.obscuria.elixirum.client.screen.section.collection.RootCollection;
 import dev.obscuria.elixirum.client.screen.section.compendium.RootCompendium;
 import dev.obscuria.elixirum.client.screen.section.recent.RootRecent;
 import dev.obscuria.elixirum.client.screen.tool.GlobalTransform;
@@ -114,7 +114,7 @@ public final class ElixirumScreen extends Screen {
     @Override
     protected void init() {
         this.addRenderableWidget(new RootRecent(height / 2, this::onTabPressed));
-        this.addRenderableWidget(new SectionCollection(height / 2, this::onTabPressed));
+        this.addRenderableWidget(new RootCollection(height / 2, this::onTabPressed));
         this.addRenderableWidget(new RootCompendium(height / 2, this::onTabPressed));
         this.findTab(selectedSection).ifPresent(section -> {
             section.initTab(this);
@@ -136,16 +136,16 @@ public final class ElixirumScreen extends Screen {
         this.rebuildWidgets();
     }
 
-    @FunctionalInterface
-    public interface TooltipProvider {
-
-        List<Component> getTooltip();
-    }
-
     static {
         MUSIC = new Music(ElixirumSounds.MUSIC_ELIXIRUM.holder(), 600, 1200, false);
         selectedSection = ClientAlchemy.getProfile().isEmpty()
                 ? AbstractSection.Type.COMPENDIUM
                 : AbstractSection.Type.RECENT;
+    }
+
+    @FunctionalInterface
+    public interface TooltipProvider {
+
+        List<Component> getTooltip();
     }
 }

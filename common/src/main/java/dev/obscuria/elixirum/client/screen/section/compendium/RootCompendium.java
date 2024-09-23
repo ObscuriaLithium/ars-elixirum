@@ -46,4 +46,8 @@ public final class RootCompendium extends AbstractSection {
         selectedPage.buildPage(pageList);
         pageScroll.resetScroll();
     }
+
+    static {
+        selectedPage = ContentsType.INTRODUCTION;
+    }
 }
