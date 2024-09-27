@@ -4,37 +4,43 @@ import dev.obscuria.elixirum.client.ClientAlchemy;
 import dev.obscuria.elixirum.client.screen.container.GridContainer;
 import dev.obscuria.elixirum.client.screen.tool.ClickAction;
 import dev.obscuria.elixirum.client.screen.widget.AbstractElixirDisplay;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirHolder;
 import dev.obscuria.elixirum.registry.ElixirumSounds;
+import net.minecraft.world.item.ItemStack;
 
 final class SubElixirsGrid extends GridContainer {
 
     public SubElixirsGrid() {
-        for (var holder : ClientAlchemy.getProfile().getSavedPages()) {
-            final var getter = RootCollection.essenceGetter();
-            this.addChild(new Entry(new RootCollection.Elixir(holder, holder.createStack(getter)))
-                    .setClickSound(ElixirumSounds.UI_CLICK_2.holder())
+        this.update();
+    }
+
+    public void update() {
+        this.children().clear();
+        for (var holder : ClientAlchemy.getProfile().getCollection()) {
+            this.addChild(new Entry(holder)
+                    .setClickSound(ElixirumSounds.UI_CLICK_2)
                     .setClickAction(ClickAction.<Entry>left(widget -> {
-                        RootCollection.select(widget.getElixir());
+                        RootCollection.select(widget.getHolder());
                         return true;
                     })));
         }
     }
 
     static final class Entry extends AbstractElixirDisplay {
-        private final RootCollection.Elixir elixir;
+        private final ElixirHolder holder;
 
-        public Entry(RootCollection.Elixir elixir) {
-            super(elixir.stack());
-            this.elixir = elixir;
+        public Entry(ElixirHolder holder) {
+            super(holder.getCachedStack().orElse(ItemStack.EMPTY));
+            this.holder = holder;
         }
 
-        public RootCollection.Elixir getElixir() {
-            return this.elixir;
+        public ElixirHolder getHolder() {
+            return this.holder;
         }
 
         @Override
         protected boolean isSelected() {
-            return RootCollection.getSelected().map(elixir -> elixir == this.elixir).orElse(false);
+            return RootCollection.getSelectedHolder().map(holder::isSame).orElse(false);
         }
     }
 }

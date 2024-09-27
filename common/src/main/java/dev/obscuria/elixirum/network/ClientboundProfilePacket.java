@@ -13,7 +13,8 @@ public record ClientboundProfilePacket(ElixirumProfile.Packed content) {
 
     static {
         STREAM_CODEC = StreamCodec.composite(
-                ElixirumProfile.STREAM_CODEC, ClientboundProfilePacket::content,
+                ElixirumProfile.STREAM_CODEC,
+                ClientboundProfilePacket::content,
                 ClientboundProfilePacket::create);
     }
 }

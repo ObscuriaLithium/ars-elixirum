@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.client.screen.section.compendium;
 
 import com.google.common.collect.Maps;
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.client.screen.tool.Accessor;
+import dev.obscuria.elixirum.client.screen.tool.Property;
 import dev.obscuria.elixirum.client.screen.tool.ClickAction;
 import dev.obscuria.elixirum.client.screen.container.*;
 import dev.obscuria.elixirum.client.screen.widget.Text;
@@ -23,9 +23,9 @@ final class PanelCompendium extends PanelContainer {
                 .setCentered(true)
                 .setScale(1.2f));
         final var split = this.setContent(new SplitContainer(0.3));
-        final var navigationScroll = split.addChild(new ScrollContainer());
+        final var navigationScroll = split.addChild(new ScrollContainer(Component.empty()));
         final var navigation = navigationScroll.addChild(new ListContainer().setSeparation(2));
-        final var pageScroll = split.addChild(new ScrollContainer());
+        final var pageScroll = split.addChild(new ScrollContainer(Component.empty()));
         final var page = pageScroll.addChild(new ListContainer().setSeparation(8));
 
         addSection(1, navigation,
@@ -52,14 +52,14 @@ final class PanelCompendium extends PanelContainer {
     }
 
     private static void addSection(int id, ListContainer parent, Component title, ContentsType... contentsTypes) {
-        final var cacheAccessor = Accessor.create(
+        final var property = Property.create(
                 () -> sectionsCache.getOrDefault(id, false),
                 value -> sectionsCache.put(id, value));
-        final var spoiler = parent.addChild(new SpoilerContainer(title).setAccessor(cacheAccessor));
+        final var spoiler = parent.addChild(new SpoilerContainer(title).setProperty(property));
         final var list = spoiler.addChild(new ListContainer().setOffset(2, 5));
         for (var type : contentsTypes)
             list.addChild(new Contents(type)
-                    .setClickSound(ElixirumSounds.UI_CLICK_2.holder())
+                    .setClickSound(ElixirumSounds.UI_CLICK_2)
                     .setClickAction(ClickAction.<Contents>left(contents -> {
                         RootCompendium.select(type);
                         return true;

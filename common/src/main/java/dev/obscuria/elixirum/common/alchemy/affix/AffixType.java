@@ -1,12 +1,14 @@
 package dev.obscuria.elixirum.common.alchemy.affix;
 
 import com.mojang.serialization.Codec;
-import dev.obscuria.elixirum.common.alchemy.elixir.ElixirProcessor;
+import dev.obscuria.elixirum.common.alchemy.brewing.BrewingProcessor;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -21,6 +23,8 @@ public enum AffixType implements StringRepresentable {
 
     public static final Codec<AffixType> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, AffixType> STREAM_CODEC;
+    public static final List<AffixType> INGREDIENT_BOUND = List.of(PREVIOUS, NEXT);
+    public static final List<AffixType> ESSENCE_BOUND = List.of(OFFENSIVE, DEFENSIVE, ENHANCING, DIMINISHING);
     private static final Predicate<Essence> ANY = essence -> true;
     private final Processor processor;
 
@@ -28,11 +32,19 @@ public enum AffixType implements StringRepresentable {
         this.processor = processor;
     }
 
+    public static AffixType pickIngredientBound(RandomSource source) {
+        return INGREDIENT_BOUND.get(source.nextInt(INGREDIENT_BOUND.size()));
+    }
+
+    public static AffixType pickEssenceBound(RandomSource source) {
+        return ESSENCE_BOUND.get(source.nextInt(ESSENCE_BOUND.size()));
+    }
+
     public Affix create(double modifier) {
         return new Affix(this, modifier);
     }
 
-    public void apply(Affix affix, ElixirProcessor processor, int index) {
+    public void apply(Affix affix, BrewingProcessor processor, int index) {
         this.processor.apply(affix, processor, index);
     }
 
@@ -45,18 +57,18 @@ public enum AffixType implements StringRepresentable {
         return this.toString().toLowerCase();
     }
 
-    private static void applyAbsolute(Affix affix, ElixirProcessor processor, int index) {
+    private static void applyAbsolute(Affix affix, BrewingProcessor processor, int index) {
         processor.listEssences(ANY)
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 
-    private static void applyNext(Affix affix, ElixirProcessor processor, int index) {
+    private static void applyNext(Affix affix, BrewingProcessor processor, int index) {
         processor.getIngredient(index + 1).stream()
                 .flatMap(ingredient -> ingredient.listEssences(ANY))
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 
-    private static void applyPrevious(Affix affix, ElixirProcessor processor, int index) {
+    private static void applyPrevious(Affix affix, BrewingProcessor processor, int index) {
         processor.getIngredient(index + 1).stream()
                 .flatMap(ingredient -> ingredient.listEssences(ANY))
                 .forEach(info -> info.addModifier(affix.modifier()));
@@ -82,6 +94,6 @@ public enum AffixType implements StringRepresentable {
     @FunctionalInterface
     interface Processor {
 
-        void apply(Affix affix, ElixirProcessor processor, int index);
+        void apply(Affix affix, BrewingProcessor processor, int index);
     }
 }

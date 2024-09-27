@@ -2,6 +2,8 @@ package dev.obscuria.elixirum.common.alchemy.elixir;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.obscuria.elixirum.common.alchemy.style.Cap;
+import dev.obscuria.elixirum.common.alchemy.style.Shape;
 import dev.obscuria.elixirum.registry.ElixirumDataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,27 +13,27 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public record ElixirStyle(ElixirShape shape, ElixirCap cap) {
+public record ElixirStyle(Shape shape, Cap cap) {
     public static final Codec<ElixirStyle> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ElixirStyle> STREAM_CODEC;
-    public static final ElixirStyle DEFAULT = new ElixirStyle(ElixirShape.DEFAULT, ElixirCap.DEFAULT);
+    public static final ElixirStyle DEFAULT = new ElixirStyle(Shape.DEFAULT, Cap.DEFAULT);
 
     public static ElixirStyle create(int shapeId, int capId) {
         return new ElixirStyle(
-                ElixirShape.getById(shapeId),
-                ElixirCap.getById(capId));
+                Shape.getById(shapeId),
+                Cap.getById(capId));
     }
 
     public static ElixirStyle get(ItemStack stack) {
-        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE.value(), DEFAULT);
+        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE, DEFAULT);
     }
 
-    public static ElixirShape getShape(ItemStack stack) {
-        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE.value(), DEFAULT).shape;
+    public static Shape getShape(ItemStack stack) {
+        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE, DEFAULT).shape;
     }
 
-    public static ElixirCap getCap(ItemStack stack) {
-        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE.value(), DEFAULT).cap;
+    public static Cap getCap(ItemStack stack) {
+        return stack.getOrDefault(ElixirumDataComponents.ELIXIR_STYLE, DEFAULT).cap;
     }
 
     public static float getShapePredicate(ItemStack stack,
@@ -48,11 +50,11 @@ public record ElixirStyle(ElixirShape shape, ElixirCap cap) {
         return (float) ElixirStyle.getCap(stack).getPredicate();
     }
 
-    public ElixirStyle withShape(ElixirShape shape) {
+    public ElixirStyle withShape(Shape shape) {
         return new ElixirStyle(shape, cap);
     }
 
-    public ElixirStyle withCap(ElixirCap cap) {
+    public ElixirStyle withCap(Cap cap) {
         return new ElixirStyle(shape, cap);
     }
 

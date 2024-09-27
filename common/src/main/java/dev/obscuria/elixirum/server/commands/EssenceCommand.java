@@ -85,7 +85,8 @@ public final class EssenceCommand {
                     essence.value().getName().getString(),
                     weight);
         map.setProperties(item, properties.with(essence.key().location(), weight));
-        ServerAlchemy.syncItemEssences();
+        ServerAlchemy.syncIngredients();
+        ServerAlchemy.validateProfiles();
         source.sendSuccess(() -> Component.translatableEscape("commands.elixirum.essence.success.set",
                 essence.value().getName().getString(),
                 weight,
@@ -100,8 +101,9 @@ public final class EssenceCommand {
             throw ERROR_NO_ESSENCE.create(
                     Component.translatableEscape(item.getDescriptionId()).getString(),
                     essence.value().getName().getString());
-        map.setProperties(item, properties.exclude(essence));
-        ServerAlchemy.syncItemEssences();
+        map.setProperties(item, properties.exclude(essence.key().location()));
+        ServerAlchemy.syncIngredients();
+        ServerAlchemy.validateProfiles();
         source.sendSuccess(() -> Component.translatableEscape("commands.elixirum.essence.success.remove",
                 essence.value().getName().getString(),
                 Component.translatableEscape(item.getDescriptionId()).getString()), true);
@@ -113,7 +115,8 @@ public final class EssenceCommand {
         map.removeProperties(item);
         if (!map.getProperties(item).isEmpty())
             throw ERROR_ALREADY_EMPTY.create(Component.translatableEscape(item.getDescriptionId()).getString());
-        ServerAlchemy.syncItemEssences();
+        ServerAlchemy.syncIngredients();
+        ServerAlchemy.validateProfiles();
         source.sendSuccess(() -> Component.translatableEscape(
                 "commands.elixirum.essence.success.clear",
                 Component.translatableEscape(item.getDescriptionId()).getString()), true);
@@ -128,7 +131,7 @@ public final class EssenceCommand {
             throw ERROR_NO_ESSENCES.create(Component.translatableEscape(item.getDescriptionId()).getString());
         var total = 0;
         for (var essence : properties.getEssences(getter).keySet()) {
-            if (profile.isDiscovered(item, essence)) continue;
+            if (profile.isEssenceDiscovered(item, essence)) continue;
             profile.discoverEssence(item, essence, false);
             total += 1;
         }
@@ -151,7 +154,7 @@ public final class EssenceCommand {
         var total = 0;
         for (var entry : ServerAlchemy.getIngredients()) {
             for (var essence : entry.properties().getEssences(getter).keySet()) {
-                if (profile.isDiscovered(entry.item(), essence)) continue;
+                if (profile.isEssenceDiscovered(entry.item(), essence)) continue;
                 profile.discoverEssence(entry.item(), essence, false);
                 total += 1;
             }
@@ -179,7 +182,7 @@ public final class EssenceCommand {
         var total = 0;
         for (var essence : properties.getEssences(getter).keySet()) {
             if (!discovered.contains(essence)) continue;
-            profile.forgetEssence(item, essence, false);
+            profile.forgetEssence(item, essence);
             total += 1;
         }
         if (total > 0) {
@@ -201,8 +204,8 @@ public final class EssenceCommand {
         var total = 0;
         for (var entry : ServerAlchemy.getIngredients()) {
             for (var essence : entry.properties().getEssences(getter).keySet()) {
-                if (!profile.isDiscovered(entry.item(), essence)) continue;
-                profile.forgetEssence(entry.item(), essence, false);
+                if (!profile.isEssenceDiscovered(entry.item(), essence)) continue;
+                profile.forgetEssence(entry.item(), essence);
                 total += 1;
             }
         }

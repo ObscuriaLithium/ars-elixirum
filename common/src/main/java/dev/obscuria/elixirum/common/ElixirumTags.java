@@ -11,6 +11,7 @@ public interface ElixirumTags {
     interface Items {
         TagKey<Item> ESSENCE_WHITELIST = TagKey.create(Registries.ITEM, Elixirum.key("essence_whitelist"));
         TagKey<Item> ESSENCE_BLACKLIST = TagKey.create(Registries.ITEM, Elixirum.key("essence_blacklist"));
+        TagKey<Item> POTION_SHELF_PLACEABLE = TagKey.create(Registries.ITEM, Elixirum.key("potion_shelf_placeable"));
     }
 
     interface Blocks {

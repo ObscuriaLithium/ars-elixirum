@@ -57,7 +57,7 @@ public final class GlassCauldronBlock extends BaseEntityBlock {
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ElixirumBlockEntityTypes.GLASS_CAULDRON.value(), GlassCauldronEntity::tick);
+        return createTickerHelper(type, ElixirumBlockEntityTypes.GLASS_CAULDRON, GlassCauldronEntity::tick);
     }
 
     @Override
@@ -135,7 +135,7 @@ public final class GlassCauldronBlock extends BaseEntityBlock {
         private static ItemInteractionResult useGlassBottle(GlassCauldronEntity entity, Level level, Player player, InteractionHand hand, ItemStack stack) {
             if (entity.isFilled() && entity.hasElixir()) {
                 final var elixir = entity.brew(player);
-                if (!elixir.isEmpty() && !level.isClientSide) {
+                if (!level.isClientSide && !elixir.isEmpty()) {
                     stack.shrink(1);
                     if (!player.addItem(elixir))
                         player.drop(elixir, false);
@@ -147,11 +147,9 @@ public final class GlassCauldronBlock extends BaseEntityBlock {
         }
 
         private static ItemInteractionResult useIngredient(GlassCauldronEntity entity, Level level, Player player, InteractionHand hand, ItemStack stack) {
-            if (entity.addIngredient(stack.copyWithCount(1))) {
-                if (!level.isClientSide) stack.shrink(1);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            }
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return entity.addIngredient(stack)
+                    ? ItemInteractionResult.sidedSuccess(level.isClientSide)
+                    : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         @FunctionalInterface

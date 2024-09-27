@@ -34,7 +34,7 @@ public class ElixirBubbleParticleOptions extends ElixirParticleOptions {
     }
 
     public ParticleType<ElixirBubbleParticleOptions> getType() {
-        return ElixirumParticleTypes.ELIXIR_BUBBLE.value();
+        return ElixirumParticleTypes.ELIXIR_BUBBLE;
     }
 
     static {

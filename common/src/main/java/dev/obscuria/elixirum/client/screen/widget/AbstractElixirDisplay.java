@@ -59,6 +59,11 @@ public abstract class AbstractElixirDisplay extends HierarchicalWidget {
 
     }
 
+    @Override
+    protected boolean hasContents() {
+        return true;
+    }
+
     protected abstract boolean isSelected();
 
     private float getHighlight() {

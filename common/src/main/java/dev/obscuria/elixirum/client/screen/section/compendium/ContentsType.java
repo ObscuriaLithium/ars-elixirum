@@ -4,6 +4,7 @@ import dev.obscuria.elixirum.client.screen.container.ListContainer;
 import dev.obscuria.elixirum.registry.ElixirumRegistries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Items;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -60,10 +61,11 @@ public enum ContentsType {
     private static void buildCreatingElixir(ListContainer page) {
         page.addChild(new SubText(Component.translatable(CREATING_ELIXIR.getSubId("text_1"))));
         final var steps = page.addChild(new ListContainer().setSeparation(2));
-        steps.addChild(new SubStep('1', Component.translatable(CREATING_ELIXIR.getSubId("step_1"))));
-        steps.addChild(new SubStep('2', Component.translatable(CREATING_ELIXIR.getSubId("step_2"))));
-        steps.addChild(new SubStep('3', Component.translatable(CREATING_ELIXIR.getSubId("step_3"))));
-        steps.addChild(new SubStep('4', Component.translatable(CREATING_ELIXIR.getSubId("step_4"))));
+        steps.addChild(new SubStepItem(Items.CAULDRON, Component.translatable(CREATING_ELIXIR.getSubId("step_1"))));
+        steps.addChild(new SubStepItem(Items.WATER_BUCKET, Component.translatable(CREATING_ELIXIR.getSubId("step_2"))));
+        steps.addChild(new SubStepItem(Items.APPLE, Component.translatable(CREATING_ELIXIR.getSubId("step_3"))));
+        steps.addChild(new SubStepItem(Items.GLASS_BOTTLE, Component.translatable(CREATING_ELIXIR.getSubId("step_4"))));
+        steps.addChild(new SubStepItem(Items.BUCKET, Component.translatable(CREATING_ELIXIR.getSubId("step_5"))));
         page.addChild(new SubText(Component.translatable(CREATING_ELIXIR.getSubId("text_2"))));
     }
 
@@ -84,18 +86,18 @@ public enum ContentsType {
     }
 
     private static void buildDiscoveringEssences(ListContainer page) {
-        page.addChild(new SubText(Component.literal("By default, when wearing the Alchemist Eye, you'll only be able to see if essences are present in an ingredient, not the exact list of essences and their weights. To thoroughly examine an ingredient's properties, you'll need a Brewing Stand, the ingredient to discover, Blaze Powder, and a few Glass Bottles.")));
+        page.addChild(new SubText(Component.translatable(DISCOVERING_ESSENCES.getSubId("text_1"))));
         final var steps = page.addChild(new ListContainer().setSeparation(2));
-        steps.addChild(new SubStep('1', Component.literal("Place the Blaze Powder in the Brewing Stand as fuel.")));
-        steps.addChild(new SubStep('2', Component.literal("Place three Bottles, which will serve as containers for the essences.")));
-        steps.addChild(new SubStep('3', Component.literal("Finally, place the ingredient and wait for the brewing process to complete.")));
-        page.addChild(new SubText(Component.literal("Once brewing is finished, the ingredient will be broken down into its constituent essences. If the ingredient had more than 3 essences, you'll only receive 3 random ones. After collecting the essence bottles from the brewing stand, the ingredient's description will change to display the exact weight of those essences in the future – allowing you to make more informed decisions when choosing ingredients for your elixirs!")));
-        page.addChild(new SubNote(Component.literal("If after the above process, the ingredient description still shows '???' at the end of the list, it means there are still essences in the ingredient that you haven't discovered, and you should repeat the process.")));
+        steps.addChild(new SubStepItem(Items.BLAZE_POWDER, Component.translatable(DISCOVERING_ESSENCES.getSubId("step_1"))));
+        steps.addChild(new SubStepItem(Items.GLASS_BOTTLE, Component.translatable(DISCOVERING_ESSENCES.getSubId("step_2"))));
+        steps.addChild(new SubStepItem(Items.APPLE, Component.translatable(DISCOVERING_ESSENCES.getSubId("step_3"))));
+        page.addChild(new SubText(Component.translatable(DISCOVERING_ESSENCES.getSubId("text_2"))));
+        page.addChild(new SubNote(Component.translatable(DISCOVERING_ESSENCES.getSubId("note_1"))));
     }
 
     private static void buildAffixes(ListContainer page) {
-        page.addChild(new SubText(Component.literal("Affixes are powerful additional properties of ingredients. There are many different types of affixes that provide a percentage bonus to all essences, essences of a specific type, or essences of neighboring ingredients. Affixes that affect neighboring ingredients are the most common, so you should pay attention to them when choosing the order of ingredients for your elixir.")));
-        page.addChild(new SubNote(Component.literal("You can see affixes in the ingredient description using Alchemist Eye, but only if you've already discovered all the essences of that ingredient.")));
+        page.addChild(new SubText(Component.translatable(AFFIXES.getSubId("text_1"))));
+        page.addChild(new SubNote(Component.translatable(AFFIXES.getSubId("note_1"))));
     }
 
     public static void acceptTranslations(BiConsumer<String, String> consumer) {
@@ -114,11 +116,23 @@ public enum ContentsType {
         consumer.accept(CREATING_ELIXIR.getSubId("step_2"), "Fill the cauldron with water and wait for it to boil completely.");
         consumer.accept(CREATING_ELIXIR.getSubId("step_3"), "Add your ingredients one by one. The order of adding ingredients is important and affects the properties of the elixir, but since you haven't discovered the properties of the ingredients yet, you won't be able to get the most out of them, so just add them in a random order.");
         consumer.accept(CREATING_ELIXIR.getSubId("step_4"), "Scoop the elixir into an empty bottle and use it. You might get something useful or poisonous, if you're lucky enough to use a good set of ingredients.");
-        consumer.accept(CREATING_ELIXIR.getSubId("text_2"), "So, you've crafted your first elixir, and I can assume it has a brownish color and some weak or pale effects. This is just the beginning of your alchemist's journey, and to brew truly legendary elixirs, you need to discover the properties of the ingredients and develop the best sequence based on their properties. Unleash the true power of magical alchemy upon this world!");
+        consumer.accept(CREATING_ELIXIR.getSubId("step_5"), "If you want to empty the cauldron without creating an elixir, simply use the empty bucket on it.");
+        consumer.accept(CREATING_ELIXIR.getSubId("text_2"), "So, you've crafted your first elixir, and most likely it has a brownish color and some weak or pale effects. This is just the beginning of your alchemist's journey, and to brew truly legendary elixirs, you need to discover the properties of the ingredients and develop the best sequence based on their properties. Unleash the true power of magical alchemy upon this world!");
 
         consumer.accept(ALL_ESSENCES.getDescriptionId(), "All Essences");
+
         consumer.accept(DISCOVERING_ESSENCES.getDescriptionId(), "Discovering Essences");
+        consumer.accept(DISCOVERING_ESSENCES.getSubId("text_1"), "By default, when wearing the Alchemist Eye, you'll only be able to see if essences are present in an ingredient, not the exact list of essences and their weights. To thoroughly examine an ingredient's properties, you'll need a Brewing Stand, the ingredient to discover, Blaze Powder, and a few Glass Bottles.");
+        consumer.accept(DISCOVERING_ESSENCES.getSubId("step_1"), "Place the Blaze Powder in the Brewing Stand as fuel.");
+        consumer.accept(DISCOVERING_ESSENCES.getSubId("step_2"), "Place three Bottles, which will serve as containers for the essences.");
+        consumer.accept(DISCOVERING_ESSENCES.getSubId("step_3"), "Finally, place the ingredient and wait for the brewing process to complete.");
+        consumer.accept(DISCOVERING_ESSENCES.getSubId("text_2"), "Once brewing is finished, the ingredient will be broken down into its constituent essences. If the ingredient had more than 3 essences, you'll only receive 3 random ones. After collecting the essence bottles from the brewing stand, the ingredient's description will change to display the exact weight of those essences in the future – allowing you to make more informed decisions when choosing ingredients for your elixirs!");
+        consumer.accept(DISCOVERING_ESSENCES.getSubId("note_1"), "If after the above process, the ingredient description still shows '???' at the end of the list, it means there are still essences in the ingredient that you haven't discovered, and you should repeat the process.");
+
         consumer.accept(AFFIXES.getDescriptionId(), "Affixes");
+        consumer.accept(AFFIXES.getSubId("text_1"), "Affixes are powerful additional properties of ingredients. There are many different types of affixes that provide a percentage bonus to all essences, essences of a specific type, or essences of neighboring ingredients. Affixes that affect neighboring ingredients are the most common, so you should pay attention to them when choosing the order of ingredients for your elixir.");
+        consumer.accept(AFFIXES.getSubId("note_1"), "You can see affixes in the ingredient description using Alchemist Eye, but only if you've already discovered all the essences of that ingredient.");
+
         consumer.accept(PALE_AND_WEAK.getDescriptionId(), "Pale & Weak");
         consumer.accept(RECIPES.getDescriptionId(), "Recipes");
         consumer.accept(STYLES.getDescriptionId(), "Styles");

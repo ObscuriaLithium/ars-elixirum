@@ -6,20 +6,16 @@ import dev.obscuria.elixirum.common.particle.ElixirSplashParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import org.jetbrains.annotations.ApiStatus;
 
-import java.util.function.Supplier;
-
-@SuppressWarnings("all")
-@ApiStatus.NonExtendable
 public interface ElixirumParticleTypes {
-    LazyRegister<ParticleType<?>> SOURCE = LazyRegister.create(BuiltInRegistries.PARTICLE_TYPE, Elixirum.MODID);
+    ParticleType<ElixirSplashParticleOptions> ELIXIR_SPLASH = register("elixir_splash", ElixirSplashParticleOptions.TYPE);
+    ParticleType<ElixirBubbleParticleOptions> ELIXIR_BUBBLE = register("elixir_bubble", ElixirBubbleParticleOptions.TYPE);
 
-    LazyValue<ParticleType<?>, ParticleType<ElixirSplashParticleOptions>> ELIXIR_SPLASH = simple("elixir_splash", () -> ElixirSplashParticleOptions.TYPE);
-    LazyValue<ParticleType<?>, ParticleType<ElixirBubbleParticleOptions>> ELIXIR_BUBBLE = simple("elixir_bubble", () -> ElixirBubbleParticleOptions.TYPE);
-
-    private static <TValue extends ParticleOptions> LazyValue<ParticleType<?>, ParticleType<TValue>>
-    simple(final String name, Supplier<ParticleType<TValue>> supplier) {
-        return SOURCE.register(name, supplier);
+    private static <T extends ParticleOptions> ParticleType<T>
+    register(final String name, ParticleType<T> value) {
+        Elixirum.PLATFORM.registerReference(BuiltInRegistries.PARTICLE_TYPE, Elixirum.key(name), () -> value);
+        return value;
     }
+
+    static void setup() {}
 }

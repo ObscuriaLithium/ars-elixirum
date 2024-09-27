@@ -45,6 +45,11 @@ public final class ElixirumScreen extends Screen {
                 rect.isMouseOver(mouseX, mouseY) ? 0xFF006FDE : 0xFFDE6F00);
     }
 
+    public static void update() {
+        if (Minecraft.getInstance().screen instanceof ElixirumScreen elixirumScreen)
+            elixirumScreen.findSection(selectedSection).ifPresent(AbstractSection::updateSection);
+    }
+
     public int left(int offset) {
         return 23 + offset;
     }
@@ -104,6 +109,12 @@ public final class ElixirumScreen extends Screen {
     }
 
     @Override
+    public void onClose() {
+        super.onClose();
+        ClientAlchemy.getProfile().syncWithServer();
+    }
+
+    @Override
     protected void renderMenuBackground(GuiGraphics graphics) {
         super.renderMenuBackground(graphics);
         graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), 0xBF090013);
@@ -116,13 +127,13 @@ public final class ElixirumScreen extends Screen {
         this.addRenderableWidget(new RootRecent(height / 2, this::onTabPressed));
         this.addRenderableWidget(new RootCollection(height / 2, this::onTabPressed));
         this.addRenderableWidget(new RootCompendium(height / 2, this::onTabPressed));
-        this.findTab(selectedSection).ifPresent(section -> {
-            section.initTab(this);
+        this.findSection(selectedSection).ifPresent(section -> {
+            section.initSection(this);
             section.setSelected(true);
         });
     }
 
-    private Optional<AbstractSection> findTab(AbstractSection.Type type) {
+    private Optional<AbstractSection> findSection(AbstractSection.Type type) {
         return this.children().stream()
                 .filter(AbstractSection.class::isInstance)
                 .map(AbstractSection.class::cast)
@@ -137,8 +148,8 @@ public final class ElixirumScreen extends Screen {
     }
 
     static {
-        MUSIC = new Music(ElixirumSounds.MUSIC_ELIXIRUM.holder(), 600, 1200, false);
-        selectedSection = ClientAlchemy.getProfile().isEmpty()
+        MUSIC = new Music(ElixirumSounds.MUSIC_ELIXIRUM, 600, 1200, false);
+        selectedSection = ClientAlchemy.getCache().getRecentElixirs().isEmpty()
                 ? AbstractSection.Type.COMPENDIUM
                 : AbstractSection.Type.RECENT;
     }

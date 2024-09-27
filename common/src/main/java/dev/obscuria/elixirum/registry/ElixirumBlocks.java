@@ -2,18 +2,32 @@ package dev.obscuria.elixirum.registry;
 
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.block.GlassCauldronBlock;
+import dev.obscuria.elixirum.common.block.PotionShelfBlock;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
-public interface ElixirumBlocks {
-    LazyRegister<Block> SOURCE = LazyRegister.create(BuiltInRegistries.BLOCK, Elixirum.MODID);
+public enum ElixirumBlocks {
+    GLASS_CAULDRON("glass_cauldron", GlassCauldronBlock::new),
+    POTION_SHELF("potion_shelf", PotionShelfBlock::new);
 
-    LazyValue<Block, GlassCauldronBlock> GLASS_CAULDRON = simple("glass_cauldron", GlassCauldronBlock::new);
+    private final Holder<Block> holder;
 
-    private static <TValue extends Block> LazyValue<Block, TValue>
-    simple(final String name, Supplier<TValue> supplier) {
-        return SOURCE.register(name, supplier);
+    ElixirumBlocks(String name, Supplier<Block> supplier) {
+        this.holder = Elixirum.PLATFORM.registerReference(
+                BuiltInRegistries.BLOCK, Elixirum.key(name),
+                supplier);
     }
+
+    public Holder<Block> holder() {
+        return this.holder;
+    }
+
+    public Block value() {
+        return this.holder.value();
+    }
+
+    public static void init() {}
 }

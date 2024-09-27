@@ -6,18 +6,20 @@ import dev.obscuria.elixirum.client.screen.tool.ClickAction;
 import dev.obscuria.elixirum.client.screen.tool.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.container.GridContainer;
 import dev.obscuria.elixirum.client.screen.widget.AbstractElixirDisplay;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirHolder;
 import dev.obscuria.elixirum.registry.ElixirumSounds;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 final class SubElixirsGrid extends GridContainer {
 
     public SubElixirsGrid() {
-        for (var elixir : ClientAlchemy.getRecentElixirs()) {
-            this.addChild(new Entry(elixir)
-                    .setClickSound(ElixirumSounds.UI_CLICK_2.holder())
+        for (var holder : ClientAlchemy.getCache().getRecentElixirs()) {
+            this.addChild(new Entry(holder)
+                    .setClickSound(ElixirumSounds.UI_CLICK_2)
                     .setClickAction(ClickAction.<Entry>left(widget -> {
-                        RootRecent.select(widget.getElixir());
+                        RootRecent.select(widget.getHolder());
                         return true;
                     })));
         }
@@ -25,27 +27,27 @@ final class SubElixirsGrid extends GridContainer {
 
     static final class Entry extends AbstractElixirDisplay {
         private static final ResourceLocation CHECK_MARK = Elixirum.key("icon/check_mark");
-        private final ClientAlchemy.RecentElixir elixir;
+        private final ElixirHolder holder;
 
-        public Entry(ClientAlchemy.RecentElixir elixir) {
-            super(elixir.stack());
-            this.elixir = elixir;
+        public Entry(ElixirHolder holder) {
+            super(holder.getCachedStack().orElse(ItemStack.EMPTY));
+            this.holder = holder;
         }
 
-        public ClientAlchemy.RecentElixir getElixir() {
-            return this.elixir;
+        public ElixirHolder getHolder() {
+            return this.holder;
         }
 
         @Override
         public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
             super.render(graphics, transform, mouseX, mouseY);
-            if (!elixir.saved().get()) return;
+            if (!ClientAlchemy.getProfile().isOnCollection(holder.getRecipe())) return;
             graphics.blitSprite(CHECK_MARK, getRight() - 6, getBottom() - 6, 6, 6);
         }
 
         @Override
         protected boolean isSelected() {
-            return RootRecent.getSelected().map(entry -> entry == this.elixir).orElse(false);
+            return RootRecent.getSelectedHolder().map(holder::isSame).orElse(false);
         }
     }
 }

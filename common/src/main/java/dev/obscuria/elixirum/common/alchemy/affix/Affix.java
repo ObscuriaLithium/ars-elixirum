@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.alchemy.affix;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.common.alchemy.elixir.ElixirProcessor;
+import dev.obscuria.elixirum.common.alchemy.brewing.BrewingProcessor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,7 +17,7 @@ public record Affix(AffixType type, double modifier) {
         return Component.translatable(type.getDescriptionId(), (modifier < 0 ? "-" : "+") + absMod);
     }
 
-    public void apply(ElixirProcessor processor, int index) {
+    public void apply(BrewingProcessor processor, int index) {
         this.type.apply(this, processor, index);
     }
 

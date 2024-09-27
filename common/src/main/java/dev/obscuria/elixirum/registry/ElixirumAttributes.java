@@ -1,22 +1,38 @@
 package dev.obscuria.elixirum.registry;
 
 import dev.obscuria.elixirum.Elixirum;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 
-import java.util.function.Supplier;
+import java.util.function.BiConsumer;
 
-public interface ElixirumAttributes {
-    LazyRegister<Attribute> SOURCE = LazyRegister.create(BuiltInRegistries.ATTRIBUTE, Elixirum.MODID);
+public enum ElixirumAttributes {
+    POTION_MASTERY("potion_mastery"),
+    POTION_IMMUNITY("potion_immunity");
 
-    LazyValue<Attribute, Attribute> POTION_MASTERY = simple("potion_mastery",
-            () -> new RangedAttribute("attribute.elixirum.potion_mastery", 0, 0, 3600));
-    LazyValue<Attribute, Attribute> POTION_IMMUNITY = simple("potion_immunity",
-            () -> new RangedAttribute("attribute.elixirum.potion_immunity", 0, 0, 3600));
+    private final Holder<Attribute> holder;
 
-    private static LazyValue<Attribute, Attribute>
-    simple(final String name, Supplier<Attribute> supplier) {
-        return SOURCE.register(name, supplier);
+    ElixirumAttributes(String name) {
+        final var description = "attribute.elixirum.%s".formatted(name);
+        this.holder = Elixirum.PLATFORM.registerReference(
+                BuiltInRegistries.ATTRIBUTE, Elixirum.key(name),
+                () -> new RangedAttribute(description, 0, 0, 3600));
     }
+
+    public Holder<Attribute> holder() {
+        return this.holder;
+    }
+
+    public Attribute value() {
+        return this.holder.value();
+    }
+
+    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+        consumer.accept(POTION_MASTERY.value().getDescriptionId(), "Potion Mastery");
+        consumer.accept(POTION_IMMUNITY.value().getDescriptionId(), "Potion Immunity");
+    }
+
+    public static void init() {}
 }

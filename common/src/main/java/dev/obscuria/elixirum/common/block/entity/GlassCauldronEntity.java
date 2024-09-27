@@ -2,8 +2,9 @@ package dev.obscuria.elixirum.common.block.entity;
 
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.ElixirumClient;
+import dev.obscuria.elixirum.client.ClientAlchemy;
 import dev.obscuria.elixirum.common.ElixirumTags;
-import dev.obscuria.elixirum.common.alchemy.elixir.ElixirMixer;
+import dev.obscuria.elixirum.common.alchemy.brewing.IngredientMixer;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.common.particle.ElixirBubbleParticleOptions;
 import dev.obscuria.elixirum.common.particle.ElixirSplashParticleOptions;
@@ -11,6 +12,7 @@ import dev.obscuria.elixirum.registry.ElixirumBlockEntityTypes;
 import dev.obscuria.elixirum.registry.ElixirumDataComponents;
 import dev.obscuria.elixirum.registry.ElixirumItems;
 import dev.obscuria.elixirum.registry.ElixirumRegistries;
+import dev.obscuria.elixirum.server.ServerAlchemy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -21,10 +23,12 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -32,19 +36,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class GlassCauldronEntity extends BlockEntity {
-    private ElixirMixer mixer = new ElixirMixer();
+    private IngredientMixer mixer = new IngredientMixer();
     private boolean filled = false;
     private double temperature = 0f;
     private float rotation;
     private float rotationO;
 
     public GlassCauldronEntity(BlockPos pos, BlockState state) {
-        super(ElixirumBlockEntityTypes.GLASS_CAULDRON.value(), pos, state);
+        super(ElixirumBlockEntityTypes.GLASS_CAULDRON, pos, state);
     }
 
     public boolean isEmpty() {
@@ -88,11 +93,17 @@ public final class GlassCauldronEntity extends BlockEntity {
     public ItemStack brew(Player player) {
         final var contents = this.mixer.getResult(essenceGetter());
         if (contents.isEmpty()) return ItemStack.EMPTY;
-        final var elixir = ElixirumItems.ELIXIR.value().getDefaultInstance();
-        elixir.set(ElixirumDataComponents.ELIXIR_CONTENTS.value(), contents);
-        if (player.level().isClientSide)
-            ElixirumClient.addRecentElixir(elixir, mixer.getRecipe());
-        return elixir;
+        final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
+        stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, contents);
+        if (player instanceof ServerPlayer serverPlayer) {
+            ServerAlchemy.getProfile(serverPlayer)
+                    .searchInCollection(mixer.getRecipe())
+                    .ifPresent(holder -> holder.applyAppearance(stack));
+        } else {
+            ClientAlchemy.getCache().saveRecent(mixer.getRecipe());
+        }
+
+        return stack;
     }
 
     public float getRotation(float delta) {
@@ -141,18 +152,17 @@ public final class GlassCauldronEntity extends BlockEntity {
                     break;
         if (!level.isClientSide) return;
         entity.rotate(0.01f + (float) entity.temperature * 0.1f);
-//        if (entity.isFilled() && entity.getTemperature() > 0f)
-//            WunschpunschClient.playBoilingSound(entity);
     }
 
     public boolean addIngredient(ItemStack stack) {
         if (this.level == null) return false;
-        if (this.mixer.append(stack)) {
-            if (!level.isClientSide) {
+        if (this.mixer.append(stack.getItem())) {
+            if (level.isClientSide) {
+                this.createSplashParticles(20);
+            } else {
+                stack.shrink(1);
                 this.setChanged();
                 this.updateClients();
-            } else {
-                this.createSplashParticles(20);
             }
             return true;
         }
@@ -182,7 +192,7 @@ public final class GlassCauldronEntity extends BlockEntity {
             this.temperature = tag.getDouble(TAG_TEMPERATURE);
         if (tag.contains(TAG_ELIXIR_MIXER, Tag.TAG_COMPOUND)) {
             final var registryOps = RegistryOps.create(NbtOps.INSTANCE, provider);
-            ElixirMixer.CODEC.decode(registryOps, tag.getCompound(TAG_ELIXIR_MIXER))
+            IngredientMixer.CODEC.decode(registryOps, tag.getCompound(TAG_ELIXIR_MIXER))
                     .ifSuccess(result -> this.mixer = result.getFirst())
                     .ifError(error -> {
                         Elixirum.LOG.warn("Failed to decode ElixirMixer for cauldron");
@@ -197,12 +207,21 @@ public final class GlassCauldronEntity extends BlockEntity {
         tag.putBoolean(TAG_FILLED, this.filled);
         tag.putDouble(TAG_TEMPERATURE, this.temperature);
         final var registryOps = RegistryOps.create(NbtOps.INSTANCE, provider);
-        ElixirMixer.CODEC.encodeStart(registryOps, this.mixer)
+        IngredientMixer.CODEC.encodeStart(registryOps, this.mixer)
                 .ifSuccess(result -> tag.put(TAG_ELIXIR_MIXER, result))
                 .ifError(error -> {
                     Elixirum.LOG.warn("Failed to encode ElixirMixer for cauldron");
                     Elixirum.LOG.warn(error.message());
                 });
+    }
+
+    private void consumeNearbyIngredients() {
+        if (level == null) return;
+        for (var entity : level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()))) {
+            final var stack = entity.getItem();
+            if (this.addIngredient(stack))
+                entity.setItem(stack);
+        }
     }
 
     private void createSplashParticles(int count) {
@@ -310,6 +329,7 @@ public final class GlassCauldronEntity extends BlockEntity {
         private static boolean tickHeating(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity) {
             entity.addTemperature(0.002);
             if (level.isClientSide) {
+                ElixirumClient.playBoilingSound(entity);
                 final var random = level.random.nextFloat();
                 if (random <= 0.2f * entity.getTemperature())
                     entity.createSplashParticles(1);
@@ -318,11 +338,11 @@ public final class GlassCauldronEntity extends BlockEntity {
         }
 
         private static boolean tickBoiling(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity) {
+            entity.consumeNearbyIngredients();
             if (level.isClientSide) {
+                ElixirumClient.playBoilingSound(entity);
                 entity.createSplashParticles(1);
                 entity.createBubbleParticles(1);
-            } else {
-                //entity.consumeNearbyIngredients();
             }
             return true;
         }

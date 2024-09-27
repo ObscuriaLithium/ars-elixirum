@@ -25,6 +25,10 @@ public abstract class AbstractSection extends AbstractButton {
         this.action = action;
     }
 
+    public abstract void initSection(ElixirumScreen screen);
+
+    public abstract void updateSection();
+
     public final Type getType() {
         return this.type;
     }
@@ -33,8 +37,6 @@ public abstract class AbstractSection extends AbstractButton {
         this.selected = value;
     }
 
-    public abstract void initTab(ElixirumScreen screen);
-
     @Override
     public final void onPress() {
         this.action.accept(this);
@@ -42,7 +44,7 @@ public abstract class AbstractSection extends AbstractButton {
 
     @Override
     public final void playDownSound(SoundManager manager) {
-        manager.play(SimpleSoundInstance.forUI(ElixirumSounds.UI_BELL.value(), 1.0F));
+        manager.play(SimpleSoundInstance.forUI(ElixirumSounds.UI_BELL, 1.0F));
     }
 
     @Override

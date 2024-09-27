@@ -76,7 +76,7 @@ public final class IngredientProperties {
         return create(result, affixes);
     }
 
-    public IngredientProperties exclude(Holder<Essence> essence) {
+    public IngredientProperties exclude(ResourceLocation essence) {
         var result = this.getEssences();
         result.removeInt(essence);
         return create(result, affixes);

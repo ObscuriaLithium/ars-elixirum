@@ -1,4 +1,45 @@
 {
+  "item.bottle_put": {
+    "sounds": [
+      { "name": "elixirum:item/bottle_put_1", "pitch": 0.9 },
+      { "name": "elixirum:item/bottle_put_1", "pitch": 1.0 },
+      { "name": "elixirum:item/bottle_put_1", "pitch": 1.1 },
+      { "name": "elixirum:item/bottle_put_2", "pitch": 0.9 },
+      { "name": "elixirum:item/bottle_put_2", "pitch": 1.0 },
+      { "name": "elixirum:item/bottle_put_2", "pitch": 1.1 }
+    ]
+  },
+  "item.bottle_shake": {
+    "sounds": [
+      { "name": "elixirum:item/bottle_shake", "pitch": 0.9 },
+      { "name": "elixirum:item/bottle_shake", "pitch": 1.0 },
+      { "name": "elixirum:item/bottle_shake", "pitch": 1.1 }
+    ]
+  },
+  "item.bottle_slosh": {
+    "sounds": [
+      { "name": "elixirum:item/bottle_slosh_1", "pitch": 0.9 },
+      { "name": "elixirum:item/bottle_slosh_1", "pitch": 1.0 },
+      { "name": "elixirum:item/bottle_slosh_1", "pitch": 1.1 },
+      { "name": "elixirum:item/bottle_slosh_2", "pitch": 0.9 },
+      { "name": "elixirum:item/bottle_slosh_2", "pitch": 1.0 },
+      { "name": "elixirum:item/bottle_slosh_2", "pitch": 1.1 }
+    ]
+  },
+  "item.bottle_open": {
+    "sounds": [
+      "elixirum:item/bottle_open_1",
+      "elixirum:item/bottle_open_2",
+      "elixirum:item/bottle_open_3",
+      "elixirum:item/bottle_open_4",
+      "elixirum:item/bottle_open_5"
+    ]
+  },
+  "block.cauldron_boil": {
+    "sounds": [
+      "elixirum:block/cauldron_boil"
+    ]
+  },
   "ui.click_1": {
     "sounds": [
       { "name": "elixirum:ui/click_1", "pitch": 0.9 },

@@ -3,15 +3,16 @@ package dev.obscuria.elixirum.client.screen.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.client.ClientAlchemy;
-import dev.obscuria.elixirum.client.screen.tool.ClickAction;
 import dev.obscuria.elixirum.client.screen.ElixirumScreen;
-import dev.obscuria.elixirum.client.screen.tool.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.HierarchicalWidget;
 import dev.obscuria.elixirum.client.screen.container.GridContainer;
-import dev.obscuria.elixirum.common.alchemy.elixir.ElixirCap;
-import dev.obscuria.elixirum.common.alchemy.elixir.ElixirShape;
+import dev.obscuria.elixirum.client.screen.tool.ClickAction;
+import dev.obscuria.elixirum.client.screen.tool.GlobalTransform;
+import dev.obscuria.elixirum.client.screen.tool.Property;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirHolder;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyle;
-import dev.obscuria.elixirum.registry.ElixirumDataComponents;
+import dev.obscuria.elixirum.common.alchemy.style.Cap;
+import dev.obscuria.elixirum.common.alchemy.style.Shape;
 import dev.obscuria.elixirum.registry.ElixirumSounds;
 import dev.obscuria.elixirum.util.TextWrapper;
 import net.minecraft.ChatFormatting;
@@ -19,7 +20,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,31 +28,31 @@ import java.util.stream.Stream;
 
 public abstract class StylePicker<T> extends GridContainer {
     private static final ResourceLocation LOCKED = Elixirum.key("icon/locked");
-    private @Nullable ItemStack stack;
+    private @Nullable ElixirHolder holder;
     private @Nullable T selected;
 
     public StylePicker() {
         this.values().forEach(value -> this.addChild(new Element(value))
-                .setClickSound(ElixirumSounds.UI_CLICK_2.holder())
+                .setClickSound(ElixirumSounds.UI_CLICK_2)
                 .setClickAction(ClickAction.<Element>left(slot -> {
-                    if (stack == null) return false;
+                    if (holder == null) return false;
                     if (this.isLocked(slot.value)) return false;
                     this.selected = slot.value;
-                    this.onSelect(stack, slot.value);
+                    this.onSelect(holder, slot.value);
                     return true;
                 })));
     }
 
-    public void setStack(ItemStack stack) {
-        this.stack = stack;
-        this.selected = this.getInitialValue(stack);
+    public void bound(ElixirHolder holder) {
+        this.holder = holder;
+        this.selected = this.getFromStyle(holder.getStyle().orElse(ElixirStyle.DEFAULT));
     }
 
     protected abstract Stream<T> values();
 
-    protected abstract void onSelect(ItemStack stack, T value);
+    protected abstract void onSelect(ElixirHolder holder, T value);
 
-    protected abstract T getInitialValue(ItemStack stack);
+    protected abstract T getFromStyle(ElixirStyle style);
 
     protected abstract void renderElement(GuiGraphics graphics, int x, int y, T value);
 
@@ -72,27 +72,30 @@ public abstract class StylePicker<T> extends GridContainer {
         };
     }
 
-    public static final class Cap extends StylePicker<ElixirCap> {
+    public static final class CapPicker extends StylePicker<Cap> {
+        private static boolean cache = false;
 
-        @Override
-        protected Stream<ElixirCap> values() {
-            return Stream.of(ElixirCap.values());
+        public static Property<Boolean> getProperty() {
+            return Property.create(() -> cache, value -> cache = value);
         }
 
         @Override
-        protected void onSelect(ItemStack stack, ElixirCap value) {
-            stack.set(
-                    ElixirumDataComponents.ELIXIR_STYLE.value(),
-                    ElixirStyle.get(stack).withCap(value));
+        protected Stream<Cap> values() {
+            return Stream.of(Cap.values());
         }
 
         @Override
-        protected ElixirCap getInitialValue(ItemStack stack) {
-            return ElixirStyle.getCap(stack);
+        protected void onSelect(ElixirHolder holder, Cap value) {
+            holder.setStyle(holder.getStyle().orElse(ElixirStyle.DEFAULT).withCap(value));
         }
 
         @Override
-        protected void renderElement(GuiGraphics graphics, int x, int y, ElixirCap value) {
+        protected Cap getFromStyle(ElixirStyle style) {
+            return style.cap();
+        }
+
+        @Override
+        protected void renderElement(GuiGraphics graphics, int x, int y, Cap value) {
             final var texture = Elixirum.key("textures/item/elixir/" + value.getTexture() + ".png");
             graphics.pose().pushPose();
             graphics.pose().translate(x + 6.75f, y + 7.5f, 0f);
@@ -102,19 +105,19 @@ public abstract class StylePicker<T> extends GridContainer {
         }
 
         @Override
-        protected boolean isLocked(ElixirCap value) {
+        protected boolean isLocked(Cap value) {
             return value.isLocked(
                     ClientAlchemy.getProfile().getTotalDiscoveredEssences(),
                     ClientAlchemy.getIngredients().getTotalEssences());
         }
 
         @Override
-        protected Component getElementName(ElixirCap value) {
+        protected Component getElementName(Cap value) {
             return value.getDisplayName();
         }
 
         @Override
-        protected List<? extends Component> getLockedTooltip(ElixirCap value) {
+        protected List<? extends Component> getLockedTooltip(Cap value) {
             final var required = value.getRequiredProgress(ClientAlchemy.getIngredients().getTotalEssences());
             final var discovered = ClientAlchemy.getProfile().getTotalDiscoveredEssences();
             final var wanting = required - discovered;
@@ -125,45 +128,48 @@ public abstract class StylePicker<T> extends GridContainer {
         }
     }
 
-    public static final class Shape extends StylePicker<ElixirShape> {
+    public static final class ShapePicker extends StylePicker<Shape> {
+        private static boolean cache = false;
 
-        @Override
-        protected Stream<ElixirShape> values() {
-            return Stream.of(ElixirShape.values());
+        public static Property<Boolean> getProperty() {
+            return Property.create(() -> cache, value -> cache = value);
         }
 
         @Override
-        protected void onSelect(ItemStack stack, ElixirShape value) {
-            stack.set(
-                    ElixirumDataComponents.ELIXIR_STYLE.value(),
-                    ElixirStyle.get(stack).withShape(value));
+        protected Stream<Shape> values() {
+            return Stream.of(Shape.values());
         }
 
         @Override
-        protected ElixirShape getInitialValue(ItemStack stack) {
-            return ElixirStyle.getShape(stack);
+        protected void onSelect(ElixirHolder holder, Shape value) {
+            holder.setStyle(holder.getStyle().orElse(ElixirStyle.DEFAULT).withShape(value));
         }
 
         @Override
-        protected void renderElement(GuiGraphics graphics, int x, int y, ElixirShape value) {
+        protected Shape getFromStyle(ElixirStyle style) {
+            return style.shape();
+        }
+
+        @Override
+        protected void renderElement(GuiGraphics graphics, int x, int y, Shape value) {
             final var texture = Elixirum.key("textures/item/elixir/" + value.getTexture() + ".png");
             graphics.blit(texture, x - 1, y - 3, 0, 0, 16, 16, 16, 16);
         }
 
         @Override
-        protected boolean isLocked(ElixirShape value) {
+        protected boolean isLocked(Shape value) {
             return value.isLocked(
                     ClientAlchemy.getProfile().getTotalDiscoveredEssences(),
                     ClientAlchemy.getIngredients().getTotalEssences());
         }
 
         @Override
-        protected Component getElementName(ElixirShape value) {
+        protected Component getElementName(Shape value) {
             return value.getDisplayName();
         }
 
         @Override
-        protected List<? extends Component> getLockedTooltip(ElixirShape value) {
+        protected List<? extends Component> getLockedTooltip(Shape value) {
             final var required = value.getRequiredProgress(ClientAlchemy.getIngredients().getTotalEssences());
             final var discovered = ClientAlchemy.getProfile().getTotalDiscoveredEssences();
             final var wanting = required - discovered;

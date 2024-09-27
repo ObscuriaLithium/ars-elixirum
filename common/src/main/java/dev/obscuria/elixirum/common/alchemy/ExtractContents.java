@@ -22,7 +22,7 @@ public record ExtractContents(Optional<Item> source, Holder<Essence> essenceHold
     public static final StreamCodec<RegistryFriendlyByteBuf, ExtractContents> STREAM_CODEC;
 
     public static Optional<ExtractContents> get(ItemStack stack) {
-        return Optional.ofNullable(stack.get(ElixirumDataComponents.EXTRACT_CONTENTS.value()));
+        return Optional.ofNullable(stack.get(ElixirumDataComponents.EXTRACT_CONTENTS));
     }
 
     public static int getOverlayColor(ItemStack stack, int layer) {

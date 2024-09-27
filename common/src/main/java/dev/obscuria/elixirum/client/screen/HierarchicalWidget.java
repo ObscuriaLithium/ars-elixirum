@@ -7,7 +7,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import org.apache.commons.compress.utils.Lists;
@@ -20,7 +19,7 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     protected static final int UPDATE_BY_HEIGHT = 1 << 1;
     private final List<HierarchicalWidget> children = Lists.newArrayList();
     private @Nullable ClickAction<?> clickAction;
-    private @Nullable Holder<SoundEvent> clickSound;
+    private @Nullable SoundEvent clickSound;
     private boolean changed = true;
     private int updateFlags;
 
@@ -33,6 +32,7 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     protected abstract void reorganize();
 
     public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button) {
+        if (!visible) return false;
         if (transform.isMouseOver(mouseX, mouseY)
                 && clickAction != null
                 && clickAction.canConsume(button)
@@ -52,6 +52,7 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     }
 
     public boolean mouseScrolled(GlobalTransform transform, double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (!visible) return false;
         for (var child : children())
             if (child.mouseScrolled(transform.child(child), mouseX, mouseY, scrollX, scrollY))
                 return true;
@@ -73,9 +74,53 @@ public abstract class HierarchicalWidget extends AbstractWidget {
         return this;
     }
 
-    public final HierarchicalWidget setClickSound(Holder<SoundEvent> sound) {
+    public final HierarchicalWidget setClickSound(SoundEvent sound) {
         this.clickSound = sound;
         return this;
+    }
+
+    public final void setVisible(boolean value) {
+        this.visible = value;
+        for (var child : children())
+            child.setVisible(value);
+    }
+
+    @Override
+    public final void setX(int value) {
+        final var difference = value - getX();
+        super.setX(value);
+        for (var child : children())
+            child.setX(child.getX() + difference);
+    }
+
+    @Override
+    public final void setY(int value) {
+        final var difference = value - getY();
+        super.setY(value);
+        for (var child : children())
+            child.setY(child.getY() + difference);
+    }
+
+    @Override
+    public final void setWidth(int width) {
+        if (this.hasUpdateFlag(UPDATE_BY_WIDTH) && getWidth() != width)
+            this.setChanged(true);
+        super.setWidth(width);
+    }
+
+    @Override
+    public final void setHeight(int height) {
+        if (this.hasUpdateFlag(UPDATE_BY_HEIGHT) && getHeight() != height)
+            this.setChanged(true);
+        super.setHeight(height);
+    }
+
+    protected boolean hasContents() {
+        return false;
+    }
+
+    protected final boolean hasVisibleContents() {
+        return (visible && hasContents()) || children().stream().anyMatch(HierarchicalWidget::hasVisibleContents);
     }
 
     protected final void setUpdateFlags(int flags) {
@@ -109,6 +154,7 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     }
 
     protected final void defaultRender(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+        if (!visible) return;
         for (var child : children())
             child.render(graphics, transform.child(child), mouseX, mouseY);
     }
@@ -116,7 +162,7 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     protected final void playClickSound() {
         if (clickSound == null) return;
         final var manager = Minecraft.getInstance().getSoundManager();
-        manager.play(SimpleSoundInstance.forUI(clickSound.value(), 1.0F));
+        manager.play(SimpleSoundInstance.forUI(clickSound, 1.0F));
     }
 
     @Override
@@ -124,34 +170,4 @@ public abstract class HierarchicalWidget extends AbstractWidget {
 
     @Override
     protected final void updateWidgetNarration(NarrationElementOutput output) {}
-
-    @Override
-    public void setX(int value) {
-        final var difference = value - getX();
-        super.setX(value);
-        for (var child : children())
-            child.setX(child.getX() + difference);
-    }
-
-    @Override
-    public void setY(int value) {
-        final var difference = value - getY();
-        super.setY(value);
-        for (var child : children())
-            child.setY(child.getY() + difference);
-    }
-
-    @Override
-    public void setWidth(int width) {
-        if (this.hasUpdateFlag(UPDATE_BY_WIDTH) && getWidth() != width)
-            this.setChanged(true);
-        super.setWidth(width);
-    }
-
-    @Override
-    public void setHeight(int height) {
-        if (this.hasUpdateFlag(UPDATE_BY_HEIGHT) && getHeight() != height)
-            this.setChanged(true);
-        super.setHeight(height);
-    }
 }

@@ -6,8 +6,10 @@ import dev.obscuria.elixirum.client.screen.container.PanelContainer;
 import dev.obscuria.elixirum.client.screen.container.ScrollContainer;
 import dev.obscuria.elixirum.client.screen.widget.Text;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 final class PanelCollection extends PanelContainer {
+    private @Nullable SubElixirsGrid elixirsGrid;
 
     public PanelCollection(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -17,7 +19,11 @@ final class PanelCollection extends PanelContainer {
                 .setStyle(Elixirum.STYLE)
                 .setCentered(true)
                 .setScale(1.2f));
-        final var scroll = this.setContent(new ScrollContainer());
-        scroll.addChild(new SubElixirsGrid());
+        final var scroll = this.setContent(new ScrollContainer(Component.literal("Collection is empty")));
+        this.elixirsGrid = scroll.addChild(new SubElixirsGrid());
+    }
+
+    public void update() {
+        if (elixirsGrid != null) elixirsGrid.update();
     }
 }

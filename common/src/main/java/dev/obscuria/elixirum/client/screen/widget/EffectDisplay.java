@@ -3,17 +3,17 @@ package dev.obscuria.elixirum.client.screen.widget;
 import dev.obscuria.elixirum.client.screen.ElixirumScreen;
 import dev.obscuria.elixirum.client.screen.HierarchicalWidget;
 import dev.obscuria.elixirum.client.screen.tool.GlobalTransform;
-import dev.obscuria.elixirum.common.alchemy.elixir.ElixirEffect;
+import dev.obscuria.elixirum.common.alchemy.PackedEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.network.chat.Component;
 
 public final class EffectDisplay extends HierarchicalWidget {
-    private final ElixirEffect effect;
+    private final PackedEffect effect;
     private MultiLineLabel label;
 
-    public EffectDisplay(ElixirEffect effect) {
+    public EffectDisplay(PackedEffect effect) {
         super(0, 0, 0, 0, Component.empty());
         this.setUpdateFlags(UPDATE_BY_WIDTH);
         this.effect = effect;

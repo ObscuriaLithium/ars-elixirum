@@ -18,7 +18,8 @@ public final class RegenerateCommand {
 
     private static int regenerate(CommandSourceStack source) {
         ServerAlchemy.getIngredients().regenerate();
-        ServerAlchemy.syncItemEssences();
+        ServerAlchemy.syncIngredients();
+        ServerAlchemy.validateProfiles();
         source.sendSuccess(() -> Component.literal("Regenerating..."), true);
         return 1;
     }

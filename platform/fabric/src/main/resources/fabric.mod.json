@@ -16,13 +16,13 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "dev.obscuria.elixirum.FabricElixirum"
+            "dev.obscuria.elixirum.fabric.FabricElixirum"
         ],
         "client": [
-            "dev.obscuria.elixirum.FabricElixirumClient"
+            "dev.obscuria.elixirum.fabric.FabricElixirumClient"
         ],
         "fabric-datagen": [
-            "dev.obscuria.elixirum.datagen.ElixirumDataGenerator"
+            "dev.obscuria.elixirum.fabric.datagen.ElixirumDataGenerator"
         ]
     },
     "mixins": [

@@ -1,15 +1,16 @@
 package dev.obscuria.elixirum.platform;
 
-import com.google.common.collect.Sets;
 import com.mojang.serialization.MapCodec;
 import dev.obscuria.elixirum.network.ClientboundItemEssencesPacket;
 import dev.obscuria.elixirum.network.NeoClientboundItemEssencesPayload;
-import dev.obscuria.elixirum.registry.LazyRegister;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,15 +21,14 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class NeoPlatform implements IPlatform {
-    public static final Set<LazyRegister<?>> registers = Sets.newHashSet();
 
     @Override
-    public <TValue> void register(LazyRegister<TValue> register) {
-        registers.add(register);
+    public <T> Holder<T> registerReference(Registry<T> registry, ResourceLocation id, Supplier<T> value) {
+        return null;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class ElixirSplashParticleOptions extends ElixirParticleOptions {
     }
 
     public ParticleType<ElixirSplashParticleOptions> getType() {
-        return ElixirumParticleTypes.ELIXIR_SPLASH.value();
+        return ElixirumParticleTypes.ELIXIR_SPLASH;
     }
 
     static {

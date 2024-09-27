@@ -1,7 +1,10 @@
 package dev.obscuria.elixirum.common.alchemy.elixir;
 
 import com.mojang.serialization.Codec;
+import dev.obscuria.elixirum.common.alchemy.brewing.IngredientMixer;
+import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import net.minecraft.Util;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,6 +23,14 @@ public record ElixirRecipe(@Unmodifiable List<Item> ingredients) {
 
     public boolean isEmpty() {
         return ingredients.isEmpty();
+    }
+
+    public ElixirHolder asHolder() {
+        return new ElixirHolder(this);
+    }
+
+    public ElixirContents brew(HolderGetter<Essence> getter) {
+        return new IngredientMixer(this).getResult(getter);
     }
 
     public ElixirRecipe with(Item item) {

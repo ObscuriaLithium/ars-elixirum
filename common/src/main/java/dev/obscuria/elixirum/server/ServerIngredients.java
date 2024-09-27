@@ -1,20 +1,20 @@
 package dev.obscuria.elixirum.server;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.JsonOps;
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.common.alchemy.affix.Affix;
 import dev.obscuria.elixirum.common.alchemy.affix.AffixType;
-import dev.obscuria.elixirum.common.alchemy.essence.*;
+import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.common.alchemy.ingredient.IngredientProperties;
 import dev.obscuria.elixirum.common.alchemy.ingredient.Ingredients;
 import dev.obscuria.elixirum.network.ClientboundItemEssencesPacket;
 import dev.obscuria.elixirum.registry.ElixirumRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -22,13 +22,18 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.FlowerBlock;
+import org.apache.commons.compress.utils.Lists;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class ServerIngredients extends Ingredients {
     private static final ImmutableList<Item> BUILTIN_BLACKLIST;
+    private static final ImmutableMap<GenerationScenario, Integer> SCENARIOS;
 
     void syncWithPlayer(ServerPlayer player) {
         Elixirum.PLATFORM.sendToPlayer(player, ClientboundItemEssencesPacket.create(this.pack()));
@@ -126,24 +131,10 @@ public final class ServerIngredients extends Ingredients {
                         .findFirst().map(preset -> preset.build(access)));
     }
 
-    private IngredientProperties generateProperties(RegistryAccess access, RandomSource random) {
-        final var essenceCount = 1 + random.nextInt(3);
-        var holders = access.registry(ElixirumRegistries.ESSENCE)
-                .map(registry -> registry.holders().toList())
-                .orElse(List.of());
-        if (holders.isEmpty()) return IngredientProperties.EMPTY;
-        final var essences = Maps.<ResourceLocation, Integer>newHashMap();
-        for (int i = 0; i < essenceCount; i++) {
-            final var weight = 1 + random.nextInt(3);
-            essences.put(holders.get(random.nextInt(holders.size())).key().location(), weight);
-        }
-        if (random.nextBoolean()) {
-            final var affixType = AffixType.values()[random.nextInt(AffixType.values().length)];
-            final var affixModifier = -0.5 + 0.05 * random.nextInt(20);
-            return IngredientProperties.create(essences, List.of(new Affix(affixType, affixModifier)));
-        } else {
-            return IngredientProperties.create(essences, List.of());
-        }
+    private IngredientProperties generateProperties(RegistryAccess access, RandomSource source) {
+        final var lookup = access.lookupOrThrow(ElixirumRegistries.ESSENCE);
+        final var scenario = pickRandomScenario(source);
+        return scenario.generate(lookup, source);
     }
 
     private boolean shouldBeIngredient(Item item) {
@@ -161,5 +152,95 @@ public final class ServerIngredients extends Ingredients {
                 .add(Items.LINGERING_POTION)
                 .add(Items.GLASS_BOTTLE)
                 .build();
+        SCENARIOS = ImmutableMap.<GenerationScenario, Integer>builder()
+                .put(ServerIngredients::generateSimple, 50)
+                .put(ServerIngredients::generateMediumWithIngredientBuff, 14)
+                .put(ServerIngredients::generateStrongWithIngredientDebuff, 14)
+                .put(ServerIngredients::generateMediumWithEssenceBuff, 8)
+                .put(ServerIngredients::generateStrongWithEssenceDebuff, 8)
+                .put(ServerIngredients::generateWeakWithAbsoluteBuff, 6)
+                .build();
+    }
+
+    private interface GenerationScenario {
+
+        IngredientProperties generate(HolderLookup<Essence> lookup, RandomSource source);
+    }
+
+    private static GenerationScenario pickRandomScenario(RandomSource source) {
+        final var totalWeight = SCENARIOS.values().stream().reduce(0, Integer::sum);
+        final var randomValue = source.nextInt(totalWeight);
+        var currentWeight = 0;
+        for (Map.Entry<GenerationScenario, Integer> entry : SCENARIOS.entrySet()) {
+            currentWeight += entry.getValue();
+            if (randomValue < currentWeight)
+                return entry.getKey();
+        }
+        throw new IllegalStateException();
+    }
+
+    private static Stream<Holder.Reference<Essence>> pickRandomEssences(HolderLookup<Essence> lookup, RandomSource source, int amount) {
+        final var essences = lookup.listElements().collect(Collectors.toList());
+        if (amount > essences.size()) amount = essences.size();
+        final var result = Lists.<Holder.Reference<Essence>>newArrayList();
+        for (int i = 0; i < amount; i++) {
+            int index = source.nextInt(essences.size());
+            result.add(essences.remove(index));
+        }
+        return result.stream();
+    }
+
+    private static IngredientProperties generateSimple(HolderLookup<Essence> lookup, RandomSource source) {
+        return IngredientProperties.create(
+                pickRandomEssences(lookup, source, source.nextInt(1, 4))
+                        .collect(Collectors.toMap(
+                                holder -> holder.key().location(),
+                                holder -> source.nextInt(2, 9))),
+                List.of());
+    }
+
+    private static IngredientProperties generateWeakWithAbsoluteBuff(HolderLookup<Essence> lookup, RandomSource source) {
+        return IngredientProperties.create(
+                pickRandomEssences(lookup, source, source.nextInt(1, 4))
+                        .collect(Collectors.toMap(
+                                holder -> holder.key().location(),
+                                holder -> source.nextInt(1, 5))),
+                List.of(AffixType.ABSOLUTE.create(0.01 * source.nextInt(10, 31))));
+    }
+
+    private static IngredientProperties generateMediumWithIngredientBuff(HolderLookup<Essence> lookup, RandomSource source) {
+        return IngredientProperties.create(
+                pickRandomEssences(lookup, source, source.nextInt(1, 4))
+                        .collect(Collectors.toMap(
+                                holder -> holder.key().location(),
+                                holder -> source.nextInt(2, 9))),
+                List.of(AffixType.pickIngredientBound(source).create(0.01 * source.nextInt(10, 31))));
+    }
+
+    private static IngredientProperties generateMediumWithEssenceBuff(HolderLookup<Essence> lookup, RandomSource source) {
+        return IngredientProperties.create(
+                pickRandomEssences(lookup, source, source.nextInt(1, 4))
+                        .collect(Collectors.toMap(
+                                holder -> holder.key().location(),
+                                holder -> source.nextInt(2, 9))),
+                List.of(AffixType.pickEssenceBound(source).create(0.01 * source.nextInt(10, 31))));
+    }
+
+    private static IngredientProperties generateStrongWithIngredientDebuff(HolderLookup<Essence> lookup, RandomSource source) {
+        return IngredientProperties.create(
+                pickRandomEssences(lookup, source, source.nextInt(1, 4))
+                        .collect(Collectors.toMap(
+                                holder -> holder.key().location(),
+                                holder -> source.nextInt(8, 17))),
+                List.of(AffixType.pickIngredientBound(source).create(0.01 * source.nextInt(-30, -9))));
+    }
+
+    private static IngredientProperties generateStrongWithEssenceDebuff(HolderLookup<Essence> lookup, RandomSource source) {
+        return IngredientProperties.create(
+                pickRandomEssences(lookup, source, source.nextInt(1, 4))
+                        .collect(Collectors.toMap(
+                                holder -> holder.key().location(),
+                                holder -> source.nextInt(8, 17))),
+                List.of(AffixType.pickEssenceBound(source).create(0.01 * source.nextInt(-30, -9))));
     }
 }

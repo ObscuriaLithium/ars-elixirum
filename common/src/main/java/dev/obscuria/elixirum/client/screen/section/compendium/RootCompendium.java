@@ -18,9 +18,14 @@ public final class RootCompendium extends AbstractSection {
     }
 
     @Override
-    public void initTab(ElixirumScreen screen) {
+    public void initSection(ElixirumScreen screen) {
         screen.addRenderableWidget(new PanelCompendium(screen.left(10), 10, screen.width(-20), screen.height(-20)));
         propagateUpdate();
+    }
+
+    @Override
+    public void updateSection() {
+
     }
 
     static void bind(ScrollContainer scroll, ListContainer list) {

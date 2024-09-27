@@ -17,7 +17,7 @@ final class PanelElixirs extends PanelContainer {
                 .setStyle(Elixirum.STYLE)
                 .setCentered(true)
                 .setScale(1.2f));
-        final var scroll = this.setContent(new ScrollContainer());
+        final var scroll = this.setContent(new ScrollContainer(Component.literal("You haven't brewed any elixirs")));
         scroll.addChild(new SubElixirsGrid());
     }
 }

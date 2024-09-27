@@ -1,26 +1,25 @@
 package dev.obscuria.elixirum.client.screen.section.recent;
 
-import dev.obscuria.elixirum.client.ClientAlchemy;
 import dev.obscuria.elixirum.client.screen.ElixirumScreen;
 import dev.obscuria.elixirum.client.screen.section.AbstractSection;
 import dev.obscuria.elixirum.client.screen.widget.ElixirOverview;
 import dev.obscuria.elixirum.client.screen.widget.ProgressDisplay;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirHolder;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.WeakReference;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class RootRecent extends AbstractSection {
-    static @Nullable WeakReference<ClientAlchemy.RecentElixir> selected;
-    static Consumer<ClientAlchemy.RecentElixir> updateListener = elixir -> {};
+    private static @Nullable ElixirHolder selectedHolder;
+    private static Consumer<Optional<ElixirHolder>> selectionListener = elixir -> {};
 
     public RootRecent(int center, Consumer<AbstractSection> action) {
         super(center, Type.RECENT, action);
     }
 
     @Override
-    public void initTab(ElixirumScreen screen) {
+    public void initSection(ElixirumScreen screen) {
         final var overview = screen.addRenderableWidget(new ElixirOverview(screen.left(screen.width(0) / 2), screen.height));
         screen.addRenderableWidget(new ProgressDisplay(screen.left(screen.width(0) / 2), 0));
         screen.addRenderableWidget(new PanelDetails(overview, screen.right(-130), 10, 120, screen.height(-20)));
@@ -28,18 +27,30 @@ public final class RootRecent extends AbstractSection {
         propagateUpdate();
     }
 
-    static Optional<ClientAlchemy.RecentElixir> getSelected() {
-        return selected != null
-                ? Optional.ofNullable(selected.get())
-                : Optional.empty();
+    @Override
+    public void updateSection() {
+
     }
 
-    static void select(ClientAlchemy.RecentElixir elixir) {
-        selected = new WeakReference<>(elixir);
+    public static void reset() {
+        selectedHolder = null;
+        selectionListener = elixir -> {};
+    }
+
+    static void setSelectionListener(Consumer<Optional<ElixirHolder>> consumer) {
+        selectionListener = consumer;
+    }
+
+    static void select(@Nullable ElixirHolder holder) {
+        selectedHolder = holder;
         propagateUpdate();
     }
 
+    static Optional<ElixirHolder> getSelectedHolder() {
+        return Optional.ofNullable(selectedHolder);
+    }
+
     static void propagateUpdate() {
-        getSelected().ifPresent(updateListener);
+        selectionListener.accept(getSelectedHolder());
     }
 }

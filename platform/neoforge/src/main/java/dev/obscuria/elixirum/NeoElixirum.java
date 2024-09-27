@@ -1,14 +1,13 @@
 package dev.obscuria.elixirum;
 
-import dev.obscuria.elixirum.server.commands.EssenceCommand;
-import dev.obscuria.elixirum.server.commands.RegenerateCommand;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.common.alchemy.ingredient.IngredientPreset;
 import dev.obscuria.elixirum.network.ClientNetworkHandler;
 import dev.obscuria.elixirum.network.NeoClientboundItemEssencesPayload;
-import dev.obscuria.elixirum.platform.NeoPlatform;
 import dev.obscuria.elixirum.registry.ElixirumRegistries;
 import dev.obscuria.elixirum.server.ServerAlchemy;
+import dev.obscuria.elixirum.server.commands.EssenceCommand;
+import dev.obscuria.elixirum.server.commands.RegenerateCommand;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -25,7 +24,6 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 public class NeoElixirum {
 
     public NeoElixirum(IEventBus bus) {
-        Elixirum.initRegistries();
         Elixirum.init();
 
         NeoForge.EVENT_BUS.register(NeoEvents.class);
@@ -45,11 +43,7 @@ public class NeoElixirum {
 
         @SubscribeEvent
         public static void onRegister(final RegisterEvent event) {
-            NeoPlatform.registers.removeIf(register -> {
-                if (!event.getRegistryKey().equals(register.getRegistryKey())) return false;
-                register.register();
-                return true;
-            });
+
         }
 
         @SubscribeEvent

@@ -4,7 +4,10 @@ import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.alchemy.*;
 import dev.obscuria.elixirum.common.alchemy.elixir.*;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
+import dev.obscuria.elixirum.common.alchemy.style.Cap;
+import dev.obscuria.elixirum.common.alchemy.style.Shape;
 import dev.obscuria.elixirum.common.item.ElixirItem;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -17,30 +20,40 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import static net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import static net.minecraft.world.item.CreativeModeTab.Output;
 
-@SuppressWarnings("unused")
-public interface ElixirumCreativeTabs {
-    LazyRegister<CreativeModeTab> SOURCE = LazyRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, Elixirum.MODID);
+public enum ElixirumCreativeTabs {
+    ELIXIRUM_GENERIC("elixirum_generic",
+            () -> ElixirumItems.ELIXIR.value().getDefaultInstance(),
+            ElixirumCreativeTabs::generateGeneric),
+    ELIXIRUM_EXTRACTS("elixirum_extracts",
+            () -> ElixirumItems.EXTRACT.value().getDefaultInstance(),
+            ElixirumCreativeTabs::generateExtracts);
 
-    LazyValue<CreativeModeTab, CreativeModeTab> ELIXIRUM_GENERIC = SOURCE.register("elixirum_generic",
-            () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, -1)
-                    .title(createTitle("elixirum_generic"))
-                    .icon(() -> ElixirumItems.ELIXIR.value().getDefaultInstance())
-                    .displayItems(ElixirumCreativeTabs::generateGeneric)
-                    .build());
+    private final Holder<CreativeModeTab> holder;
 
-    LazyValue<CreativeModeTab, CreativeModeTab> ELIXIRUM_EXTRACTS = SOURCE.register("elixirum_extracts",
-            () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, -1)
-                    .title(createTitle("elixirum_extracts"))
-                    .icon(() -> ElixirumItems.EXTRACT.value().getDefaultInstance())
-                    .displayItems(ElixirumCreativeTabs::generateExtracts)
-                    .build());
+    ElixirumCreativeTabs(String name,
+                         Supplier<ItemStack> iconSupplier,
+                         CreativeModeTab.DisplayItemsGenerator generator) {
+        this.holder = Elixirum.PLATFORM.registerReference(
+                BuiltInRegistries.CREATIVE_MODE_TAB, Elixirum.key(name),
+                () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, -1)
+                        .title(Component.translatable("itemGroup." + name))
+                        .icon(iconSupplier)
+                        .displayItems(generator)
+                        .build());
+    }
 
-    private static Component createTitle(String name) {
-        return Component.translatable("itemGroup." + name);
+    public Holder<CreativeModeTab> holder() {
+        return this.holder;
+    }
+
+    public CreativeModeTab value() {
+        return this.holder.value();
     }
 
     private static void generateGeneric(ItemDisplayParameters params, Output output) {
@@ -51,7 +64,7 @@ public interface ElixirumCreativeTabs {
         params.holders().lookupOrThrow(ElixirumRegistries.ESSENCE).listElements().forEach(essence -> {
             for (var i = 1; i <= 9; i++) {
                 var stack = ElixirumItems.EXTRACT.value().getDefaultInstance();
-                stack.set(ElixirumDataComponents.EXTRACT_CONTENTS.value(), new ExtractContents(Optional.empty(), essence, i));
+                stack.set(ElixirumDataComponents.EXTRACT_CONTENTS, new ExtractContents(Optional.empty(), essence, i));
                 output.accept(stack);
             }
         });
@@ -59,11 +72,11 @@ public interface ElixirumCreativeTabs {
 
     private static ItemStack testElixir(HolderGetter<Essence> getter, double weight) {
         final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
-        stack.set(ElixirumDataComponents.ELIXIR_STYLE.value(),
-                new ElixirStyle(ElixirShape.FLASK_2, ElixirCap.AMETHYST));
+        stack.set(ElixirumDataComponents.ELIXIR_STYLE,
+                new ElixirStyle(Shape.FLASK_2, Cap.AMETHYST));
 
-        stack.set(ElixirumDataComponents.ELIXIR_CONTENTS.value(), ElixirContents.create()
-                .addEffect(ElixirEffect.byWeight(getter.getOrThrow(ElixirumEssences.ABSORPTION), weight, weight))
+        stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, ElixirContents.create()
+                .addEffect(PackedEffect.byWeight(getter.getOrThrow(ElixirumEssences.ABSORPTION), weight, weight))
                 .setCustomColor(DyeColor.MAGENTA.getTextureDiffuseColor())
                 .build());
         ElixirContents.setRarityByContent(stack);
@@ -77,13 +90,13 @@ public interface ElixirumCreativeTabs {
                 final var weight = 10 + RandomSource.create().nextInt(90);
                 final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
                 final var builder = ElixirContents.create();
-                builder.addEffect(ElixirEffect.byWeight(primaryEssence, weight, weight));
+                builder.addEffect(PackedEffect.byWeight(primaryEssence, weight, weight));
                 pickRandom(lookup.listElements()
                         .filter(essence -> !essence.is(primaryEssence))
                         .toList())
-                        .ifPresent(secondaryEssence -> builder.addEffect(ElixirEffect.byWeight(secondaryEssence, weight / 2.0, weight / 2.0)));
+                        .ifPresent(secondaryEssence -> builder.addEffect(PackedEffect.byWeight(secondaryEssence, weight / 2.0, weight / 2.0)));
                 builder.computeContentColor();
-                stack.set(ElixirumDataComponents.ELIXIR_CONTENTS.value(), builder.build());
+                stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, builder.build());
                 ElixirContents.setRarityByContent(stack);
                 randomizeName(lookupProvider, stack);
                 output.accept(stack);
@@ -116,4 +129,11 @@ public interface ElixirumCreativeTabs {
                                 + ElixirItem.getContentName(content)
                                 + "'"))));
     }
+
+    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+        consumer.accept("itemGroup.elixirum_generic", Elixirum.DISPLAY_NAME);
+        consumer.accept("itemGroup.elixirum_extracts", Elixirum.DISPLAY_NAME + ": Extracts");
+    }
+
+    public static void init() {}
 }

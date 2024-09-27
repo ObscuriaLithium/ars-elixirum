@@ -47,28 +47,33 @@ public record Essence(Holder<MobEffect> effectHolder,
                 || item.builtInRegistryHolder().is(ElixirumTags.Items.ESSENCE_WHITELIST);
     }
 
-    public record Property(int maxValue, double minWeight, double maxWeight) {
+    public record Property(double minWeight, int maxValue) {
+        private static final double MAX_WEIGHT = 100.0;
+
+        public Property(double minWeight, int maxValue) {
+            this.minWeight = Math.clamp(minWeight, 0, 99.0);
+            this.maxValue = Math.max(maxValue, 0);
+        }
 
         public int valueByWeight(double weight) {
-            if (weight >= maxWeight) return maxValue;
+            if (weight >= MAX_WEIGHT) return maxValue;
             if (weight <= 0) return 0;
-            final var ratio = weight / maxWeight;
+            final var ratio = weight / MAX_WEIGHT;
             return (int) (maxValue * (ratio * ratio));
         }
 
         public double weightByValue(int value) {
             if (value <= 0) return 0;
-            if (value >= maxValue) return maxWeight;
+            if (value >= maxValue) return MAX_WEIGHT;
             double ratio = Math.sqrt((double) value / maxValue);
-            return maxWeight * ratio + 0.01;
+            return MAX_WEIGHT * ratio + 0.001;
         }
     }
 
     static {
         final var propertyCodec = RecordCodecBuilder.<Property>create(instance -> instance.group(
-                Codec.INT.fieldOf("max_value").forGetter(Property::maxValue),
                 Codec.DOUBLE.fieldOf("min_weight").forGetter(Property::minWeight),
-                Codec.DOUBLE.fieldOf("max_weight").forGetter(Property::maxWeight)
+                Codec.INT.fieldOf("max_value").forGetter(Property::maxValue)
         ).apply(instance, Property::new));
         DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 MobEffect.CODEC.fieldOf("mob_effect").forGetter(Essence::effectHolder),

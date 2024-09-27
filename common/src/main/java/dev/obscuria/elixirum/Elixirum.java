@@ -21,7 +21,7 @@ public final class Elixirum {
     public static final String MODID = "elixirum";
     public static final String DISPLAY_NAME = "Ars Elixirum";
     public static final Logger LOG = LoggerFactory.getLogger(DISPLAY_NAME);
-    public static final IPlatform PLATFORM = load(IPlatform.class);
+    public static final IPlatform PLATFORM = ServiceLoader.load(IPlatform.class).findFirst().orElseThrow();
     public static final int WATER_COLOR = FastColor.ARGB32.opaque(-13083194);
     public static final Style STYLE = Style.EMPTY.withFont(Elixirum.key("elixirum"));
 
@@ -48,29 +48,16 @@ public final class Elixirum {
     }
 
     @ApiStatus.Internal
-    public static void initRegistries() {
-        PLATFORM.register(ElixirumAttributes.SOURCE);
-        PLATFORM.register(ElixirumDataComponents.SOURCE);
-        PLATFORM.register(ElixirumItems.SOURCE);
-        PLATFORM.register(ElixirumMobEffects.SOURCE);
-        PLATFORM.register(ElixirumCreativeTabs.SOURCE);
-        PLATFORM.register(ElixirumParticleTypes.SOURCE);
-        PLATFORM.register(ElixirumSounds.SOURCE);
-    }
-
-    @ApiStatus.Internal
     public static void init() {
-        PLATFORM.register(ElixirumBlocks.SOURCE);
-        PLATFORM.register(ElixirumBlockEntityTypes.SOURCE);
-    }
+        ElixirumAttributes.init();
+        ElixirumMobEffects.init();
+        ElixirumBlocks.init();
+        ElixirumItems.init();
+        ElixirumCreativeTabs.init();
 
-    @ApiStatus.Internal
-    public static <T> T load(Class<T> clazz) {
-
-        final T service = ServiceLoader.load(clazz)
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        LOG.debug("Loaded {} for service {}", service, clazz);
-        return service;
+        ElixirumBlockEntityTypes.setup();
+        ElixirumDataComponents.setup();
+        ElixirumParticleTypes.setup();
+        ElixirumSounds.setup();
     }
 }

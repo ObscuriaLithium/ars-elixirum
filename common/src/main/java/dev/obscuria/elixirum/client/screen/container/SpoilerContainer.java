@@ -5,7 +5,7 @@ import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.client.screen.ElixirumScreen;
 import dev.obscuria.elixirum.client.screen.tool.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.HierarchicalWidget;
-import dev.obscuria.elixirum.client.screen.tool.Accessor;
+import dev.obscuria.elixirum.client.screen.tool.Property;
 import dev.obscuria.elixirum.registry.ElixirumSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,28 +16,28 @@ public class SpoilerContainer extends HierarchicalWidget {
     private static final ResourceLocation ARROW_UP = Elixirum.key("icon/arrow_up");
     private static final ResourceLocation ARROW_DOWN = Elixirum.key("icon/arrow_down");
     private boolean defaultExpanded;
-    private Accessor<Boolean> accessor;
+    private Property<Boolean> property;
 
     public SpoilerContainer(Component name) {
         super(0, 0, 0, 0, name);
-        this.setClickSound(ElixirumSounds.UI_CLICK_1.holder());
-        this.accessor = Accessor.create(
+        this.setClickSound(ElixirumSounds.UI_CLICK_1);
+        this.property = Property.create(
                 () -> defaultExpanded,
                 value -> defaultExpanded = value);
     }
 
-    public SpoilerContainer setAccessor(Accessor<Boolean> accessor) {
-        this.accessor = accessor;
+    public SpoilerContainer setProperty(Property<Boolean> property) {
+        this.property = property;
         return this;
     }
 
     public boolean isExpanded() {
-        return this.accessor.get();
+        return this.property.get();
     }
 
     public void setExpanded(boolean value) {
         if (this.isExpanded() == value) return;
-        this.accessor.set(value);
+        this.property.set(value);
         this.setChanged(true);
     }
 
@@ -76,5 +76,10 @@ public class SpoilerContainer extends HierarchicalWidget {
             maxHeight = Math.max(maxHeight, child.getHeight());
         }
         this.setHeight(14 + (isExpanded() ? maxHeight : 0));
+    }
+
+    @Override
+    protected boolean hasContents() {
+        return true;
     }
 }

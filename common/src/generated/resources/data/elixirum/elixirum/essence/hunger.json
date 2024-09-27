@@ -1,13 +1,11 @@
 {
   "amplifier": {
     "max_value": 4,
-    "max_weight": 100.0,
-    "min_weight": 10.0
+    "min_weight": 20.0
   },
   "duration": {
-    "max_value": 600,
-    "max_weight": 100.0,
-    "min_weight": 10.0
+    "max_value": 300,
+    "min_weight": 20.0
   },
   "mob_effect": "minecraft:hunger",
   "required_ingredients": 3

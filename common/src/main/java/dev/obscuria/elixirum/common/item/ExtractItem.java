@@ -41,6 +41,6 @@ public final class ExtractItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return stack.has(ElixirumDataComponents.EXTRACT_CONTENTS.value());
+        return stack.has(ElixirumDataComponents.EXTRACT_CONTENTS);
     }
 }

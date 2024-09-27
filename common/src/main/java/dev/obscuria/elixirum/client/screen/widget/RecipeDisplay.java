@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.client.screen.widget;
 
 import dev.obscuria.elixirum.client.screen.ElixirumScreen;
+import dev.obscuria.elixirum.client.screen.tool.Property;
 import dev.obscuria.elixirum.client.screen.tool.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.HierarchicalWidget;
 import dev.obscuria.elixirum.client.screen.container.GridContainer;
@@ -15,11 +16,13 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public final class RecipeDisplay extends SpoilerContainer {
+    private static boolean cache = false;
     private final ElixirRecipe recipe;
 
     public RecipeDisplay(ElixirRecipe recipe) {
         super(Component.literal("Recipe"));
         this.setExpanded(true);
+        this.setProperty(Property.create(() -> cache, value -> cache = value));
         this.recipe = recipe;
         final var grid = addChild(new GridContainer());
         for (var item : recipe.ingredients())
