@@ -22,7 +22,7 @@ public final class ExtractItem extends Item {
     @Override
     public Component getName(ItemStack stack) {
         return ExtractContents.get(stack)
-                .map(contents -> (Component) Component.literal("Extract of " + contents.getEssence().getName().getString()))
+                .map(contents -> (Component) Component.literal("Extract of " + contents.getEssence().getDisplayName().getString()))
                 .orElseGet(() -> super.getName(stack));
     }
 
@@ -30,7 +30,7 @@ public final class ExtractItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
         ExtractContents.get(stack).ifPresent(contents -> {
             components.add(Component
-                    .translatable("elixirum.extract.essence", contents.weight(), contents.getEssence().getName())
+                    .translatable("elixirum.extract.essence", contents.weight(), contents.getEssence().getDisplayName())
                     .withStyle(ChatFormatting.GRAY));
             contents.source().ifPresent(source ->
                     components.add(Component

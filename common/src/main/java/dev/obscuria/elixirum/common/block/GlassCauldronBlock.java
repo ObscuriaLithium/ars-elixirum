@@ -14,6 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,7 +35,8 @@ public final class GlassCauldronBlock extends BaseEntityBlock {
     private static final VoxelShape SHAPE;
 
     public GlassCauldronBlock() {
-        super(BlockBehaviour.Properties.of()
+        super(BlockBehaviour.Properties
+                .ofFullCopy(Blocks.BLACK_STAINED_GLASS)
                 .mapColor(MapColor.STONE)
                 .requiresCorrectToolForDrops()
                 .strength(2.0F)

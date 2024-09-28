@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:blindness": 1
+    "elixirum:blindness": 20
   },
   "target": "minecraft:azure_bluet"
 }

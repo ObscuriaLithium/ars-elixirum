@@ -38,7 +38,7 @@ public final class IngredientMixer {
     }
 
     public ElixirContents getResult(HolderGetter<Essence> getter) {
-        if (this.changed) {
+        if (changed) {
             this.result = BrewingProcessor.brew(getter, recipe);
             this.changed = false;
         }
@@ -46,6 +46,7 @@ public final class IngredientMixer {
     }
 
     public boolean append(Item item) {
+        if (recipe.getSize() >= 9) return false;
         var essences = Elixirum.getIngredients().getProperties(item);
         if (essences.isEmpty()) return false;
         this.recipe = recipe.with(item);

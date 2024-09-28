@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.fabric;
 
 import dev.obscuria.elixirum.Elixirum;
+import dev.obscuria.elixirum.common.alchemy.elixir.ConfiguredElixir;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirPrefix;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.common.alchemy.ingredient.IngredientPreset;
@@ -21,6 +22,7 @@ public final class FabricElixirum implements ModInitializer {
 
         DynamicRegistries.registerSynced(ElixirumRegistries.ESSENCE, Essence.DIRECT_CODEC);
         DynamicRegistries.registerSynced(ElixirumRegistries.ELIXIR_PREFIX, ElixirPrefix.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(ElixirumRegistries.CONFIGURED_ELIXIR, ConfiguredElixir.DIRECT_CODEC);
         DynamicRegistries.register(ElixirumRegistries.INGREDIENT_PRESET, IngredientPreset.DIRECT_CODEC);
 
         ServerLifecycleEvents.SERVER_STARTED.register(ServerAlchemy::whenServerStarted);

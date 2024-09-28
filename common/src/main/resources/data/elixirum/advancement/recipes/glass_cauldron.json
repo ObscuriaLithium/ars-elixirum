@@ -1,0 +1,32 @@
+{
+  "parent": "elixirum:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "elixirum:glass_cauldron"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_water_bucket": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:water_bucket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_water_bucket"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "elixirum:glass_cauldron"
+    ]
+  }
+}

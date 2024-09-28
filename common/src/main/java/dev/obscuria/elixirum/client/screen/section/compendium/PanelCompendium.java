@@ -39,14 +39,8 @@ final class PanelCompendium extends PanelContainer {
                 ContentsType.DISCOVERING_ESSENCES,
                 ContentsType.AFFIXES);
         addSection(3, navigation,
-                Component.literal("Elixirs"),
-                ContentsType.PALE_AND_WEAK,
-                ContentsType.RECIPES,
-                ContentsType.STYLES);
-        addSection(4, navigation,
                 Component.literal("Extras"),
-                ContentsType.CONTRIBUTION,
-                ContentsType.CREDITS);
+                ContentsType.CONTRIBUTION);
 
         RootCompendium.bind(pageScroll, page);
     }

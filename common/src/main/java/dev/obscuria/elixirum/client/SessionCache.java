@@ -28,7 +28,7 @@ public final class SessionCache {
 
     public void saveRecent(ElixirRecipe recipe) {
         if (recentElixirs.stream().anyMatch(recent -> recent.is(recipe))) return;
-        this.recentElixirs.add(ClientAlchemy.getProfile()
+        this.recentElixirs.addFirst(ClientAlchemy.getProfile()
                 .searchInCollection(recipe)
                 .orElseGet(recipe::asHolder));
     }

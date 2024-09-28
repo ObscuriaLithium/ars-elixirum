@@ -23,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import org.jetbrains.annotations.Nullable;
@@ -72,20 +71,10 @@ public record ElixirContents(ImmutableList<PackedEffect> effects, int color) imp
         return layer != 1 ? -1 : ElixirContents.get(stack).color();
     }
 
-    public static void setRarityByContent(ItemStack stack) {
-        if (!stack.has(ElixirumDataComponents.ELIXIR_CONTENTS)) return;
-        var contents = get(stack);
-        if (contents.isEmpty()) return;
-        final var quality = contents.effects().getFirst().getQuality();
-        if (quality >= 100) {
-            stack.set(DataComponents.RARITY, Rarity.EPIC);
-        } else if (quality >= 90) {
-            stack.set(DataComponents.RARITY, Rarity.RARE);
-        } else if (quality >= 80) {
-            stack.set(DataComponents.RARITY, Rarity.UNCOMMON);
-        } else {
-            stack.set(DataComponents.RARITY, Rarity.COMMON);
-        }
+    public ItemStack set(ItemStack stack) {
+        stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, this);
+        stack.set(DataComponents.RARITY, ElixirTier.get(this).getRarity());
+        return stack;
     }
 
     public boolean isEmpty() {
@@ -97,7 +86,15 @@ public record ElixirContents(ImmutableList<PackedEffect> effects, int color) imp
     }
 
     public int getQuality() {
-        return this.effects.stream().mapToInt(PackedEffect::getQuality).sum();
+        return this.effects.stream().findFirst()
+                .map(PackedEffect::getQuality)
+                .orElse(0);
+    }
+
+    public Component getDisplayName() {
+        return this.effects.stream().findFirst()
+                .map(PackedEffect::getName)
+                .orElse(Component.literal("Water"));
     }
 
     public ElixirContents split(int count) {

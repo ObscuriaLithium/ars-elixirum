@@ -30,8 +30,8 @@ public record PackedEffect(Holder<Essence> essenceHolder,
     
     public static PackedEffect byValue(Holder<Essence> essence, int amplifier, int duration) {
         return new PackedEffect(essence,
-                essence.value().amplifier().weightByValue(amplifier),
-                essence.value().duration().weightByValue(duration),
+                essence.value().weightForAmplifier(amplifier),
+                essence.value().weightForDuration(duration),
                 essence.value().requiredIngredients());
     }
 
@@ -66,14 +66,12 @@ public record PackedEffect(Holder<Essence> essenceHolder,
         return (int) ((amplifierWeight + durationWeight) * 0.5);
     }
 
-    public boolean isPale() {
-        return ingredients < getEssence().requiredIngredients();
+    public boolean isWeak() {
+        return getQuality() < getEssence().requiredQuality();
     }
 
-    public boolean isWeak() {
-        var essence = getEssence();
-        return amplifierWeight <= essence.amplifier().minWeight()
-                || durationWeight <= essence.duration().minWeight();
+    public boolean isPale() {
+        return ingredients < getEssence().requiredIngredients();
     }
 
     public boolean isInstantenous() {
@@ -81,11 +79,11 @@ public record PackedEffect(Holder<Essence> essenceHolder,
     }
 
     public int getAmplifier() {
-        return getEssence().amplifier().valueByWeight(amplifierWeight);
+        return getEssence().amplifierByWeight(amplifierWeight);
     }
 
     public int getDuration() {
-        return getEssence().duration().valueByWeight(durationWeight);
+        return getEssence().durationByWeight(durationWeight);
     }
 
     public PackedEffect scale(double scale) {
@@ -96,7 +94,7 @@ public record PackedEffect(Holder<Essence> essenceHolder,
     }
 
     public Component getName() {
-        return getEssence().getName();
+        return getEssence().getDisplayName();
     }
 
     public Component getDisplayName() {
@@ -110,11 +108,11 @@ public record PackedEffect(Holder<Essence> essenceHolder,
 
     public Component getStatusOrDuration(float tickRate) {
         return this.isPale()
-                ? Component.literal("Pale")
+                ? Component.translatable("elixir.status.pale")
                 : this.isWeak()
-                ? Component.literal("Weak")
+                ? Component.translatable("elixir.status.weak")
                 : this.isInstantenous()
-                ? Component.literal("Instantenous")
+                ? Component.translatable("elixir.status.instantenous")
                 : this.getFormattedDuration(tickRate);
     }
 

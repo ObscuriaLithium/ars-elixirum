@@ -3,6 +3,7 @@ package dev.obscuria.elixirum.common.alchemy.affix;
 import com.mojang.serialization.Codec;
 import dev.obscuria.elixirum.common.alchemy.brewing.BrewingProcessor;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
+import dev.obscuria.elixirum.common.alchemy.essence.EssenceCategory;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
@@ -16,10 +17,10 @@ public enum AffixType implements StringRepresentable {
     ABSOLUTE(AffixType::applyAbsolute),
     NEXT(AffixType::applyNext),
     PREVIOUS(AffixType::applyPrevious),
-    OFFENSIVE(AffixType::applyAbsolute),
-    DEFENSIVE(AffixType::applyAbsolute),
-    ENHANCING(AffixType::applyAbsolute),
-    DIMINISHING(AffixType::applyAbsolute);
+    OFFENSIVE(AffixType::applyOffensive),
+    DEFENSIVE(AffixType::applyDefensive),
+    ENHANCING(AffixType::applyEnhancing),
+    DIMINISHING(AffixType::applyDiminishing);
 
     public static final Codec<AffixType> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, AffixType> STREAM_CODEC;
@@ -63,14 +64,35 @@ public enum AffixType implements StringRepresentable {
     }
 
     private static void applyNext(Affix affix, BrewingProcessor processor, int index) {
-        processor.getIngredient(index + 1).stream()
+        processor.getElement(index + 1).stream()
                 .flatMap(ingredient -> ingredient.listEssences(ANY))
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 
     private static void applyPrevious(Affix affix, BrewingProcessor processor, int index) {
-        processor.getIngredient(index + 1).stream()
+        processor.getElement(index + 1).stream()
                 .flatMap(ingredient -> ingredient.listEssences(ANY))
+                .forEach(info -> info.addModifier(affix.modifier()));
+    }
+
+    private static void applyOffensive(Affix affix, BrewingProcessor processor, int index) {
+        applyByCategory(affix, processor, EssenceCategory.OFFENSIVE);
+    }
+
+    private static void applyDefensive(Affix affix, BrewingProcessor processor, int index) {
+        applyByCategory(affix, processor, EssenceCategory.DEFENSIVE);
+    }
+
+    private static void applyEnhancing(Affix affix, BrewingProcessor processor, int index) {
+        applyByCategory(affix, processor, EssenceCategory.ENHANCING);
+    }
+
+    private static void applyDiminishing(Affix affix, BrewingProcessor processor, int index) {
+        applyByCategory(affix, processor, EssenceCategory.DIMINISHING);
+    }
+
+    private static void applyByCategory(Affix affix, BrewingProcessor processor, EssenceCategory category) {
+        processor.listEssences(essence -> essence.category() == category)
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 

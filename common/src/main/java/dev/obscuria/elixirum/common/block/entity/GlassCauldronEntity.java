@@ -25,6 +25,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -42,9 +43,14 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class GlassCauldronEntity extends BlockEntity {
+    private static final String TAG_FILLED = "Filled";
+    private static final String TAG_TEMPERATURE = "Temperature";
+    private static final String TAG_BOTTLES = "Bottles";
+    private static final String TAG_ELIXIR_MIXER = "ElixirMixer";
     private IngredientMixer mixer = new IngredientMixer();
     private boolean filled = false;
     private double temperature = 0f;
+    private int bottles;
     private float rotation;
     private float rotationO;
 
@@ -71,6 +77,7 @@ public final class GlassCauldronEntity extends BlockEntity {
     public void fillWithWater() {
         this.filled = true;
         this.temperature = 0;
+        this.bottles = 3;
         this.setChanged();
         this.updateClients();
     }
@@ -78,6 +85,7 @@ public final class GlassCauldronEntity extends BlockEntity {
     public void pickUpWater() {
         this.filled = false;
         this.temperature = 0;
+        this.bottles = 0;
         this.setChanged();
         this.updateClients();
     }
@@ -85,6 +93,7 @@ public final class GlassCauldronEntity extends BlockEntity {
     public void flushElixir() {
         this.filled = false;
         this.temperature = 0;
+        this.bottles = 0;
         this.mixer.clear();
         this.setChanged();
         this.updateClients();
@@ -103,6 +112,9 @@ public final class GlassCauldronEntity extends BlockEntity {
             ClientAlchemy.getCache().saveRecent(mixer.getRecipe());
         }
 
+        this.bottles -= 1;
+        if (bottles <= 0)
+            this.flushElixir();
         return stack;
     }
 
@@ -163,6 +175,7 @@ public final class GlassCauldronEntity extends BlockEntity {
                 stack.shrink(1);
                 this.setChanged();
                 this.updateClients();
+                this.playSound(SoundEvents.AXOLOTL_SPLASH, 1, 1);
             }
             return true;
         }
@@ -173,10 +186,6 @@ public final class GlassCauldronEntity extends BlockEntity {
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
-
-    private static final String TAG_FILLED = "Filled";
-    private static final String TAG_TEMPERATURE = "Temperature";
-    private static final String TAG_ELIXIR_MIXER = "ElixirMixer";
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
@@ -190,6 +199,8 @@ public final class GlassCauldronEntity extends BlockEntity {
             this.filled = tag.getBoolean(TAG_FILLED);
         if (tag.contains(TAG_TEMPERATURE))
             this.temperature = tag.getDouble(TAG_TEMPERATURE);
+        if (tag.contains(TAG_BOTTLES))
+            this.bottles = tag.getInt(TAG_BOTTLES);
         if (tag.contains(TAG_ELIXIR_MIXER, Tag.TAG_COMPOUND)) {
             final var registryOps = RegistryOps.create(NbtOps.INSTANCE, provider);
             IngredientMixer.CODEC.decode(registryOps, tag.getCompound(TAG_ELIXIR_MIXER))
@@ -206,6 +217,7 @@ public final class GlassCauldronEntity extends BlockEntity {
         super.saveAdditional(tag, provider);
         tag.putBoolean(TAG_FILLED, this.filled);
         tag.putDouble(TAG_TEMPERATURE, this.temperature);
+        tag.putInt(TAG_BOTTLES, this.bottles);
         final var registryOps = RegistryOps.create(NbtOps.INSTANCE, provider);
         IngredientMixer.CODEC.encodeStart(registryOps, this.mixer)
                 .ifSuccess(result -> tag.put(TAG_ELIXIR_MIXER, result))

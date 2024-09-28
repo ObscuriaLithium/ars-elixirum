@@ -29,6 +29,6 @@ public abstract class MixinItemStack {
                                         TooltipFlag flag, CallbackInfoReturnable<List<Component>> info,
                                         @Local Consumer<Component> consumer) {
 
-        ItemStackHooks.getTooltipLines(context, (ItemStack) (Object) this, player, flag, consumer);
+        ItemStackHooks.getTooltipLines((ItemStack) (Object) this, player, consumer);
     }
 }

@@ -22,7 +22,11 @@ public record ElixirRecipe(@Unmodifiable List<Item> ingredients) {
     public static final ElixirRecipe EMPTY = new ElixirRecipe(List.of());
 
     public boolean isEmpty() {
-        return ingredients.isEmpty();
+        return this.ingredients.isEmpty();
+    }
+
+    public int getSize() {
+        return this.ingredients.size();
     }
 
     public ElixirHolder asHolder() {

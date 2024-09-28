@@ -1,12 +1,8 @@
 {
-  "amplifier": {
-    "max_value": 4,
-    "min_weight": 20.0
-  },
-  "duration": {
-    "max_value": 300,
-    "min_weight": 20.0
-  },
+  "category": "offensive",
+  "max_amplifier": 4,
+  "max_duration": 300,
   "mob_effect": "minecraft:wither",
-  "required_ingredients": 3
+  "required_ingredients": 3,
+  "required_quality": 10
 }

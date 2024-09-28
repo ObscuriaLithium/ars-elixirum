@@ -28,32 +28,32 @@ final class ModIngredientPresetGenerator implements DataProvider {
 
     private void generateEssence(Consumer<IngredientPreset> consumer) {
 
-        consumer.accept(IngredientPreset.single(Items.ALLIUM, Elixirum.key("fire_resistance"), 1));
-        consumer.accept(IngredientPreset.single(Items.AZURE_BLUET, Elixirum.key("blindness"), 1));
-        consumer.accept(IngredientPreset.single(Items.BLUE_ORCHID, Elixirum.key("saturation"), 1));
-        consumer.accept(IngredientPreset.single(Items.CORNFLOWER, Elixirum.key("jump_boost"), 1));
-        consumer.accept(IngredientPreset.single(Items.DANDELION, Elixirum.key("saturation"), 1));
-        consumer.accept(IngredientPreset.single(Items.LILY_OF_THE_VALLEY, Elixirum.key("poison"), 1));
-        consumer.accept(IngredientPreset.single(Items.ORANGE_TULIP, Elixirum.key("weakness"), 1));
-        consumer.accept(IngredientPreset.single(Items.PINK_TULIP, Elixirum.key("weakness"), 1));
-        consumer.accept(IngredientPreset.single(Items.RED_TULIP, Elixirum.key("weakness"), 1));
-        consumer.accept(IngredientPreset.single(Items.WHITE_TULIP, Elixirum.key("weakness"), 1));
-        consumer.accept(IngredientPreset.single(Items.OXEYE_DAISY, Elixirum.key("regeneration"), 1));
-        consumer.accept(IngredientPreset.single(Items.POPPY, Elixirum.key("night_vision"), 1));
-        consumer.accept(IngredientPreset.single(Items.TORCHFLOWER, Elixirum.key("night_vision"), 1));
-        consumer.accept(IngredientPreset.single(Items.WITHER_ROSE, Elixirum.key("wither"), 1));
+        consumer.accept(IngredientPreset.single(Items.ALLIUM, Elixirum.key("fire_resistance"), 20));
+        consumer.accept(IngredientPreset.single(Items.AZURE_BLUET, Elixirum.key("blindness"), 20));
+        consumer.accept(IngredientPreset.single(Items.BLUE_ORCHID, Elixirum.key("saturation"), 20));
+        consumer.accept(IngredientPreset.single(Items.CORNFLOWER, Elixirum.key("jump_boost"), 20));
+        consumer.accept(IngredientPreset.single(Items.DANDELION, Elixirum.key("saturation"), 20));
+        consumer.accept(IngredientPreset.single(Items.LILY_OF_THE_VALLEY, Elixirum.key("poison"), 20));
+        consumer.accept(IngredientPreset.single(Items.ORANGE_TULIP, Elixirum.key("weakness"), 20));
+        consumer.accept(IngredientPreset.single(Items.PINK_TULIP, Elixirum.key("weakness"), 20));
+        consumer.accept(IngredientPreset.single(Items.RED_TULIP, Elixirum.key("weakness"), 20));
+        consumer.accept(IngredientPreset.single(Items.WHITE_TULIP, Elixirum.key("weakness"), 20));
+        consumer.accept(IngredientPreset.single(Items.OXEYE_DAISY, Elixirum.key("regeneration"), 20));
+        consumer.accept(IngredientPreset.single(Items.POPPY, Elixirum.key("night_vision"), 20));
+        consumer.accept(IngredientPreset.single(Items.TORCHFLOWER, Elixirum.key("night_vision"), 20));
+        consumer.accept(IngredientPreset.single(Items.WITHER_ROSE, Elixirum.key("wither"), 20));
 
-        consumer.accept(IngredientPreset.single(Items.BLAZE_POWDER, Elixirum.key("strength"), 2));
-        consumer.accept(IngredientPreset.single(Items.FERMENTED_SPIDER_EYE, Elixirum.key("weakness"), 2));
-        consumer.accept(IngredientPreset.single(Items.GHAST_TEAR, Elixirum.key("regeneration"), 2));
-        consumer.accept(IngredientPreset.single(Items.GLISTERING_MELON_SLICE, Elixirum.key("instant_health"), 2));
-        consumer.accept(IngredientPreset.single(Items.GOLDEN_CARROT, Elixirum.key("night_vision"), 2));
-        consumer.accept(IngredientPreset.single(Items.MAGMA_CREAM, Elixirum.key("fire_resistance"), 2));
-        consumer.accept(IngredientPreset.single(Items.PHANTOM_MEMBRANE, Elixirum.key("slow_falling"), 2));
-        consumer.accept(IngredientPreset.single(Items.PUFFERFISH, Elixirum.key("water_breathing"), 2));
-        consumer.accept(IngredientPreset.single(Items.RABBIT_FOOT, Elixirum.key("jump_boost"), 2));
-        consumer.accept(IngredientPreset.single(Items.SPIDER_EYE, Elixirum.key("poison"), 2));
-        consumer.accept(IngredientPreset.single(Items.SUGAR, Elixirum.key("speed"), 2));
+        consumer.accept(IngredientPreset.single(Items.BLAZE_POWDER, Elixirum.key("strength"), 20));
+        consumer.accept(IngredientPreset.single(Items.FERMENTED_SPIDER_EYE, Elixirum.key("weakness"), 20));
+        consumer.accept(IngredientPreset.single(Items.GHAST_TEAR, Elixirum.key("regeneration"), 20));
+        consumer.accept(IngredientPreset.single(Items.GLISTERING_MELON_SLICE, Elixirum.key("instant_health"), 20));
+        consumer.accept(IngredientPreset.single(Items.GOLDEN_CARROT, Elixirum.key("night_vision"), 20));
+        consumer.accept(IngredientPreset.single(Items.MAGMA_CREAM, Elixirum.key("fire_resistance"), 20));
+        consumer.accept(IngredientPreset.single(Items.PHANTOM_MEMBRANE, Elixirum.key("slow_falling"), 20));
+        consumer.accept(IngredientPreset.single(Items.PUFFERFISH, Elixirum.key("water_breathing"), 20));
+        consumer.accept(IngredientPreset.single(Items.RABBIT_FOOT, Elixirum.key("jump_boost"), 20));
+        consumer.accept(IngredientPreset.single(Items.SPIDER_EYE, Elixirum.key("poison"), 20));
+        consumer.accept(IngredientPreset.single(Items.SUGAR, Elixirum.key("speed"), 20));
     }
 
     @SuppressWarnings("deprecation")

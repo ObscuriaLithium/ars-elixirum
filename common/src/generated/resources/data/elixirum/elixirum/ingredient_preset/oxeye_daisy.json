@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:regeneration": 1
+    "elixirum:regeneration": 20
   },
   "target": "minecraft:oxeye_daisy"
 }

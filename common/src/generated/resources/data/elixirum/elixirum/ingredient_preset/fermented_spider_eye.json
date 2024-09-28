@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:weakness": 2
+    "elixirum:weakness": 20
   },
   "target": "minecraft:fermented_spider_eye"
 }

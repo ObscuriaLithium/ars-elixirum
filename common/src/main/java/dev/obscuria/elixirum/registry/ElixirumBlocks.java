@@ -7,6 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public enum ElixirumBlocks {
@@ -27,6 +28,11 @@ public enum ElixirumBlocks {
 
     public Block value() {
         return this.holder.value();
+    }
+
+    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+        consumer.accept(GLASS_CAULDRON.value().getDescriptionId(), "Glass Cauldron");
+        consumer.accept(POTION_SHELF.value().getDescriptionId(), "Potion Shelf");
     }
 
     public static void init() {}

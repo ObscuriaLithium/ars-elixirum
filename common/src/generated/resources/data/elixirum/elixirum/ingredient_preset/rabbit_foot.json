@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:jump_boost": 2
+    "elixirum:jump_boost": 20
   },
   "target": "minecraft:rabbit_foot"
 }

@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.common.alchemy.brewing;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirRecipe;
 import dev.obscuria.elixirum.common.alchemy.PackedEffect;
@@ -20,24 +21,28 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class BrewingProcessor {
-    private final List<BrewingProcessor.Ingredient> ingredients = Lists.newArrayList();
+    private final List<Element> ingredients = Lists.newArrayList();
 
     public static ElixirContents brew(HolderGetter<Essence> getter, ElixirRecipe recipe) {
         return new BrewingProcessor(getter, recipe).brew();
     }
 
     private BrewingProcessor(HolderGetter<Essence> getter, ElixirRecipe recipe) {
-        for (var item : recipe.ingredients())
-            ingredients.add(new Ingredient(getter, item,
-                    ServerAlchemy.getIngredients().getProperties(item)));
+        final var consumed = Sets.<Item>newHashSet();
+        for (var item : recipe.ingredients()) {
+            ingredients.add(!consumed.contains(item)
+                    ? new Ingredient(getter, item, ServerAlchemy.getIngredients().getProperties(item))
+                    : new Empty());
+            consumed.add(item);
+        }
         for (var i = 0; i < ingredients.size(); i++) {
             final var ingredient = ingredients.get(i);
-            for (var affix : ingredient.properties.getAffixes())
+            for (var affix : ingredient.getProperties().getAffixes())
                 affix.apply(this, i);
         }
     }
 
-    public Optional<Ingredient> getIngredient(int index) {
+    public Optional<Element> getElement(int index) {
         return index > 0 && index < ingredients.size()
                 ? Optional.of(ingredients.get(index))
                 : Optional.empty();
@@ -51,7 +56,7 @@ public final class BrewingProcessor {
         final var builder = ElixirContents.create();
         final var essences = Maps.<Holder<Essence>, Double>newHashMap();
         ingredients.stream()
-                .flatMap(ingredient -> ingredient.essences.entrySet().stream())
+                .flatMap(ingredient -> ingredient.getEssences().entrySet().stream())
                 .forEach(entry -> essences.compute(entry.getKey(), (key, value) -> {
                     final var addition = entry.getValue().compute();
                     return value == null ? addition : value + addition;
@@ -61,7 +66,16 @@ public final class BrewingProcessor {
         return builder.build();
     }
 
-    public static final class Ingredient {
+    public interface Element {
+
+        IngredientProperties getProperties();
+
+        Map<Holder<Essence>, EssenceInfo> getEssences();
+
+        Stream<EssenceInfo> listEssences(Predicate<Essence> predicate);
+    }
+
+    private static final class Ingredient implements Element {
         private final Item item;
         private final IngredientProperties properties;
         private final Map<Holder<Essence>, EssenceInfo> essences;
@@ -73,10 +87,38 @@ public final class BrewingProcessor {
                     .collect(Collectors.toMap(Map.Entry::getKey, entry -> new EssenceInfo(entry.getIntValue())));
         }
 
+        @Override
+        public IngredientProperties getProperties() {
+            return this.properties;
+        }
+
+        @Override
+        public Map<Holder<Essence>, EssenceInfo> getEssences() {
+            return this.essences;
+        }
+
         public Stream<EssenceInfo> listEssences(Predicate<Essence> predicate) {
-            return essences.entrySet().stream()
+            return this.essences.entrySet().stream()
                     .filter(entry -> predicate.test(entry.getKey().value()))
                     .map(Map.Entry::getValue);
+        }
+    }
+
+    private static final class Empty implements Element {
+
+        @Override
+        public IngredientProperties getProperties() {
+            return IngredientProperties.EMPTY;
+        }
+
+        @Override
+        public Map<Holder<Essence>, EssenceInfo> getEssences() {
+            return Maps.newHashMap();
+        }
+
+        @Override
+        public Stream<EssenceInfo> listEssences(Predicate<Essence> predicate) {
+            return Stream.empty();
         }
     }
 

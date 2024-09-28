@@ -16,9 +16,9 @@ import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
-public interface BrewingStandHooks {
+public final class BrewingStandHooks {
 
-    static boolean isBrewable(NonNullList<ItemStack> items) {
+    public static boolean isBrewable(NonNullList<ItemStack> items) {
         final var ingredient = items.get(3);
         if (ingredient.isEmpty()) {
             return false;
@@ -35,7 +35,7 @@ public interface BrewingStandHooks {
         }
     }
 
-    static void doBrew(Level level, BlockPos pos, NonNullList<ItemStack> items) {
+    public static void doBrew(Level level, BlockPos pos, NonNullList<ItemStack> items) {
         var ingredient = items.get(3);
         final var ingredientItem = ingredient.getItem();
 
@@ -67,7 +67,7 @@ public interface BrewingStandHooks {
         level.levelEvent(1035, pos, 0);
     }
 
-    static boolean canPlaceItem(int index, ItemStack stack) {
+    public static boolean canPlaceItem(int index, ItemStack stack) {
         if (index == 3) {
             return ServerAlchemy.getIngredients().hasProperties(stack.getItem());
         } else if (index == 4) {
@@ -77,15 +77,15 @@ public interface BrewingStandHooks {
         }
     }
 
-    static boolean mayPlaceIngredient(ItemStack stack) {
+    public static boolean mayPlaceIngredient(ItemStack stack) {
         return ServerAlchemy.getIngredients().hasProperties(stack.getItem());
     }
 
-    static boolean mayPlacePotion(ItemStack stack) {
+    public static boolean mayPlacePotion(ItemStack stack) {
         return stack.is(Items.GLASS_BOTTLE);
     }
 
-    static void onTakePotion(Player player, ItemStack stack) {
+    public static void onTakePotion(Player player, ItemStack stack) {
         if (player instanceof ServerPlayer serverPlayer) {
             ExtractContents.get(stack).ifPresent(contents ->
                     contents.source().ifPresent(source ->

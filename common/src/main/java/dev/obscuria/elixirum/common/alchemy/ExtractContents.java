@@ -17,7 +17,10 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public record ExtractContents(Optional<Item> source, Holder<Essence> essenceHolder, int weight) {
+public record ExtractContents(Optional<Item> source,
+                              Holder<Essence> essenceHolder,
+                              int weight) {
+
     public static final Codec<ExtractContents> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ExtractContents> STREAM_CODEC;
 

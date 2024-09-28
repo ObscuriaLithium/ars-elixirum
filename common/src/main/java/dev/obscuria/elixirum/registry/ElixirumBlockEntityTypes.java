@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public interface ElixirumBlockEntityTypes {
-    BlockEntityType<GlassCauldronEntity> GLASS_CAULDRON = register("glass_cauldron",
+    BlockEntityType<GlassCauldronEntity> GLASS_CAULDRON = register("glass_cauldron.json",
             Elixirum.PLATFORM.createBlockEntityType(GlassCauldronEntity::new, ElixirumBlocks.GLASS_CAULDRON.value()));
     BlockEntityType<PotionShelfEntity> POTION_SHELF = register("potion_shelf",
             Elixirum.PLATFORM.createBlockEntityType(PotionShelfEntity::new, ElixirumBlocks.POTION_SHELF.value()));

@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:speed": 2
+    "elixirum:speed": 20
   },
   "target": "minecraft:sugar"
 }

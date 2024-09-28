@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:water_breathing": 2
+    "elixirum:water_breathing": 20
   },
   "target": "minecraft:pufferfish"
 }

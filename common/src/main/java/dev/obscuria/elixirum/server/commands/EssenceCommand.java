@@ -82,13 +82,13 @@ public final class EssenceCommand {
         if (properties.getWeight(essence.key().location()) == weight)
             throw ERROR_ALREADY_EXISTS.create(
                     Component.translatableEscape(item.getDescriptionId()).getString(),
-                    essence.value().getName().getString(),
+                    essence.value().getDisplayName().getString(),
                     weight);
         map.setProperties(item, properties.with(essence.key().location(), weight));
         ServerAlchemy.syncIngredients();
         ServerAlchemy.validateProfiles();
         source.sendSuccess(() -> Component.translatableEscape("commands.elixirum.essence.success.set",
-                essence.value().getName().getString(),
+                essence.value().getDisplayName().getString(),
                 weight,
                 Component.translatableEscape(item.getDescriptionId()).getString()), true);
         return 1;
@@ -100,12 +100,12 @@ public final class EssenceCommand {
         if (!properties.contains(essence.key().location()))
             throw ERROR_NO_ESSENCE.create(
                     Component.translatableEscape(item.getDescriptionId()).getString(),
-                    essence.value().getName().getString());
+                    essence.value().getDisplayName().getString());
         map.setProperties(item, properties.exclude(essence.key().location()));
         ServerAlchemy.syncIngredients();
         ServerAlchemy.validateProfiles();
         source.sendSuccess(() -> Component.translatableEscape("commands.elixirum.essence.success.remove",
-                essence.value().getName().getString(),
+                essence.value().getDisplayName().getString(),
                 Component.translatableEscape(item.getDescriptionId()).getString()), true);
         return 1;
     }

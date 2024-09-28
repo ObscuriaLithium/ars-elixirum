@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.client.screen.section.compendium;
 
 import dev.obscuria.elixirum.client.screen.container.ListContainer;
+import dev.obscuria.elixirum.registry.ElixirumItems;
 import dev.obscuria.elixirum.registry.ElixirumRegistries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -18,11 +19,7 @@ public enum ContentsType {
     ALL_ESSENCES(ContentsType::buildAllEssences),
     DISCOVERING_ESSENCES(ContentsType::buildDiscoveringEssences),
     AFFIXES(ContentsType::buildAffixes),
-    PALE_AND_WEAK(page -> {}),
-    RECIPES(page -> {}),
-    STYLES(page -> {}),
-    CONTRIBUTION(page -> {}),
-    CREDITS(page -> {});
+    CONTRIBUTION(ContentsType::buildContribution);
 
     private final PageBuilder builder;
 
@@ -69,6 +66,21 @@ public enum ContentsType {
         page.addChild(new SubText(Component.translatable(CREATING_ELIXIR.getSubId("text_2"))));
     }
 
+    private static void buildContribution(ListContainer page) {
+        page.addChild(new SubLogo());
+        page.addChild(new SubText(Component.literal("Ars Elixirum was created in just three weeks for the CurseForge modjam. As it is a very complex mod, some planned content had to be postponed due to the deadline. However, the mod will be receiving frequent and substantial content updates soon, and your participation, feedback, and ideas can help shape the future of Ars Elixirum! Join our Discord server (button at the end of the page) to share your thoughts and stay updated on the latest developments.")));
+        page.addChild(new SubText(Component.literal("Here are some features we are prioritizing for upcoming updates:")));
+        final var steps = page.addChild(new ListContainer().setSeparation(2));
+        steps.addChild(new SubStepItem(ElixirumItems.GLASS_CAULDRON.asItem(), Component.literal("Catastrophes and Reactions: The contents of your cauldron won't always be stable during brewing. Expect dangerous reactions that will force you to carefully plan your alchemical lab to create truly powerful elixirs!")));
+        steps.addChild(new SubStepItem(Items.PAPER, Component.literal("Ancient Recipes: Unearth ancient elixir recipes as treasures, offering unique effects that cannot be achieved through other means.")));
+        steps.addChild(new SubStepItem(Items.PAPER, Component.literal("Global Spells: Find fragments of ancient scrolls to brew spells that temporarily alter the entire world! ")));
+        steps.addChild(new SubStepItem(Items.WRITABLE_BOOK, Component.literal("Personalized Recipe Books: Combine recipes from your collection into recipe book items that can be shared with other players.")));
+        steps.addChild(new SubStepItem(ElixirumItems.ELIXIR.asItem(), Component.literal("More Elixir Effects for Every Situation: Expand your potion repertoire with a wider variety of effects.")));
+        steps.addChild(new SubStepItem(ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem(), Component.literal("Versatile Elixir Applications: Explore new ways to utilize elixirs, tailored to different situations and environments.")));
+        page.addChild(new SubText(Component.literal("We look forward to your feedback and contributions as we continue to develop Ars Elixirum.")));
+        page.addChild(new DiscordButton());
+    }
+
     private static void buildAllEssences(ListContainer page) {
         final var lookup = Optional.ofNullable(Minecraft.getInstance().level)
                 .map(level -> level.holderLookup(ElixirumRegistries.ESSENCE))
@@ -108,7 +120,7 @@ public enum ContentsType {
         consumer.accept(ESSENCES_AND_INGREDIENTS.getDescriptionId(), "Essences & Ingredients");
         consumer.accept(ESSENCES_AND_INGREDIENTS.getSubId("text_1"), "Any item can be used as an ingredient for an elixir, provided it contains any essences. Essences are effects in their raw form. Each essence in an ingredient has a weight value, and the sum of the weight of identical essences in the finished elixir determines the amplifier and duration of the final effect.");
         consumer.accept(ESSENCES_AND_INGREDIENTS.getSubId("note_1"), "To determine if an item contains any essences without having to try to toss it into the cauldron, you can use the Alchemist Eye. If the item's description displays a section with alchemical properties, then that item can become an ingredient!");
-        consumer.accept(ESSENCES_AND_INGREDIENTS.getSubId("text_2"), "It's important to note that only unique ingredients add their essences to the elixir's effects. Duplicate ingredients will not provide any bonuses to the elixir, and will only take up space in the recipe.");
+        consumer.accept(ESSENCES_AND_INGREDIENTS.getSubId("text_2"), "Elixir Ingredient Tips:\n - You can only use up to 9 ingredients in an elixir.\n - Don't bother adding the same ingredient twice! It won't do anything.");
 
         consumer.accept(CREATING_ELIXIR.getDescriptionId(), "Creating Elixir");
         consumer.accept(CREATING_ELIXIR.getSubId("text_1"), "To craft your first elixir, you will only need a Glass Cauldron, a Bucket of Water, a few unique ingredients and a Glass Bottle.");
@@ -133,11 +145,7 @@ public enum ContentsType {
         consumer.accept(AFFIXES.getSubId("text_1"), "Affixes are powerful additional properties of ingredients. There are many different types of affixes that provide a percentage bonus to all essences, essences of a specific type, or essences of neighboring ingredients. Affixes that affect neighboring ingredients are the most common, so you should pay attention to them when choosing the order of ingredients for your elixir.");
         consumer.accept(AFFIXES.getSubId("note_1"), "You can see affixes in the ingredient description using Alchemist Eye, but only if you've already discovered all the essences of that ingredient.");
 
-        consumer.accept(PALE_AND_WEAK.getDescriptionId(), "Pale & Weak");
-        consumer.accept(RECIPES.getDescriptionId(), "Recipes");
-        consumer.accept(STYLES.getDescriptionId(), "Styles");
         consumer.accept(CONTRIBUTION.getDescriptionId(), "Contribution");
-        consumer.accept(CREDITS.getDescriptionId(), "Credits");
     }
 
     @FunctionalInterface

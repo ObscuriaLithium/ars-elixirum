@@ -1,9 +1,8 @@
 package dev.obscuria.elixirum.common.item;
 
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirContents;
-import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyle;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirTier;
 import dev.obscuria.elixirum.common.alchemy.essence.EssenceBlacklist;
-import dev.obscuria.elixirum.registry.ElixirumDataComponents;
 import dev.obscuria.elixirum.registry.ElixirumSounds;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.network.chat.Component;
@@ -18,25 +17,20 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
+import java.util.List;
+
 @EssenceBlacklist
 public final class ElixirItem extends Item {
 
     public ElixirItem() {
-        super(new Properties().stacksTo(3).craftRemainder(Items.GLASS_BOTTLE));
-    }
-
-    public static String getContentQuality(ElixirContents contents) {
-        final var index = (int) Math.round(contents.effects().getFirst().getQuality() / 10.0);
-        return Component.translatable("elixir.quality." + Math.clamp(index - 1, 1, 9)).getString();
-    }
-
-    public static String getContentName(ElixirContents contents) {
-        return contents.effects().getFirst().getName().getString();
+        super(new Properties()
+                .stacksTo(8)
+                .craftRemainder(Items.GLASS_BOTTLE));
     }
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return ElixirContents.get(stack).getQuality() >= 100;
+        return ElixirTier.get(stack).isFoil();
     }
 
     @Override
@@ -47,22 +41,6 @@ public final class ElixirItem extends Item {
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.DRINK;
-    }
-
-    @Override
-    public Component getName(ItemStack stack) {
-        var contents = stack.getOrDefault(ElixirumDataComponents.ELIXIR_CONTENTS, ElixirContents.WATER);
-        return !contents.isEmpty()
-                ? Component.literal(getContentQuality(contents) + " Elixir of " + getContentName(contents))
-                : super.getName(stack);
-    }
-
-    @Override
-    public ItemStack getDefaultInstance() {
-        var stack = super.getDefaultInstance();
-        stack.set(ElixirumDataComponents.ELIXIR_STYLE, ElixirStyle.DEFAULT);
-        stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, ElixirContents.WATER);
-        return stack;
     }
 
     @Override
@@ -93,5 +71,21 @@ public final class ElixirItem extends Item {
         }
         player.gameEvent(GameEvent.DRINK);
         return stack;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        ElixirContents.get(stack).addToTooltip(context, tooltip::add, flag);
+    }
+
+    @Override
+    public Component getName(ItemStack stack) {
+        return ElixirContents.getOptional(stack)
+                .<Component>map(contents -> Component
+                        .translatable("elixir.compound_name",
+                                ElixirTier.get(stack).getDisplayName(),
+                                super.getName(stack),
+                                contents.getDisplayName()))
+                .orElseGet(() -> super.getName(stack));
     }
 }

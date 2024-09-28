@@ -16,12 +16,15 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
 
 public record Essence(Holder<MobEffect> effectHolder,
-                      Property amplifier,
-                      Property duration,
+                      EssenceCategory category,
+                      int maxAmplifier,
+                      int maxDuration,
+                      int requiredQuality,
                       int requiredIngredients) {
     public static final Codec<Essence> DIRECT_CODEC;
     public static final Codec<Holder<Essence>> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Essence>> STREAM_CODEC;
+    private static final double MAX_WEIGHT = 100.0;
 
     public static ResourceKey<Essence> key(ResourceLocation id) {
         return ResourceKey.create(ElixirumRegistries.ESSENCE, id);
@@ -31,8 +34,24 @@ public record Essence(Holder<MobEffect> effectHolder,
         return this.effectHolder.value();
     }
 
-    public Component getName() {
+    public Component getDisplayName() {
         return getEffect().getDisplayName();
+    }
+
+    public int amplifierByWeight(double weight) {
+        return valueByWeight(weight, maxAmplifier);
+    }
+
+    public int durationByWeight(double weight) {
+        return valueByWeight(weight, maxDuration);
+    }
+
+    public double weightForAmplifier(int amplifier) {
+        return weightByValue(amplifier, maxAmplifier);
+    }
+
+    public double weightForDuration(int duration) {
+        return weightByValue(duration, maxDuration);
     }
 
     @SuppressWarnings("deprecation")
@@ -47,38 +66,27 @@ public record Essence(Holder<MobEffect> effectHolder,
                 || item.builtInRegistryHolder().is(ElixirumTags.Items.ESSENCE_WHITELIST);
     }
 
-    public record Property(double minWeight, int maxValue) {
-        private static final double MAX_WEIGHT = 100.0;
+    private static int valueByWeight(double weight, int maxValue) {
+        if (weight >= MAX_WEIGHT) return maxValue;
+        if (weight <= 0) return 0;
+        final var ratio = weight / MAX_WEIGHT;
+        return (int) (maxValue * (ratio * ratio));
+    }
 
-        public Property(double minWeight, int maxValue) {
-            this.minWeight = Math.clamp(minWeight, 0, 99.0);
-            this.maxValue = Math.max(maxValue, 0);
-        }
-
-        public int valueByWeight(double weight) {
-            if (weight >= MAX_WEIGHT) return maxValue;
-            if (weight <= 0) return 0;
-            final var ratio = weight / MAX_WEIGHT;
-            return (int) (maxValue * (ratio * ratio));
-        }
-
-        public double weightByValue(int value) {
-            if (value <= 0) return 0;
-            if (value >= maxValue) return MAX_WEIGHT;
-            double ratio = Math.sqrt((double) value / maxValue);
-            return MAX_WEIGHT * ratio + 0.001;
-        }
+    private static double weightByValue(int value, int maxValue) {
+        if (value <= 0) return 0;
+        if (value >= maxValue) return MAX_WEIGHT;
+        double ratio = Math.sqrt((double) value / maxValue);
+        return MAX_WEIGHT * ratio + 0.001;
     }
 
     static {
-        final var propertyCodec = RecordCodecBuilder.<Property>create(instance -> instance.group(
-                Codec.DOUBLE.fieldOf("min_weight").forGetter(Property::minWeight),
-                Codec.INT.fieldOf("max_value").forGetter(Property::maxValue)
-        ).apply(instance, Property::new));
         DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 MobEffect.CODEC.fieldOf("mob_effect").forGetter(Essence::effectHolder),
-                propertyCodec.fieldOf("amplifier").forGetter(Essence::amplifier),
-                propertyCodec.fieldOf("duration").forGetter(Essence::duration),
+                EssenceCategory.CODEC.optionalFieldOf("category", EssenceCategory.NONE).forGetter(Essence::category),
+                Codec.INT.fieldOf("max_amplifier").forGetter(Essence::maxAmplifier),
+                Codec.INT.fieldOf("max_duration").forGetter(Essence::maxDuration),
+                Codec.INT.fieldOf("required_quality").forGetter(Essence::requiredQuality),
                 Codec.INT.fieldOf("required_ingredients").forGetter(Essence::requiredIngredients)
         ).apply(instance, Essence::new));
         CODEC = RegistryFixedCodec.create(ElixirumRegistries.ESSENCE);

@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:regeneration": 2
+    "elixirum:regeneration": 20
   },
   "target": "minecraft:ghast_tear"
 }

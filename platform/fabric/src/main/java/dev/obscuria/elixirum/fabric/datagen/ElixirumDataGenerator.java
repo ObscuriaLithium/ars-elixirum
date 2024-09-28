@@ -15,6 +15,7 @@ public class ElixirumDataGenerator implements DataGeneratorEntrypoint {
 
         pack.addProvider(ModEssenceGenerator::new);
         pack.addProvider(ModIngredientPresetGenerator::new);
+        pack.addProvider(ModConfiguredElixirGenerator::new);
         pack.addProvider(ModElixirPrefixGenerator::new);
         pack.addProvider(ModTagItemGenerator::new);
         pack.addProvider(ModTagBlockGenerator::new);

@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:jump_boost": 1
+    "elixirum:jump_boost": 20
   },
   "target": "minecraft:cornflower"
 }

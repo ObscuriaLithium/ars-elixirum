@@ -3,12 +3,11 @@ package dev.obscuria.elixirum.fabric.datagen;
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.client.screen.section.compendium.ContentsType;
 import dev.obscuria.elixirum.common.alchemy.affix.AffixType;
+import dev.obscuria.elixirum.common.alchemy.elixir.ElixirTier;
+import dev.obscuria.elixirum.common.alchemy.essence.EssenceCategory;
 import dev.obscuria.elixirum.common.alchemy.style.Cap;
 import dev.obscuria.elixirum.common.alchemy.style.Shape;
-import dev.obscuria.elixirum.registry.ElixirumAttributes;
-import dev.obscuria.elixirum.registry.ElixirumCreativeTabs;
-import dev.obscuria.elixirum.registry.ElixirumItems;
-import dev.obscuria.elixirum.registry.ElixirumMobEffects;
+import dev.obscuria.elixirum.registry.*;
 import dev.obscuria.elixirum.server.commands.EssenceCommand;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -24,16 +23,20 @@ final class ModLanguageGenerator extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder builder) {
+        ElixirumBlocks.acceptTranslations(builder::add);
         ElixirumItems.acceptTranslations(builder::add);
         ElixirumMobEffects.acceptTranslations(builder::add);
         ElixirumAttributes.acceptTranslations(builder::add);
         ElixirumCreativeTabs.acceptTranslations(builder::add);
+        ElixirumEntityTypes.acceptTranslations(builder::add);
 
         AffixType.acceptTranslations(builder::add);
         Cap.acceptTranslations(builder::add);
         Shape.acceptTranslations(builder::add);
         ContentsType.acceptTranslations(builder::add);
         EssenceCommand.acceptTranslations(builder::add);
+        ElixirTier.acceptTranslations(builder::add);
+        EssenceCategory.acceptTranslations(builder::add);
 
         builder.add("elixirum.functionality_tip", "The functionality of this block has been modified by Ars Elixirum. For more detailed information, click on this icon or the [%s] key during the game.");
         builder.add("elixirum.discovered_essences", "You have discovered %s of %s essences, distributed among %s ingredients.");
@@ -44,18 +47,18 @@ final class ModLanguageGenerator extends FabricLanguageProvider {
         builder.add("elixirum.alchemy_properties.essence", " x%s %s");
         builder.add("elixirum.alchemy_properties.affix", " %s");
         builder.add("elixirum.alchemy_properties.unknown", " ???");
+        builder.add("elixirum.essence_description.category", " Category: %s");
+        builder.add("elixirum.essence_description.max_amplifier", " Max Amplifier: %s");
+        builder.add("elixirum.essence_description.max_duration", " Max Duration: %s");
+        builder.add("elixirum.essence_description.weak_if", "Weak if quality is less than %s.");
+        builder.add("elixirum.essence_description.pale_if", "Pale if less than %s ingredients are used.");
 
-        builder.add("elixir.quality.1", "Pale");
-        builder.add("elixir.quality.2", "Cloudy");
-        builder.add("elixir.quality.3", "Weak");
-        builder.add("elixir.quality.4", "Minor");
-        builder.add("elixir.quality.5", "Moderate");
-        builder.add("elixir.quality.6", "Grand");
-        builder.add("elixir.quality.7", "Intense");
-        builder.add("elixir.quality.8", "Supreme");
-        builder.add("elixir.quality.9", "Legendary");
+        builder.add("elixir.compound_name", "%s %s of %s");
         builder.add("elixir.collapsed.weak", "+%s Weak Effects");
         builder.add("elixir.collapsed.pale", "+%s Pale Effects");
+        builder.add("elixir.status.weak", "Weak");
+        builder.add("elixir.status.pale", "Pale");
+        builder.add("elixir.status.instantenous", "Instantenous");
 
         builder.add("potion.potency.6", "VI");
         builder.add("potion.potency.7", "VII");

@@ -10,12 +10,14 @@
     "MixinBrewingStandMenu_PotionSlot",
     "MixinEntity",
     "MixinItemStack",
+    "MixinLivingEntity",
     "RegistryAccessor",
     "server.MixinPlayerList"
   ],
   "client": [
     "client.MixinBrewingStandScreen",
     "client.MixinClientLevel",
+    "client.MixinHumanoidArmorLayer",
     "client.MixinMusicManager"
   ],
   "server": [],

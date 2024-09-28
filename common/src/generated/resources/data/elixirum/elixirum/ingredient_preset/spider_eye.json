@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:poison": 2
+    "elixirum:poison": 20
   },
   "target": "minecraft:spider_eye"
 }

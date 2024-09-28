@@ -1,12 +1,8 @@
 {
-  "amplifier": {
-    "max_value": 4,
-    "min_weight": 10.0
-  },
-  "duration": {
-    "max_value": 600,
-    "min_weight": 10.0
-  },
+  "category": "enhancing",
+  "max_amplifier": 4,
+  "max_duration": 600,
   "mob_effect": "minecraft:speed",
-  "required_ingredients": 3
+  "required_ingredients": 3,
+  "required_quality": 10
 }

@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:instant_health": 2
+    "elixirum:instant_health": 20
   },
   "target": "minecraft:glistering_melon_slice"
 }

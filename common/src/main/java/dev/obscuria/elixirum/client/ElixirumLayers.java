@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 public interface ElixirumLayers {
     HashMap<ModelLayerLocation, Supplier<LayerDefinition>> VALUES = Maps.newHashMap();
 
-    ModelLayerLocation GLASS_CAULDRON = add("glass_cauldron", ModelGlassCauldron::createBodyLayer);
-    ModelLayerLocation GLASS_CAULDRON_FLUID = add("glass_cauldron", "fluid", ModelGlassCauldron::createFluidLayer);
+    ModelLayerLocation GLASS_CAULDRON = add("glass_cauldron.json", ModelGlassCauldron::createBodyLayer);
+    ModelLayerLocation GLASS_CAULDRON_FLUID = add("glass_cauldron.json", "fluid", ModelGlassCauldron::createFluidLayer);
 
     private static ModelLayerLocation add(String name, Supplier<LayerDefinition> model) {
         return add(name, "main", model);

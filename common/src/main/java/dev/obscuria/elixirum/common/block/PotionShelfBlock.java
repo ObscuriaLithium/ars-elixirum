@@ -118,6 +118,21 @@ public final class PotionShelfBlock extends BaseEntityBlock {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            if (level.getBlockEntity(pos) instanceof PotionShelfEntity entity) {
+                final var first = entity.getFirstStack();
+                final var second = entity.getSecondStack();
+                final var third = entity.getThirdStack();
+                if (!first.isEmpty()) popResource(level, pos, first);
+                if (!second.isEmpty()) popResource(level, pos, second);
+                if (!third.isEmpty()) popResource(level, pos, third);
+            }
+        }
+        super.onRemove(state, level, pos, newState, isMoving);
+    }
+
     private ItemInteractionResult useOnSlot(ItemStack stack, Player player,
                                             InteractionHand hand,
                                             Supplier<ItemStack> takeFunc,

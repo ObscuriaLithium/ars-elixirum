@@ -1,12 +1,8 @@
 {
-  "amplifier": {
-    "max_value": 4,
-    "min_weight": 20.0
-  },
-  "duration": {
-    "max_value": 0,
-    "min_weight": 0.0
-  },
+  "category": "defensive",
+  "max_amplifier": 4,
+  "max_duration": 0,
   "mob_effect": "minecraft:instant_health",
-  "required_ingredients": 3
+  "required_ingredients": 3,
+  "required_quality": 10
 }

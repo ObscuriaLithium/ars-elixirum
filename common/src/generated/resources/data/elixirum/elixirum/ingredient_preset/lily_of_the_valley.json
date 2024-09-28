@@ -1,6 +1,6 @@
 {
   "essences": {
-    "elixirum:poison": 1
+    "elixirum:poison": 20
   },
   "target": "minecraft:lily_of_the_valley"
 }

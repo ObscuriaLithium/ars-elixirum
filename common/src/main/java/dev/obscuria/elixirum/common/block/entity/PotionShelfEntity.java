@@ -67,27 +67,30 @@ public final class PotionShelfEntity extends BlockEntity {
     public boolean putFirstStack(ItemStack stack) {
         if (!this.getFirstStack().isEmpty()) return false;
         if (!this.validateStack(stack)) return false;
-        this.setFirstStack(stack.copyAndClear());
+        this.setFirstStack(stack.copyWithCount(1));
         this.playSound(ElixirumSounds.ITEM_BOTTLE_PUT, 1f);
         this.playSound(ElixirumSounds.ITEM_BOTTLE_SHAKE, 0.5f);
+        stack.shrink(1);
         return true;
     }
 
     public boolean putSecondStack(ItemStack stack) {
         if (!this.getSecondStack().isEmpty()) return false;
         if (!this.validateStack(stack)) return false;
-        this.setSecondStack(stack.copyAndClear());
+        this.setSecondStack(stack.copyWithCount(1));
         this.playSound(ElixirumSounds.ITEM_BOTTLE_PUT, 1f);
         this.playSound(ElixirumSounds.ITEM_BOTTLE_SHAKE, 0.5f);
+        stack.shrink(1);
         return true;
     }
 
     public boolean putThirdStack(ItemStack stack) {
         if (!this.getThirdStack().isEmpty()) return false;
         if (!this.validateStack(stack)) return false;
-        this.setThirdStack(stack.copyAndClear());
+        this.setThirdStack(stack.copyWithCount(1));
         this.playSound(ElixirumSounds.ITEM_BOTTLE_PUT, 1f);
         this.playSound(ElixirumSounds.ITEM_BOTTLE_SHAKE, 0.5f);
+        stack.shrink(1);
         return true;
     }
 

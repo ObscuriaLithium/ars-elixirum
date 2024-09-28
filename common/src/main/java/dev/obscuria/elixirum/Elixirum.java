@@ -55,9 +55,11 @@ public final class Elixirum {
         ElixirumItems.init();
         ElixirumCreativeTabs.init();
 
+        ElixirumRecipeSerializers.setup();
         ElixirumBlockEntityTypes.setup();
         ElixirumDataComponents.setup();
         ElixirumParticleTypes.setup();
+        ElixirumEntityTypes.setup();
         ElixirumSounds.setup();
     }
 }

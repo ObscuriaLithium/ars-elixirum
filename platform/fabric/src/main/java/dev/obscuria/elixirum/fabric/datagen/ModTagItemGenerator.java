@@ -57,10 +57,11 @@ final class ModTagItemGenerator extends FabricTagProvider.ItemTagProvider {
                 .add(reverseLookup(Items.TROPICAL_FISH_BUCKET));
 
         this.tag(ElixirumTags.Items.POTION_SHELF_PLACEABLE)
-                .add(reverseLookup(ElixirumItems.ELIXIR.value()))
-                .add(reverseLookup(ElixirumItems.EXTRACT.value()))
+                .add(reverseLookup(ElixirumItems.ELIXIR.asItem()))
+                .add(reverseLookup(ElixirumItems.SPLASH_ELIXIR.asItem()))
+                .add(reverseLookup(ElixirumItems.EXTRACT.asItem()))
                 .add(reverseLookup(Items.GLASS_BOTTLE))
-                .add(reverseLookup(Items.POTATO))
+                .add(reverseLookup(Items.POTION))
                 .add(reverseLookup(Items.SPLASH_POTION))
                 .add(reverseLookup(Items.LINGERING_POTION))
                 .add(reverseLookup(Items.EXPERIENCE_BOTTLE))
