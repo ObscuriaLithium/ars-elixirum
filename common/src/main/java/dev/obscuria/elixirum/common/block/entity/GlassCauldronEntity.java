@@ -66,6 +66,10 @@ public final class GlassCauldronEntity extends BlockEntity {
         return this.filled;
     }
 
+    public boolean isBoil() {
+        return this.temperature >= 1;
+    }
+
     public boolean hasElixir() {
         return this.isFilled() && !this.mixer.isEmpty();
     }
@@ -167,8 +171,8 @@ public final class GlassCauldronEntity extends BlockEntity {
     }
 
     public boolean addIngredient(ItemStack stack) {
-        if (this.level == null) return false;
-        if (this.mixer.append(stack.getItem())) {
+        if (level == null) return false;
+        if (mixer.append(stack.getItem())) {
             if (level.isClientSide) {
                 this.createSplashParticles(20);
             } else {

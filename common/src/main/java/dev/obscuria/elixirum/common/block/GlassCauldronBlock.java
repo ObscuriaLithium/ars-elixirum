@@ -135,7 +135,7 @@ public final class GlassCauldronBlock extends BaseEntityBlock {
         }
 
         private static ItemInteractionResult useGlassBottle(GlassCauldronEntity entity, Level level, Player player, InteractionHand hand, ItemStack stack) {
-            if (entity.isFilled() && entity.hasElixir()) {
+            if (entity.isFilled() && entity.hasElixir() && entity.isBoil()) {
                 final var elixir = entity.brew(player);
                 if (!level.isClientSide && !elixir.isEmpty()) {
                     stack.shrink(1);
@@ -149,7 +149,7 @@ public final class GlassCauldronBlock extends BaseEntityBlock {
         }
 
         private static ItemInteractionResult useIngredient(GlassCauldronEntity entity, Level level, Player player, InteractionHand hand, ItemStack stack) {
-            return entity.addIngredient(stack)
+            return entity.isBoil() && entity.addIngredient(stack)
                     ? ItemInteractionResult.sidedSuccess(level.isClientSide)
                     : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
