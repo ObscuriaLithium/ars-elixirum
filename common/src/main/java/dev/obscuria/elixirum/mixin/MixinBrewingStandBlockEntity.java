@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = BrewingStandBlockEntity.class, priority = 9999)
-public abstract class MixinBrewingStandBlockEntity {
-
+public abstract class MixinBrewingStandBlockEntity
+{
     @Inject(method = "isBrewable", at = @At("HEAD"), cancellable = true)
     private static void isBrewable_Override(PotionBrewing potionBrewing,
                                             NonNullList<ItemStack> items,
-                                            CallbackInfoReturnable<Boolean> info) {
-
+                                            CallbackInfoReturnable<Boolean> info)
+    {
         info.setReturnValue(BrewingStandHooks.isBrewable(items));
     }
 
@@ -28,8 +28,8 @@ public abstract class MixinBrewingStandBlockEntity {
     private static void doBrew_Override(Level level,
                                         BlockPos pos,
                                         NonNullList<ItemStack> items,
-                                        CallbackInfo info) {
-
+                                        CallbackInfo info)
+    {
         BrewingStandHooks.doBrew(level, pos, items);
         info.cancel();
     }
@@ -37,8 +37,8 @@ public abstract class MixinBrewingStandBlockEntity {
     @Inject(method = "canPlaceItem", at = @At("HEAD"), cancellable = true)
     private void canPlaceItem_Override(int index,
                                        ItemStack stack,
-                                       CallbackInfoReturnable<Boolean> info) {
-
+                                       CallbackInfoReturnable<Boolean> info)
+    {
         info.setReturnValue(BrewingStandHooks.canPlaceItem(index, stack));
     }
 }

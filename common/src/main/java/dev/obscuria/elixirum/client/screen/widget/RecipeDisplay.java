@@ -15,11 +15,13 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public final class RecipeDisplay extends SpoilerContainer {
+public final class RecipeDisplay extends SpoilerContainer
+{
     private static boolean cache = false;
     private final ElixirRecipe recipe;
 
-    public RecipeDisplay(ElixirRecipe recipe) {
+    public RecipeDisplay(ElixirRecipe recipe)
+    {
         super(Component.literal("Recipe"));
         this.setExpanded(true);
         this.setProperty(Property.create(() -> cache, value -> cache = value));
@@ -29,20 +31,24 @@ public final class RecipeDisplay extends SpoilerContainer {
             grid.addChild(new Ingredient(item.getDefaultInstance()));
     }
 
-    private static final class Ingredient extends HierarchicalWidget {
+    private static final class Ingredient extends HierarchicalWidget
+    {
         private final ItemStack stack;
 
-        private Ingredient(ItemStack stack) {
+        private Ingredient(ItemStack stack)
+        {
             super(0, 0, 18, 18, Component.empty());
             this.stack = stack;
         }
 
         @Override
-        public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+        public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+        {
             if (!transform.isWithinScissor()) return;
             ElixirumScreen.debugRenderer(this, graphics, transform, mouseX, mouseY);
             graphics.renderFakeItem(stack, getX() + 1, getY() + 1);
-            if (transform.isMouseOver(mouseX, mouseY)) {
+            if (transform.isMouseOver(mouseX, mouseY))
+            {
                 graphics.blitSprite(ElixirumScreen.SPRITE_OUTLINE_PURPLE, getX(), getY(), getWidth(), getHeight());
                 ElixirumScreen.tooltipProvider = this::getCustomTooltip;
             }
@@ -51,7 +57,8 @@ public final class RecipeDisplay extends SpoilerContainer {
         @Override
         protected void reorganize() {}
 
-        private List<Component> getCustomTooltip() {
+        private List<Component> getCustomTooltip()
+        {
             return Screen.getTooltipFromItem(Minecraft.getInstance(), stack);
         }
     }

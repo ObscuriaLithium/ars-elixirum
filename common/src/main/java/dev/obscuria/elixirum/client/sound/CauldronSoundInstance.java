@@ -11,11 +11,13 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 
-public final class CauldronSoundInstance extends AbstractTickableSoundInstance {
+public final class CauldronSoundInstance extends AbstractTickableSoundInstance
+{
     private static final List<CauldronSoundInstance> TRACKED_SOUNDS = Lists.newArrayList();
     private final GlassCauldronEntity entity;
 
-    public CauldronSoundInstance(GlassCauldronEntity entity) {
+    public CauldronSoundInstance(GlassCauldronEntity entity)
+    {
         super(ElixirumSounds.BLOCK_CAULDRON_BOIL, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());
         this.x = entity.getBlockPos().getX();
         this.y = entity.getBlockPos().getY();
@@ -26,23 +28,27 @@ public final class CauldronSoundInstance extends AbstractTickableSoundInstance {
         this.volume = 0f;
     }
 
-    public boolean is(GlassCauldronEntity entity) {
+    public boolean is(GlassCauldronEntity entity)
+    {
         return this.entity == entity;
     }
 
     @Override
-    public void tick() {
+    public void tick()
+    {
         if (entity.isRemoved() || entity.getTemperature() <= 0.0) this.stop();
         this.volume = (float) Math.pow(entity.getTemperature(), 5);
     }
 
     @Override
-    public boolean canStartSilent() {
+    public boolean canStartSilent()
+    {
         return true;
     }
 
     @ApiStatus.Internal
-    public static void play(GlassCauldronEntity entity) {
+    public static void play(GlassCauldronEntity entity)
+    {
         if (TRACKED_SOUNDS.stream().anyMatch(sound -> sound.is(entity))) return;
         final var sound = new CauldronSoundInstance(entity);
         Minecraft.getInstance().getSoundManager().play(sound);
@@ -50,7 +56,8 @@ public final class CauldronSoundInstance extends AbstractTickableSoundInstance {
     }
 
     @ApiStatus.Internal
-    public static void onClientTick() {
+    public static void onClientTick()
+    {
         TRACKED_SOUNDS.removeIf(AbstractTickableSoundInstance::isStopped);
     }
 }

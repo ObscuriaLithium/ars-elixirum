@@ -8,7 +8,8 @@ import net.minecraft.util.StringRepresentable;
 
 import java.util.function.BiConsumer;
 
-public enum EssenceCategory implements StringRepresentable {
+public enum EssenceCategory implements StringRepresentable
+{
     NONE,
     OFFENSIVE,
     DEFENSIVE,
@@ -18,20 +19,24 @@ public enum EssenceCategory implements StringRepresentable {
     public static final Codec<EssenceCategory> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, EssenceCategory> STREAM_CODEC;
 
-    public Component getDisplayName() {
+    public Component getDisplayName()
+    {
         return Component.translatable(getDescriptionId());
     }
 
-    public String getDescriptionId() {
+    public String getDescriptionId()
+    {
         return "elixirum.essence_category." + getSerializedName();
     }
 
     @Override
-    public String getSerializedName() {
+    public String getSerializedName()
+    {
         return this.toString().toLowerCase();
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    public static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept(NONE.getDescriptionId(), "None");
         consumer.accept(OFFENSIVE.getDescriptionId(), "Offensive");
         consumer.accept(DEFENSIVE.getDescriptionId(), "Defensive");
@@ -39,7 +44,8 @@ public enum EssenceCategory implements StringRepresentable {
         consumer.accept(DIMINISHING.getDescriptionId(), "Diminishing");
     }
 
-    static {
+    static
+    {
         CODEC = StringRepresentable.fromEnum(EssenceCategory::values);
         STREAM_CODEC = StreamCodec.ofMember(
                 (value, buf) -> buf.writeEnum(value),

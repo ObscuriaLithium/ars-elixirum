@@ -15,10 +15,12 @@ import org.apache.commons.compress.utils.Lists;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractDetailsPanel extends PanelContainer {
+public abstract class AbstractDetailsPanel extends PanelContainer
+{
     protected final List<UpdateListener> listeners = Lists.newArrayList();
 
-    public AbstractDetailsPanel(ElixirOverview overview, int x, int y, int width, int height) {
+    public AbstractDetailsPanel(ElixirOverview overview, int x, int y, int width, int height)
+    {
         super(x, y, width, height);
         this.setHeader(createHeader());
         this.createFooter().ifPresent(this::setFooter);
@@ -34,11 +36,13 @@ public abstract class AbstractDetailsPanel extends PanelContainer {
         content.setVisible(false);
     }
 
-    public void update(ElixirHolder holder) {
+    public void update(ElixirHolder holder)
+    {
         this.listeners.forEach(listener -> listener.update(holder));
     }
 
-    protected void buildContents(ListContainer container) {
+    protected void buildContents(ListContainer container)
+    {
 
         final var capSpoiler = new SpoilerContainer(Component.literal("Cap"))
                 .setProperty(StylePicker.CapPicker.getProperty());
@@ -56,7 +60,8 @@ public abstract class AbstractDetailsPanel extends PanelContainer {
         container.addChild(shapeSpoiler);
     }
 
-    protected HierarchicalWidget createHeader() {
+    protected HierarchicalWidget createHeader()
+    {
         final var widget = new Text()
                 .setContent(Component.literal("Details"))
                 .setStyle(Elixirum.STYLE)
@@ -71,11 +76,13 @@ public abstract class AbstractDetailsPanel extends PanelContainer {
         return widget;
     }
 
-    protected Optional<HierarchicalWidget> createFooter() {
+    protected Optional<HierarchicalWidget> createFooter()
+    {
         return Optional.empty();
     }
 
-    protected HierarchicalWidget createEffects() {
+    protected HierarchicalWidget createEffects()
+    {
         final var widget = new ListContainer();
         this.listeners.add((holder -> {
             final var contents = holder.getCachedStack()
@@ -88,7 +95,8 @@ public abstract class AbstractDetailsPanel extends PanelContainer {
         return widget;
     }
 
-    protected HierarchicalWidget createRecipe() {
+    protected HierarchicalWidget createRecipe()
+    {
         final var widget = new ListContainer();
         this.listeners.add(holder -> {
             widget.children().clear();
@@ -97,17 +105,19 @@ public abstract class AbstractDetailsPanel extends PanelContainer {
         return widget;
     }
 
-    protected StylePicker.CapPicker createCapPicker() {
+    protected StylePicker.CapPicker createCapPicker()
+    {
         return new StylePicker.CapPicker();
     }
 
-    protected StylePicker.ShapePicker createShapePicker() {
+    protected StylePicker.ShapePicker createShapePicker()
+    {
         return new StylePicker.ShapePicker();
     }
 
     @FunctionalInterface
-    protected interface UpdateListener {
-
+    protected interface UpdateListener
+    {
         void update(ElixirHolder holder);
     }
 }

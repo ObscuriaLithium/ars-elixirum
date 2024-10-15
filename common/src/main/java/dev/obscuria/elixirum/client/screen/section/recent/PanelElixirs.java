@@ -7,9 +7,10 @@ import dev.obscuria.elixirum.client.screen.container.ScrollContainer;
 import dev.obscuria.elixirum.client.screen.widget.Text;
 import net.minecraft.network.chat.Component;
 
-final class PanelElixirs extends PanelContainer {
-
-    public PanelElixirs(int x, int y, int width, int height) {
+final class PanelElixirs extends PanelContainer
+{
+    public PanelElixirs(int x, int y, int width, int height)
+    {
         super(x, y, width, height);
         final var Header = this.setHeader(new ListContainer());
         Header.addChild(new Text()

@@ -12,7 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
-public enum ContentsType {
+public enum ContentsType
+{
     INTRODUCTION(ContentsType::buildIntroduction),
     ESSENCES_AND_INGREDIENTS(ContentsType::buildEssencesAndIngredients),
     CREATING_ELIXIR(ContentsType::buildCreatingElixir),
@@ -23,39 +24,47 @@ public enum ContentsType {
 
     private final PageBuilder builder;
 
-    ContentsType(PageBuilder builder) {
+    ContentsType(PageBuilder builder)
+    {
         this.builder = builder;
     }
 
-    public void buildPage(ListContainer page) {
+    public void buildPage(ListContainer page)
+    {
         this.builder.build(page);
     }
 
-    public String getDescriptionId() {
+    public String getDescriptionId()
+    {
         return "elixirum.compendium." + toString().toLowerCase();
     }
 
-    public Component getDisplayName() {
+    public Component getDisplayName()
+    {
         return Component.translatable(getDescriptionId());
     }
 
-    private String getSubId(String name) {
+    private String getSubId(String name)
+    {
         return getDescriptionId() + "." + name;
     }
 
-    private static void buildIntroduction(ListContainer page) {
+    private static void buildIntroduction(ListContainer page)
+    {
         page.addChild(new SubLogo());
         page.addChild(new SubText(Component.translatable(INTRODUCTION.getSubId("text_1"))));
         page.addChild(new SubNote(Component.translatable(INTRODUCTION.getSubId("note_1"))));
     }
 
-    private static void buildEssencesAndIngredients(ListContainer page) {
+    private static void buildEssencesAndIngredients(ListContainer page)
+    {
         page.addChild(new SubText(Component.translatable(ESSENCES_AND_INGREDIENTS.getSubId("text_1"))));
         page.addChild(new SubNote(Component.translatable(ESSENCES_AND_INGREDIENTS.getSubId("note_1"))));
         page.addChild(new SubText(Component.translatable(ESSENCES_AND_INGREDIENTS.getSubId("text_2"))));
     }
 
-    private static void buildCreatingElixir(ListContainer page) {
+    private static void buildCreatingElixir(ListContainer page)
+    {
         page.addChild(new SubText(Component.translatable(CREATING_ELIXIR.getSubId("text_1"))));
         final var steps = page.addChild(new ListContainer().setSeparation(2));
         steps.addChild(new SubStepItem(Items.CAULDRON, Component.translatable(CREATING_ELIXIR.getSubId("step_1"))));
@@ -66,26 +75,29 @@ public enum ContentsType {
         page.addChild(new SubText(Component.translatable(CREATING_ELIXIR.getSubId("text_2"))));
     }
 
-    private static void buildContribution(ListContainer page) {
+    private static void buildContribution(ListContainer page)
+    {
         page.addChild(new SubLogo());
         page.addChild(new SubText(Component.literal("Ars Elixirum was created in just three weeks for the CurseForge modjam. As it is a very complex mod, some planned content had to be postponed due to the deadline. However, the mod will be receiving frequent and substantial content updates soon, and your participation, feedback, and ideas can help shape the future of Ars Elixirum! Join our Discord server (button at the end of the page) to share your thoughts and stay updated on the latest developments.")));
         page.addChild(new SubText(Component.literal("Here are some features we are prioritizing for upcoming updates:")));
         final var steps = page.addChild(new ListContainer().setSeparation(2));
-        steps.addChild(new SubStepItem(ElixirumItems.GLASS_CAULDRON.asItem(), Component.literal("Catastrophes and Reactions: The contents of your cauldron won't always be stable during brewing. Expect dangerous reactions that will force you to carefully plan your alchemical lab to create truly powerful elixirs!")));
+        steps.addChild(new SubStepItem(ElixirumItems.GLASS_CAULDRON.value(), Component.literal("Catastrophes and Reactions: The contents of your cauldron won't always be stable during brewing. Expect dangerous reactions that will force you to carefully plan your alchemical lab to create truly powerful elixirs!")));
         steps.addChild(new SubStepItem(Items.PAPER, Component.literal("Ancient Recipes: Unearth ancient elixir recipes as treasures, offering unique effects that cannot be achieved through other means.")));
         steps.addChild(new SubStepItem(Items.PAPER, Component.literal("Global Spells: Find fragments of ancient scrolls to brew spells that temporarily alter the entire world! ")));
         steps.addChild(new SubStepItem(Items.WRITABLE_BOOK, Component.literal("Personalized Recipe Books: Combine recipes from your collection into recipe book items that can be shared with other players.")));
-        steps.addChild(new SubStepItem(ElixirumItems.ELIXIR.asItem(), Component.literal("More Elixir Effects for Every Situation: Expand your potion repertoire with a wider variety of effects.")));
-        steps.addChild(new SubStepItem(ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem(), Component.literal("Versatile Elixir Applications: Explore new ways to utilize elixirs, tailored to different situations and environments.")));
+        steps.addChild(new SubStepItem(ElixirumItems.ELIXIR.value(), Component.literal("More Elixir Effects for Every Situation: Expand your potion repertoire with a wider variety of effects.")));
+        steps.addChild(new SubStepItem(ElixirumItems.WITCH_TOTEM_OF_UNDYING.value(), Component.literal("Versatile Elixir Applications: Explore new ways to utilize elixirs, tailored to different situations and environments.")));
         page.addChild(new SubText(Component.literal("We look forward to your feedback and contributions as we continue to develop Ars Elixirum.")));
         page.addChild(new DiscordButton());
     }
 
-    private static void buildAllEssences(ListContainer page) {
+    private static void buildAllEssences(ListContainer page)
+    {
         final var lookup = Optional.ofNullable(Minecraft.getInstance().level)
                 .map(level -> level.holderLookup(ElixirumRegistries.ESSENCE))
                 .orElse(null);
-        if (lookup != null) {
+        if (lookup != null)
+        {
             final var index = new AtomicInteger(1);
             final var light = new AtomicBoolean(true);
             final var list = page.addChild(new ListContainer());
@@ -97,7 +109,8 @@ public enum ContentsType {
         }
     }
 
-    private static void buildDiscoveringEssences(ListContainer page) {
+    private static void buildDiscoveringEssences(ListContainer page)
+    {
         page.addChild(new SubText(Component.translatable(DISCOVERING_ESSENCES.getSubId("text_1"))));
         final var steps = page.addChild(new ListContainer().setSeparation(2));
         steps.addChild(new SubStepItem(Items.BLAZE_POWDER, Component.translatable(DISCOVERING_ESSENCES.getSubId("step_1"))));
@@ -107,12 +120,14 @@ public enum ContentsType {
         page.addChild(new SubNote(Component.translatable(DISCOVERING_ESSENCES.getSubId("note_1"))));
     }
 
-    private static void buildAffixes(ListContainer page) {
+    private static void buildAffixes(ListContainer page)
+    {
         page.addChild(new SubText(Component.translatable(AFFIXES.getSubId("text_1"))));
         page.addChild(new SubNote(Component.translatable(AFFIXES.getSubId("note_1"))));
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    public static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept(INTRODUCTION.getDescriptionId(), "Introduction");
         consumer.accept(INTRODUCTION.getSubId("text_1"), "Ars Elixirum is the ultimate extension of potion crafting, applications, and diversity. Through exploration and experimentation, you can create your own recipes to craft Elixirs - powerful replacements for potions - and save and customize them.");
         consumer.accept(INTRODUCTION.getSubId("note_1"), "While you can still find ordinary potions as rare loot, crafting them the conventional way is no longer possible.");
@@ -149,8 +164,8 @@ public enum ContentsType {
     }
 
     @FunctionalInterface
-    interface PageBuilder {
-
+    interface PageBuilder
+    {
         void build(ListContainer page);
     }
 }

@@ -4,12 +4,14 @@ import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.alchemy.ExtractContents;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyle;
+import dev.obscuria.core.api.v1.common.ObscureRegistry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.function.UnaryOperator;
 
-public interface ElixirumDataComponents {
+public interface ElixirumDataComponents
+{
     DataComponentType<ElixirStyle> ELIXIR_STYLE =
             register("elixir_style", builder -> builder
                     .persistent(ElixirStyle.CODEC)
@@ -28,13 +30,16 @@ public interface ElixirumDataComponents {
                     .cacheEncoding());
 
     private static <T> DataComponentType<T>
-    register(final String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
+    register(final String name, UnaryOperator<DataComponentType.Builder<T>> builder)
+    {
         final var component = builder.apply(DataComponentType.builder()).build();
-        Elixirum.PLATFORM.registerReference(
-                BuiltInRegistries.DATA_COMPONENT_TYPE, Elixirum.key(name),
+        ObscureRegistry.register(
+                Elixirum.MODID,
+                BuiltInRegistries.DATA_COMPONENT_TYPE,
+                Elixirum.key(name),
                 () -> component);
         return component;
     }
 
-    static void setup() {}
+    static void init() {}
 }

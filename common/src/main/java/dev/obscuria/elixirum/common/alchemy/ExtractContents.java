@@ -19,26 +19,31 @@ import java.util.Optional;
 
 public record ExtractContents(Optional<Item> source,
                               Holder<Essence> essenceHolder,
-                              int weight) {
+                              int weight)
+{
 
     public static final Codec<ExtractContents> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ExtractContents> STREAM_CODEC;
 
-    public static Optional<ExtractContents> get(ItemStack stack) {
+    public static Optional<ExtractContents> get(ItemStack stack)
+    {
         return Optional.ofNullable(stack.get(ElixirumDataComponents.EXTRACT_CONTENTS));
     }
 
-    public static int getOverlayColor(ItemStack stack, int layer) {
+    public static int getOverlayColor(ItemStack stack, int layer)
+    {
         return layer != 1 ? -1 : get(stack)
                 .map(contents -> FastColor.ARGB32.opaque(contents.getEssence().getEffect().getColor()))
                 .orElse(Elixirum.WATER_COLOR);
     }
 
-    public Essence getEssence() {
+    public Essence getEssence()
+    {
         return essenceHolder.value();
     }
 
-    static {
+    static
+    {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("source").forGetter(ExtractContents::source),
                 Essence.CODEC.fieldOf("essence").forGetter(ExtractContents::essenceHolder),

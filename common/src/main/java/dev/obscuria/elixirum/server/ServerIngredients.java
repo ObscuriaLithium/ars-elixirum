@@ -3,13 +3,13 @@ package dev.obscuria.elixirum.server;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.JsonOps;
-import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.alchemy.affix.AffixType;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.common.alchemy.ingredient.IngredientProperties;
 import dev.obscuria.elixirum.common.alchemy.ingredient.Ingredients;
-import dev.obscuria.elixirum.network.ClientboundItemEssencesPacket;
+import dev.obscuria.elixirum.network.ClientboundIngredientsPayload;
 import dev.obscuria.elixirum.registry.ElixirumRegistries;
+import dev.obscuria.core.api.v1.common.ObscureNetworking;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -31,33 +31,39 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class ServerIngredients extends Ingredients {
+public final class ServerIngredients extends Ingredients
+{
     private static final ImmutableList<Item> BUILTIN_BLACKLIST;
     private static final ImmutableMap<GenerationScenario, Integer> SCENARIOS;
 
-    void syncWithPlayer(ServerPlayer player) {
-        Elixirum.PLATFORM.sendToPlayer(player, ClientboundItemEssencesPacket.create(this.pack()));
+    void syncWithPlayer(ServerPlayer player)
+    {
+        ObscureNetworking.sendTo(player, ClientboundIngredientsPayload.create(this.pack()));
     }
 
-    public void load() {
+    public void load()
+    {
         if (ServerAlchemy.server == null) return;
         final var path = ServerAlchemy.server.getWorldPath(ServerAlchemy.ALCHEMY_DIR).resolve("ingredients.map");
         this.load(ServerAlchemy.server.registryAccess(), path);
         final var anyDeleted = this.deleteInvalidProperties(ServerAlchemy.server);
         final var anyGenerated = this.generateMissingProperties(ServerAlchemy.server);
-        if (anyDeleted || anyGenerated) {
+        if (anyDeleted || anyGenerated)
+        {
             this.save();
             this.computeTotalEssences();
         }
     }
 
-    public void save() {
+    public void save()
+    {
         if (ServerAlchemy.server == null) return;
         final var path = ServerAlchemy.server.getWorldPath(ServerAlchemy.ALCHEMY_DIR).resolve("ingredients.map");
         this.save(ServerAlchemy.server.registryAccess(), path);
     }
 
-    public void regenerate() {
+    public void regenerate()
+    {
         if (ServerAlchemy.server == null) return;
         this.properties.clear();
         this.generateMissingProperties(ServerAlchemy.server);
@@ -65,11 +71,13 @@ public final class ServerIngredients extends Ingredients {
     }
 
     @Override
-    protected void whenExternallyModified() {
+    protected void whenExternallyModified()
+    {
         this.save();
     }
 
-    private void load(RegistryAccess access, Path path) {
+    private void load(RegistryAccess access, Path path)
+    {
         final var registryOps = RegistryOps.create(JsonOps.INSTANCE, access);
         ServerAlchemy.tryLoad(path)
                 .ifPresent(element -> Packed.CODEC.decode(registryOps, element)
@@ -80,7 +88,8 @@ public final class ServerIngredients extends Ingredients {
                         }));
     }
 
-    private void save(RegistryAccess access, Path path) {
+    private void save(RegistryAccess access, Path path)
+    {
         final var registryOps = RegistryOps.create(JsonOps.INSTANCE, access);
         Packed.CODEC.encodeStart(registryOps, this.pack())
                 .ifSuccess(element -> ServerAlchemy.trySave(path, element))
@@ -90,10 +99,12 @@ public final class ServerIngredients extends Ingredients {
                 });
     }
 
-    private boolean deleteInvalidProperties(MinecraftServer server) {
+    private boolean deleteInvalidProperties(MinecraftServer server)
+    {
         var total = 0;
 
-        for (var item : BuiltInRegistries.ITEM) {
+        for (var item : BuiltInRegistries.ITEM)
+        {
             if (!this.properties.containsKey(item)) continue;
             if (this.shouldBeIngredient(item)) continue;
             this.properties.remove(item);
@@ -105,11 +116,13 @@ public final class ServerIngredients extends Ingredients {
         return true;
     }
 
-    private boolean generateMissingProperties(MinecraftServer server) {
+    private boolean generateMissingProperties(MinecraftServer server)
+    {
         final var seed = server.overworld().getSeed();
         var total = 0;
 
-        for (var item : BuiltInRegistries.ITEM) {
+        for (var item : BuiltInRegistries.ITEM)
+        {
             if (this.properties.containsKey(item)) continue;
             if (!this.shouldBeIngredient(item)) continue;
             this.properties.put(item, findPreset(server.registryAccess(), item)
@@ -124,27 +137,31 @@ public final class ServerIngredients extends Ingredients {
         return true;
     }
 
-    private Optional<IngredientProperties> findPreset(RegistryAccess access, Item item) {
+    private Optional<IngredientProperties> findPreset(RegistryAccess access, Item item)
+    {
         return access.registry(ElixirumRegistries.INGREDIENT_PRESET)
                 .flatMap(registry -> registry.stream()
                         .filter(definition -> definition.target().equals(item))
                         .findFirst().map(preset -> preset.build(access)));
     }
 
-    private IngredientProperties generateProperties(RegistryAccess access, RandomSource source) {
+    private IngredientProperties generateProperties(RegistryAccess access, RandomSource source)
+    {
         final var lookup = access.lookupOrThrow(ElixirumRegistries.ESSENCE);
         final var scenario = pickRandomScenario(source);
         return scenario.generate(lookup, source);
     }
 
-    private boolean shouldBeIngredient(Item item) {
+    private boolean shouldBeIngredient(Item item)
+    {
         if (BUILTIN_BLACKLIST.contains(item)) return false;
         if (Essence.isBlacklisted(item)) return false;
         if (Essence.isWhitelisted(item)) return true;
         return !(item instanceof BlockItem block) || block.getBlock() instanceof FlowerBlock;
     }
 
-    static {
+    static
+    {
         BUILTIN_BLACKLIST = ImmutableList.<Item>builder()
                 .add(Items.AIR)
                 .add(Items.POTION)
@@ -162,16 +179,19 @@ public final class ServerIngredients extends Ingredients {
                 .build();
     }
 
-    private interface GenerationScenario {
+    private interface GenerationScenario
+    {
 
         IngredientProperties generate(HolderLookup<Essence> lookup, RandomSource source);
     }
 
-    private static GenerationScenario pickRandomScenario(RandomSource source) {
+    private static GenerationScenario pickRandomScenario(RandomSource source)
+    {
         final var totalWeight = SCENARIOS.values().stream().reduce(0, Integer::sum);
         final var randomValue = source.nextInt(totalWeight);
         var currentWeight = 0;
-        for (Map.Entry<GenerationScenario, Integer> entry : SCENARIOS.entrySet()) {
+        for (Map.Entry<GenerationScenario, Integer> entry : SCENARIOS.entrySet())
+        {
             currentWeight += entry.getValue();
             if (randomValue < currentWeight)
                 return entry.getKey();
@@ -179,18 +199,21 @@ public final class ServerIngredients extends Ingredients {
         throw new IllegalStateException();
     }
 
-    private static Stream<Holder.Reference<Essence>> pickRandomEssences(HolderLookup<Essence> lookup, RandomSource source, int amount) {
+    private static Stream<Holder.Reference<Essence>> pickRandomEssences(HolderLookup<Essence> lookup, RandomSource source, int amount)
+    {
         final var essences = lookup.listElements().collect(Collectors.toList());
         if (amount > essences.size()) amount = essences.size();
         final var result = Lists.<Holder.Reference<Essence>>newArrayList();
-        for (int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++)
+        {
             int index = source.nextInt(essences.size());
             result.add(essences.remove(index));
         }
         return result.stream();
     }
 
-    private static IngredientProperties generateSimple(HolderLookup<Essence> lookup, RandomSource source) {
+    private static IngredientProperties generateSimple(HolderLookup<Essence> lookup, RandomSource source)
+    {
         return IngredientProperties.create(
                 pickRandomEssences(lookup, source, source.nextInt(1, 4))
                         .collect(Collectors.toMap(
@@ -199,7 +222,8 @@ public final class ServerIngredients extends Ingredients {
                 List.of());
     }
 
-    private static IngredientProperties generateWeakWithAbsoluteBuff(HolderLookup<Essence> lookup, RandomSource source) {
+    private static IngredientProperties generateWeakWithAbsoluteBuff(HolderLookup<Essence> lookup, RandomSource source)
+    {
         return IngredientProperties.create(
                 pickRandomEssences(lookup, source, source.nextInt(1, 4))
                         .collect(Collectors.toMap(
@@ -208,7 +232,8 @@ public final class ServerIngredients extends Ingredients {
                 List.of(AffixType.ABSOLUTE.create(0.01 * source.nextInt(10, 31))));
     }
 
-    private static IngredientProperties generateMediumWithIngredientBuff(HolderLookup<Essence> lookup, RandomSource source) {
+    private static IngredientProperties generateMediumWithIngredientBuff(HolderLookup<Essence> lookup, RandomSource source)
+    {
         return IngredientProperties.create(
                 pickRandomEssences(lookup, source, source.nextInt(1, 4))
                         .collect(Collectors.toMap(
@@ -217,7 +242,8 @@ public final class ServerIngredients extends Ingredients {
                 List.of(AffixType.pickIngredientBound(source).create(0.01 * source.nextInt(10, 31))));
     }
 
-    private static IngredientProperties generateMediumWithEssenceBuff(HolderLookup<Essence> lookup, RandomSource source) {
+    private static IngredientProperties generateMediumWithEssenceBuff(HolderLookup<Essence> lookup, RandomSource source)
+    {
         return IngredientProperties.create(
                 pickRandomEssences(lookup, source, source.nextInt(1, 4))
                         .collect(Collectors.toMap(
@@ -226,7 +252,8 @@ public final class ServerIngredients extends Ingredients {
                 List.of(AffixType.pickEssenceBound(source).create(0.01 * source.nextInt(10, 31))));
     }
 
-    private static IngredientProperties generateStrongWithIngredientDebuff(HolderLookup<Essence> lookup, RandomSource source) {
+    private static IngredientProperties generateStrongWithIngredientDebuff(HolderLookup<Essence> lookup, RandomSource source)
+    {
         return IngredientProperties.create(
                 pickRandomEssences(lookup, source, source.nextInt(1, 4))
                         .collect(Collectors.toMap(
@@ -235,7 +262,8 @@ public final class ServerIngredients extends Ingredients {
                 List.of(AffixType.pickIngredientBound(source).create(0.01 * source.nextInt(-30, -9))));
     }
 
-    private static IngredientProperties generateStrongWithEssenceDebuff(HolderLookup<Essence> lookup, RandomSource source) {
+    private static IngredientProperties generateStrongWithEssenceDebuff(HolderLookup<Essence> lookup, RandomSource source)
+    {
         return IngredientProperties.create(
                 pickRandomEssences(lookup, source, source.nextInt(1, 4))
                         .collect(Collectors.toMap(

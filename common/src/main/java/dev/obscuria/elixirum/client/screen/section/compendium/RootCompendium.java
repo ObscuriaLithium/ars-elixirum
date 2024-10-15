@@ -8,42 +8,50 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public final class RootCompendium extends AbstractSection {
+public final class RootCompendium extends AbstractSection
+{
     private static @Nullable ScrollContainer pageScroll;
     private static @Nullable ListContainer pageList;
     private static @Nullable ContentsType selectedPage;
 
-    public RootCompendium(int center, Consumer<AbstractSection> action) {
+    public RootCompendium(int center, Consumer<AbstractSection> action)
+    {
         super(center, Type.COMPENDIUM, action);
     }
 
     @Override
-    public void initSection(ElixirumScreen screen) {
+    public void initSection(ElixirumScreen screen)
+    {
         screen.addRenderableWidget(new PanelCompendium(screen.left(10), 10, screen.width(-20), screen.height(-20)));
         propagateUpdate();
     }
 
     @Override
-    public void updateSection() {
+    public void updateSection()
+    {
 
     }
 
-    static void bind(ScrollContainer scroll, ListContainer list) {
+    static void bind(ScrollContainer scroll, ListContainer list)
+    {
         pageScroll = scroll;
         pageList = list;
     }
 
-    static boolean isSelected(ContentsType type) {
+    static boolean isSelected(ContentsType type)
+    {
         return selectedPage == type;
     }
 
-    static void select(ContentsType type) {
+    static void select(ContentsType type)
+    {
         if (isSelected(type)) return;
         selectedPage = type;
         propagateUpdate();
     }
 
-    static void propagateUpdate() {
+    static void propagateUpdate()
+    {
         if (selectedPage == null) return;
         if (pageScroll == null) return;
         if (pageList == null) return;
@@ -52,7 +60,8 @@ public final class RootCompendium extends AbstractSection {
         pageScroll.resetScroll();
     }
 
-    static {
+    static
+    {
         selectedPage = ContentsType.INTRODUCTION;
     }
 }

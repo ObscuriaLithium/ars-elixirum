@@ -18,7 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class PotionShelfEntity extends BlockEntity {
+public final class PotionShelfEntity extends BlockEntity
+{
     private static final String TAG_ITEM_1 = "Item1";
     private static final String TAG_ITEM_2 = "Item2";
     private static final String TAG_ITEM_3 = "Item3";
@@ -26,45 +27,54 @@ public final class PotionShelfEntity extends BlockEntity {
     private ItemStack stack2 = ItemStack.EMPTY;
     private ItemStack stack3 = ItemStack.EMPTY;
 
-    public PotionShelfEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public PotionShelfEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
+    {
         super(type, pos, state);
     }
 
-    public PotionShelfEntity(BlockPos pos, BlockState state) {
-        this(ElixirumBlockEntityTypes.POTION_SHELF, pos, state);
+    public PotionShelfEntity(BlockPos pos, BlockState state)
+    {
+        this(ElixirumBlockEntityTypes.POTION_SHELF.value(), pos, state);
     }
 
-    public ItemStack getFirstStack() {
+    public ItemStack getFirstStack()
+    {
         return this.stack1;
     }
 
-    public void setFirstStack(ItemStack stack) {
+    public void setFirstStack(ItemStack stack)
+    {
         this.stack1 = stack;
         this.setChanged();
         this.updateClients();
     }
 
-    public ItemStack getSecondStack() {
+    public ItemStack getSecondStack()
+    {
         return this.stack2;
     }
 
-    public void setSecondStack(ItemStack stack) {
+    public void setSecondStack(ItemStack stack)
+    {
         this.stack2 = stack;
         this.setChanged();
         this.updateClients();
     }
 
-    public ItemStack getThirdStack() {
+    public ItemStack getThirdStack()
+    {
         return this.stack3;
     }
 
-    public void setThirdStack(ItemStack stack) {
+    public void setThirdStack(ItemStack stack)
+    {
         this.stack3 = stack;
         this.setChanged();
         this.updateClients();
     }
 
-    public boolean putFirstStack(ItemStack stack) {
+    public boolean putFirstStack(ItemStack stack)
+    {
         if (!this.getFirstStack().isEmpty()) return false;
         if (!this.validateStack(stack)) return false;
         this.setFirstStack(stack.copyWithCount(1));
@@ -74,7 +84,8 @@ public final class PotionShelfEntity extends BlockEntity {
         return true;
     }
 
-    public boolean putSecondStack(ItemStack stack) {
+    public boolean putSecondStack(ItemStack stack)
+    {
         if (!this.getSecondStack().isEmpty()) return false;
         if (!this.validateStack(stack)) return false;
         this.setSecondStack(stack.copyWithCount(1));
@@ -84,7 +95,8 @@ public final class PotionShelfEntity extends BlockEntity {
         return true;
     }
 
-    public boolean putThirdStack(ItemStack stack) {
+    public boolean putThirdStack(ItemStack stack)
+    {
         if (!this.getThirdStack().isEmpty()) return false;
         if (!this.validateStack(stack)) return false;
         this.setThirdStack(stack.copyWithCount(1));
@@ -94,7 +106,8 @@ public final class PotionShelfEntity extends BlockEntity {
         return true;
     }
 
-    public ItemStack takeFirstStack() {
+    public ItemStack takeFirstStack()
+    {
         if (this.getFirstStack().isEmpty()) return ItemStack.EMPTY;
         final var stack = this.getFirstStack();
         this.setFirstStack(ItemStack.EMPTY);
@@ -102,7 +115,8 @@ public final class PotionShelfEntity extends BlockEntity {
         return stack;
     }
 
-    public ItemStack takeSecondStack() {
+    public ItemStack takeSecondStack()
+    {
         if (this.getSecondStack().isEmpty()) return ItemStack.EMPTY;
         final var stack = this.getSecondStack();
         this.setSecondStack(ItemStack.EMPTY);
@@ -110,7 +124,8 @@ public final class PotionShelfEntity extends BlockEntity {
         return stack;
     }
 
-    public ItemStack takeThirdStack() {
+    public ItemStack takeThirdStack()
+    {
         if (this.getThirdStack().isEmpty()) return ItemStack.EMPTY;
         final var stack = this.getThirdStack();
         this.setThirdStack(ItemStack.EMPTY);
@@ -119,17 +134,20 @@ public final class PotionShelfEntity extends BlockEntity {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
+    public Packet<ClientGamePacketListener> getUpdatePacket()
+    {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    {
         return this.saveCustomOnly(provider);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    {
         super.loadAdditional(tag, provider);
         if (tag.contains(TAG_ITEM_1, Tag.TAG_COMPOUND))
             this.stack1 = ItemStack.parseOptional(provider, tag.getCompound(TAG_ITEM_1));
@@ -140,7 +158,8 @@ public final class PotionShelfEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    {
         super.saveAdditional(tag, provider);
         tag.put(TAG_ITEM_1, this.stack1.saveOptional(provider));
         tag.put(TAG_ITEM_2, this.stack2.saveOptional(provider));
@@ -148,16 +167,19 @@ public final class PotionShelfEntity extends BlockEntity {
     }
 
     @SuppressWarnings("all")
-    private boolean validateStack(ItemStack stack) {
+    private boolean validateStack(ItemStack stack)
+    {
         return stack.is(ElixirumTags.Items.POTION_SHELF_PLACEABLE);
     }
 
-    private void playSound(SoundEvent event, float volume) {
+    private void playSound(SoundEvent event, float volume)
+    {
         if (this.level == null) return;
         this.level.playSound(null, getBlockPos(), event, SoundSource.BLOCKS, volume, 1f);
     }
 
-    private void updateClients() {
+    private void updateClients()
+    {
         if (level != null) this.level.sendBlockUpdated(
                 this.getBlockPos(),
                 this.getBlockState(),

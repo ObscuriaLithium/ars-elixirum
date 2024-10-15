@@ -4,7 +4,8 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.BiConsumer;
 
-public enum Cap {
+public enum Cap
+{
     WOOD(1, 0.00, "cap/wood"),
     BLUE_WOOD(2, 0.05, "cap/blue_wood"),
     OPEN(3, 0.10, "cap/open"),
@@ -29,48 +30,58 @@ public enum Cap {
     private final double requiredProgress;
     private final String texture;
 
-    Cap(int id, double requiredProgress, String texture) {
+    Cap(int id, double requiredProgress, String texture)
+    {
         this.id = id;
         this.requiredProgress = requiredProgress;
         this.texture = texture;
     }
 
-    public static Cap getById(int id) {
+    public static Cap getById(int id)
+    {
         for (var cap : values())
             if (cap.getId() == id)
                 return cap;
         return DEFAULT;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return this.id;
     }
 
-    public int getRequiredProgress(int total) {
+    public int getRequiredProgress(int total)
+    {
         return (int) (total * requiredProgress);
     }
 
-    public boolean isLocked(int discovered, int total) {
+    public boolean isLocked(int discovered, int total)
+    {
         return discovered < getRequiredProgress(total);
     }
 
-    public double getPredicate() {
+    public double getPredicate()
+    {
         return getId() / 100.0;
     }
 
-    public String getTexture() {
+    public String getTexture()
+    {
         return this.texture;
     }
 
-    public String getDescriptionId() {
+    public String getDescriptionId()
+    {
         return "elixirum.elixir_cap." + toString().toLowerCase();
     }
 
-    public Component getDisplayName() {
+    public Component getDisplayName()
+    {
         return Component.translatable(getDescriptionId());
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    public static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept(WOOD.getDescriptionId(), "Wood");
         consumer.accept(BLUE_WOOD.getDescriptionId(), "Blue Wood");
         consumer.accept(OPEN.getDescriptionId(), "Open");

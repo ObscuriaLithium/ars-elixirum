@@ -34,80 +34,96 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public record ElixirContents(ImmutableList<PackedEffect> effects, int color) implements TooltipProvider {
+public record ElixirContents(ImmutableList<PackedEffect> effects, int color) implements TooltipProvider
+{
     public static final Codec<ElixirContents> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ElixirContents> STREAM_CODEC;
     public static final ElixirContents WATER = new ElixirContents(List.of(), Elixirum.WATER_COLOR);
     private static final Component NO_EFFECT;
 
-    public static Builder create() {
+    public static Builder create()
+    {
         return new Builder();
     }
 
-    public static Builder create(ElixirContents byOther) {
+    public static Builder create(ElixirContents byOther)
+    {
         return new Builder(byOther);
     }
 
-    public ElixirContents(List<PackedEffect> effects, int color) {
+    public ElixirContents(List<PackedEffect> effects, int color)
+    {
         this(ImmutableList.copyOf(effects), color);
     }
 
-    public ElixirContents(ImmutableList<PackedEffect> effects, int color) {
+    public ElixirContents(ImmutableList<PackedEffect> effects, int color)
+    {
         this.effects = ImmutableList.copyOf(effects.stream()
                 .sorted(Comparator.comparingInt(PackedEffect::getQuality).reversed())
                 .toList());
         this.color = color;
     }
 
-    public static ElixirContents get(ItemStack stack) {
+    public static ElixirContents get(ItemStack stack)
+    {
         return stack.getOrDefault(ElixirumDataComponents.ELIXIR_CONTENTS, WATER);
     }
 
-    public static Optional<ElixirContents> getOptional(ItemStack stack) {
+    public static Optional<ElixirContents> getOptional(ItemStack stack)
+    {
         return Optional.ofNullable(stack.get(ElixirumDataComponents.ELIXIR_CONTENTS));
     }
 
-    public static int getOverlayColor(ItemStack stack, int layer) {
+    public static int getOverlayColor(ItemStack stack, int layer)
+    {
         return layer != 1 ? -1 : ElixirContents.get(stack).color();
     }
 
-    public ItemStack set(ItemStack stack) {
+    public ItemStack set(ItemStack stack)
+    {
         stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, this);
         stack.set(DataComponents.RARITY, ElixirTier.get(this).getRarity());
         return stack;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return this.effects.isEmpty();
     }
 
-    public boolean hasInstantEffects() {
+    public boolean hasInstantEffects()
+    {
         return effects.stream().anyMatch(PackedEffect::isInstantenous);
     }
 
-    public int getQuality() {
+    public int getQuality()
+    {
         return this.effects.stream().findFirst()
                 .map(PackedEffect::getQuality)
                 .orElse(0);
     }
 
-    public Component getDisplayName() {
+    public Component getDisplayName()
+    {
         return this.effects.stream().findFirst()
                 .map(PackedEffect::getName)
                 .orElse(Component.literal("Water"));
     }
 
-    public ElixirContents split(int count) {
+    public ElixirContents split(int count)
+    {
         return this.scale(1.0 / count);
     }
 
-    public ElixirContents scale(double scale) {
+    public ElixirContents scale(double scale)
+    {
         return new ElixirContents(scale != 1.0
                 ? effects().stream().map(effect -> effect.scale(scale)).toList()
                 : effects(), this.color);
     }
 
-    public void apply(LivingEntity target, @Nullable Entity direct, @Nullable Entity source) {
+    public void apply(LivingEntity target, @Nullable Entity direct, @Nullable Entity source)
+    {
         final var mastery = Elixirum.getPotionMastery(source);
         final var immunity = Elixirum.getPotionImmunity(target);
         this.effects().stream()
@@ -115,29 +131,40 @@ public record ElixirContents(ImmutableList<PackedEffect> effects, int color) imp
                 .map(effect -> effect.instantiate(mastery, immunity))
                 .forEach(instance -> {
                     final var effect = instance.getEffect().value();
-                    if (effect.isInstantenous()) {
+                    if (effect.isInstantenous())
+                    {
                         effect.applyInstantenousEffect(direct, source, target, instance.getAmplifier(), 1);
-                    } else {
+                    }
+                    else
+                    {
                         target.addEffect(instance);
                     }
                 });
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext context, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
-        if (this.isEmpty()) {
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> consumer, TooltipFlag tooltipFlag)
+    {
+        if (this.isEmpty())
+        {
             consumer.accept(NO_EFFECT);
             return;
         }
         final var attributes = Lists.<Pair<Holder<Attribute>, AttributeModifier>>newArrayList();
         var weakEffects = 0;
         var paleEffects = 0;
-        for (var effect : this.effects()) {
-            if (effect.isWeak()) {
+        for (var effect : this.effects())
+        {
+            if (effect.isWeak())
+            {
                 weakEffects += 1;
-            } else if (effect.isPale()) {
+            }
+            else if (effect.isPale())
+            {
                 paleEffects += 1;
-            } else {
+            }
+            else
+            {
                 consumer.accept(Component.translatable("potion.withDuration",
                                 effect.getDisplayName(),
                                 effect.getStatusOrDuration(context.tickRate()))
@@ -154,7 +181,8 @@ public record ElixirContents(ImmutableList<PackedEffect> effects, int color) imp
                     .withStyle(ChatFormatting.GRAY));
     }
 
-    static {
+    static
+    {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 PackedEffect.CODEC.listOf().fieldOf("effects").forGetter(ElixirContents::effects),
                 Codec.INT.fieldOf("color").forGetter(ElixirContents::color)
@@ -167,29 +195,35 @@ public record ElixirContents(ImmutableList<PackedEffect> effects, int color) imp
         NO_EFFECT = Component.translatable("effect.none").withStyle(ChatFormatting.GRAY);
     }
 
-    public static class Builder {
+    public static class Builder
+    {
         private final List<PackedEffect> effects = Lists.newArrayList();
         private int color = Elixirum.WATER_COLOR;
 
-        public Builder(ElixirContents byOther) {
+        public Builder(ElixirContents byOther)
+        {
             this.effects.addAll(byOther.effects);
             this.color = byOther.color;
         }
 
         public Builder() {}
 
-        public Builder addEffect(PackedEffect effect) {
+        public Builder addEffect(PackedEffect effect)
+        {
             this.effects.add(effect);
             return this;
         }
 
-        public Builder setCustomColor(int color) {
+        public Builder setCustomColor(int color)
+        {
             this.color = color;
             return this;
         }
 
-        public Builder computeContentColor() {
-            if (effects.isEmpty()) {
+        public Builder computeContentColor()
+        {
+            if (effects.isEmpty())
+            {
                 this.color = Elixirum.WATER_COLOR;
                 return this;
             }
@@ -200,7 +234,8 @@ public record ElixirContents(ImmutableList<PackedEffect> effects, int color) imp
             final int totalWeight = colorWeights.values().stream().reduce(0, Integer::sum);
 
             float red = 0, green = 0, blue = 0;
-            for (Map.Entry<MobEffect, Integer> entry : colorWeights.entrySet()) {
+            for (Map.Entry<MobEffect, Integer> entry : colorWeights.entrySet())
+            {
                 final var color = entry.getKey().getColor();
                 final var weight = entry.getValue();
                 final var weightRatio = weight / 1f / totalWeight;
@@ -213,7 +248,8 @@ public record ElixirContents(ImmutableList<PackedEffect> effects, int color) imp
             return this;
         }
 
-        public ElixirContents build() {
+        public ElixirContents build()
+        {
             return new ElixirContents(ImmutableList.copyOf(this.effects), this.color);
         }
     }

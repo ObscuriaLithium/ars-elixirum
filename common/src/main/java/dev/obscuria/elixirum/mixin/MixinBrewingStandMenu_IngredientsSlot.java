@@ -8,10 +8,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(targets = "net.minecraft.world.inventory.BrewingStandMenu$IngredientsSlot")
-public abstract class MixinBrewingStandMenu_IngredientsSlot {
-
+public abstract class MixinBrewingStandMenu_IngredientsSlot
+{
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
-    private void mayPlace_Override(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
+    private void mayPlace_Override(ItemStack stack,
+                                   CallbackInfoReturnable<Boolean> info)
+    {
         info.setReturnValue(BrewingStandHooks.mayPlaceIngredient(stack));
     }
 }

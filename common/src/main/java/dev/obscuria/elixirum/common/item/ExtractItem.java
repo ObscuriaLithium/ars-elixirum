@@ -13,21 +13,24 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 @EssenceBlacklist
-public final class ExtractItem extends Item {
-
-    public ExtractItem() {
+public final class ExtractItem extends Item
+{
+    public ExtractItem()
+    {
         super(new Properties().stacksTo(16).craftRemainder(Items.GLASS_BOTTLE));
     }
 
     @Override
-    public Component getName(ItemStack stack) {
+    public Component getName(ItemStack stack)
+    {
         return ExtractContents.get(stack)
                 .map(contents -> (Component) Component.literal("Extract of " + contents.getEssence().getDisplayName().getString()))
                 .orElseGet(() -> super.getName(stack));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag)
+    {
         ExtractContents.get(stack).ifPresent(contents -> {
             components.add(Component
                     .translatable("elixirum.extract.essence", contents.weight(), contents.getEssence().getDisplayName())
@@ -40,7 +43,8 @@ public final class ExtractItem extends Item {
     }
 
     @Override
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(ItemStack stack)
+    {
         return stack.has(ElixirumDataComponents.EXTRACT_CONTENTS);
     }
 }

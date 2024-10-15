@@ -16,35 +16,42 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
-public record ElixirRecipe(@Unmodifiable List<Item> ingredients) {
+public record ElixirRecipe(@Unmodifiable List<Item> ingredients)
+{
     public static final Codec<ElixirRecipe> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ElixirRecipe> STREAM_CODEC;
     public static final ElixirRecipe EMPTY = new ElixirRecipe(List.of());
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return this.ingredients.isEmpty();
     }
 
-    public int getSize() {
+    public int getSize()
+    {
         return this.ingredients.size();
     }
 
-    public ElixirHolder asHolder() {
+    public ElixirHolder asHolder()
+    {
         return new ElixirHolder(this);
     }
 
-    public ElixirContents brew(HolderGetter<Essence> getter) {
+    public ElixirContents brew(HolderGetter<Essence> getter)
+    {
         return new IngredientMixer(this).getResult(getter);
     }
 
-    public ElixirRecipe with(Item item) {
+    public ElixirRecipe with(Item item)
+    {
         return new ElixirRecipe(Util.make(Lists.newArrayList(), list -> {
             list.addAll(this.ingredients);
             list.add(item);
         }));
     }
 
-    static {
+    static
+    {
         CODEC = BuiltInRegistries.ITEM.byNameCodec().listOf()
                 .xmap(ElixirRecipe::new, ElixirRecipe::ingredients);
         STREAM_CODEC = StreamCodec.composite(

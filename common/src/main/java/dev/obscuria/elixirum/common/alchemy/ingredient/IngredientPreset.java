@@ -17,14 +17,17 @@ import java.util.stream.Collectors;
 
 public record IngredientPreset(Item target,
                                Map<ResourceLocation, Integer> essences,
-                               List<Affix> affixes) {
+                               List<Affix> affixes)
+{
     public static final Codec<IngredientPreset> DIRECT_CODEC;
 
-    public static IngredientPreset single(Item item, ResourceLocation essence, int weight) {
+    public static IngredientPreset single(Item item, ResourceLocation essence, int weight)
+    {
         return new IngredientPreset(item, Util.make(Maps.newHashMap(), map -> map.put(essence, weight)), List.of());
     }
 
-    public IngredientProperties build(RegistryAccess access) {
+    public IngredientProperties build(RegistryAccess access)
+    {
         final var registry = access.registry(ElixirumRegistries.ESSENCE).orElseThrow();
         return IngredientProperties.create(this.essences.entrySet().stream()
                         .filter(entry -> registry.containsKey(entry.getKey()))
@@ -32,7 +35,8 @@ public record IngredientPreset(Item target,
                 affixes);
     }
 
-    static {
+    static
+    {
         DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BuiltInRegistries.ITEM.byNameCodec().fieldOf("target").forGetter(IngredientPreset::target),
                 Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("essences").forGetter(IngredientPreset::essences),

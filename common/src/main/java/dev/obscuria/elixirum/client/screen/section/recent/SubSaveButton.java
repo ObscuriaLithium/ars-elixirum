@@ -9,11 +9,13 @@ import dev.obscuria.elixirum.registry.ElixirumSounds;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
-final class SubSaveButton extends Button {
+final class SubSaveButton extends Button
+{
     private static final Component SAVE = Component.literal("Save");
     private static final Component SAVED = Component.literal("Saved");
 
-    public SubSaveButton() {
+    public SubSaveButton()
+    {
         super(Component.empty());
         this.setClickSound(ElixirumSounds.UI_CLICK_1);
         this.setClickAction(ClickAction.<SubSaveButton>left(
@@ -21,23 +23,27 @@ final class SubSaveButton extends Button {
     }
 
     @Override
-    protected void renderButton(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    protected void renderButton(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         final var sprite = isSaved() ? GREEN_SPRITE : isHovered ? PURPLE_SPRITE : GRAY_SPRITE;
         graphics.blitSprite(sprite, getX(), getY(), getWidth(), getHeight());
     }
 
     @Override
-    protected Component getButtonName() {
+    protected Component getButtonName()
+    {
         return isSaved() ? SAVED : SAVE;
     }
 
-    private boolean isSaved() {
+    private boolean isSaved()
+    {
         return RootRecent.getSelectedHolder()
                 .map(holder -> ClientAlchemy.getProfile().isOnCollection(holder.getRecipe()))
                 .orElse(false);
     }
 
-    private boolean save(ElixirHolder holder) {
+    private boolean save(ElixirHolder holder)
+    {
         return ClientAlchemy.getProfile().addToCollection(holder);
     }
 }

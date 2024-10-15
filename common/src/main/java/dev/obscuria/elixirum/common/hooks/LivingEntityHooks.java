@@ -14,18 +14,21 @@ import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
 
-public final class LivingEntityHooks {
-
-    public static boolean checkTotemDeathProtection(LivingEntity entity, DamageSource source) {
+public final class LivingEntityHooks
+{
+    public static boolean checkTotemDeathProtection(LivingEntity entity, DamageSource source)
+    {
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
-        for (var hand : InteractionHand.values()) {
+        for (var hand : InteractionHand.values())
+        {
             final var stack = entity.getItemInHand(hand);
-            if (!stack.is(ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem())) continue;
+            if (!stack.is(ElixirumItems.WITCH_TOTEM_OF_UNDYING.value())) continue;
 
             final var totem = stack.copy();
             stack.shrink(1);
-            if (entity instanceof ServerPlayer player) {
-                player.awardStat(Stats.ITEM_USED.get(ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem()), 1);
+            if (entity instanceof ServerPlayer player)
+            {
+                player.awardStat(Stats.ITEM_USED.get(ElixirumItems.WITCH_TOTEM_OF_UNDYING.value()), 1);
                 CriteriaTriggers.USED_TOTEM.trigger(player, totem);
                 entity.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
             }

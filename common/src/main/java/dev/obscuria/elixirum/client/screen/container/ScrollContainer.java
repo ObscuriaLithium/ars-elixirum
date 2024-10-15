@@ -14,7 +14,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
-public final class ScrollContainer extends HierarchicalWidget {
+public final class ScrollContainer extends HierarchicalWidget
+{
     private @Nullable MultiLineLabel placeholderLabel;
     private double scrollValue;
     private double scrollValueO;
@@ -22,12 +23,14 @@ public final class ScrollContainer extends HierarchicalWidget {
     private int childrenHeight;
     private int visibleHeight;
 
-    public ScrollContainer(Component placeholder) {
+    public ScrollContainer(Component placeholder)
+    {
         super(0, 0, 0, 0, placeholder);
         this.setUpdateFlags(UPDATE_BY_HEIGHT);
     }
 
-    public void resetScroll() {
+    public void resetScroll()
+    {
         this.scrollValue = 0;
         this.scrollValueO = 0;
         this.scroll = 0;
@@ -35,7 +38,8 @@ public final class ScrollContainer extends HierarchicalWidget {
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         ElixirumScreen.debugRenderer(this, graphics, transform, mouseX, mouseY);
         final var scroll = getScroll();
 
@@ -47,7 +51,8 @@ public final class ScrollContainer extends HierarchicalWidget {
         graphics.pose().popPose();
         graphics.disableScissor();
 
-        if (isScrollEnabled()) {
+        if (isScrollEnabled())
+        {
             graphics.fill(getRight() - 1, getY(), getRight() + 1, getBottom(), 0x2F000000);
             final var clampedScroll = Math.clamp(scroll, 0, getMaxScroll());
             final var ratio = clampedScroll / 1f / getMaxScroll();
@@ -59,7 +64,8 @@ public final class ScrollContainer extends HierarchicalWidget {
             graphics.pose().popPose();
         }
 
-        if (!hasVisibleContents() && placeholderLabel != null) {
+        if (!hasVisibleContents() && placeholderLabel != null)
+        {
             final var x = getX() + getWidth() / 2;
             final var y = getY() + getHeight() / 2 - placeholderLabel.getLineCount() * 5;
             placeholderLabel.renderCentered(graphics, x, y);
@@ -67,19 +73,24 @@ public final class ScrollContainer extends HierarchicalWidget {
     }
 
     @Override
-    public void tick() {
+    public void tick()
+    {
         this.scrollValueO = scrollValue;
         this.scrollValue = Mth.lerp(0.5, scrollValue, scroll);
-        if (scroll < 0 || !isScrollEnabled()) {
+        if (scroll < 0 || !isScrollEnabled())
+        {
             this.scroll = Mth.lerp(0.4, scroll, 0.0);
-        } else if (scroll > getMaxScroll()) {
+        }
+        else if (scroll > getMaxScroll())
+        {
             this.scroll = Mth.lerp(0.4, scroll, getMaxScroll());
         }
         super.tick();
     }
 
     @Override
-    public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button)
+    {
         final var scroll = getScroll();
         for (var child : children())
             if (child.mouseClicked(GlobalTransform.offset(child, transform.rect(), 0, (int) -scroll), mouseX, mouseY, button))
@@ -88,8 +99,10 @@ public final class ScrollContainer extends HierarchicalWidget {
     }
 
     @Override
-    public boolean mouseScrolled(GlobalTransform transform, double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (transform.isMouseOver(mouseX, mouseY)) {
+    public boolean mouseScrolled(GlobalTransform transform, double mouseX, double mouseY, double scrollX, double scrollY)
+    {
+        if (transform.isMouseOver(mouseX, mouseY))
+        {
             if (!isScrollEnabled()) return false;
             this.scroll += scrollY * -20.0;
             final var manager = Minecraft.getInstance().getSoundManager();
@@ -100,10 +113,12 @@ public final class ScrollContainer extends HierarchicalWidget {
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
         this.visibleHeight = getHeight();
         this.childrenHeight = 0;
-        for (var child : children()) {
+        for (var child : children())
+        {
             child.setX(getX());
             child.setY(getY() + 5);
             child.setWidth(getWidth() - 2);
@@ -114,16 +129,19 @@ public final class ScrollContainer extends HierarchicalWidget {
         this.placeholderLabel = MultiLineLabel.create(font, placeholder, getWidth() - 10);
     }
 
-    private boolean isScrollEnabled() {
+    private boolean isScrollEnabled()
+    {
         return childrenHeight > visibleHeight;
     }
 
-    private double getScroll() {
+    private double getScroll()
+    {
         final var delta = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
         return Mth.lerp(delta, scrollValueO, scrollValue);
     }
 
-    private double getMaxScroll() {
+    private double getMaxScroll()
+    {
         return childrenHeight - visibleHeight;
     }
 }

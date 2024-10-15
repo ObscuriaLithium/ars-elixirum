@@ -2,11 +2,11 @@ package dev.obscuria.elixirum.common.alchemy.elixir;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.client.ClientAlchemy;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.registry.ElixirumDataComponents;
 import dev.obscuria.elixirum.registry.ElixirumItems;
+import dev.obscuria.core.api.ObscureAPI;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,7 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public final class ElixirHolder {
+public final class ElixirHolder
+{
     public static final Codec<ElixirHolder> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ElixirHolder> STREAM_CODEC;
 
@@ -31,11 +32,13 @@ public final class ElixirHolder {
     private @Nullable Component description;
     private boolean changed = true;
 
-    public static ElixirHolder empty() {
+    public static ElixirHolder empty()
+    {
         return ElixirRecipe.EMPTY.asHolder();
     }
 
-    public ElixirHolder(ElixirRecipe recipe) {
+    public ElixirHolder(ElixirRecipe recipe)
+    {
         this.recipe = recipe;
     }
 
@@ -43,38 +46,46 @@ public final class ElixirHolder {
     private ElixirHolder(ElixirRecipe recipe,
                          Optional<ElixirStyle> style,
                          Optional<Component> name,
-                         Optional<Component> description) {
+                         Optional<Component> description)
+    {
         this.recipe = recipe;
         this.style = style.orElse(null);
         this.name = name.orElse(null);
         this.description = description.orElse(null);
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return this.recipe.isEmpty();
     }
 
-    public boolean is(ElixirRecipe recipe) {
+    public boolean is(ElixirRecipe recipe)
+    {
         return this.recipe.equals(recipe);
     }
 
-    public ElixirRecipe getRecipe() {
+    public ElixirRecipe getRecipe()
+    {
         return this.recipe;
     }
 
-    public Optional<ElixirStyle> getStyle() {
+    public Optional<ElixirStyle> getStyle()
+    {
         return Optional.ofNullable(style);
     }
 
-    public Optional<Component> getName() {
+    public Optional<Component> getName()
+    {
         return Optional.ofNullable(name);
     }
 
-    public Optional<Component> getDescription() {
+    public Optional<Component> getDescription()
+    {
         return Optional.ofNullable(description);
     }
 
-    public ElixirHolder setStyle(@Nullable ElixirStyle style) {
+    public ElixirHolder setStyle(@Nullable ElixirStyle style)
+    {
         this.style = style;
         this.changed = true;
         this.getCachedStack().ifPresent(stack -> getStyle().ifPresentOrElse(
@@ -83,7 +94,8 @@ public final class ElixirHolder {
         return this;
     }
 
-    public ElixirHolder setName(@Nullable Component name) {
+    public ElixirHolder setName(@Nullable Component name)
+    {
         this.name = name;
         this.changed = true;
         this.getCachedStack().ifPresent(stack -> getName().ifPresentOrElse(
@@ -92,41 +104,48 @@ public final class ElixirHolder {
         return this;
     }
 
-    public ElixirHolder setDescription(@Nullable Component description) {
+    public ElixirHolder setDescription(@Nullable Component description)
+    {
         this.description = description;
         this.changed = true;
         return this;
     }
 
-    public Optional<ItemStack> getCachedStack() {
-        return Elixirum.PLATFORM.isClient() && !isEmpty()
+    public Optional<ItemStack> getCachedStack()
+    {
+        return ObscureAPI.PLATFORM.isClient() && !isEmpty()
                 ? Optional.of(ClientAlchemy.getCache().getOrCreateStack(this))
                 : Optional.empty();
     }
 
-    public ItemStack createStack(HolderGetter<Essence> getter) {
+    public ItemStack createStack(HolderGetter<Essence> getter)
+    {
         final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
         stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, recipe.brew(getter));
         return applyAppearance(stack);
     }
 
-    public ItemStack applyAppearance(ItemStack stack) {
+    public ItemStack applyAppearance(ItemStack stack)
+    {
         getStyle().ifPresent(style -> stack.set(ElixirumDataComponents.ELIXIR_STYLE, style));
         getName().ifPresent(name -> stack.set(DataComponents.ITEM_NAME, name));
         return stack;
     }
 
-    public boolean isSame(ElixirHolder other) {
+    public boolean isSame(ElixirHolder other)
+    {
         return this.recipe.equals(other.recipe);
     }
 
-    public void consumeChanges(Consumer<ElixirHolder> consumer) {
+    public void consumeChanges(Consumer<ElixirHolder> consumer)
+    {
         if (!changed) return;
         consumer.accept(this);
         this.changed = false;
     }
 
-    static {
+    static
+    {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ElixirRecipe.CODEC.fieldOf("recipe").forGetter(ElixirHolder::getRecipe),
                 ElixirStyle.CODEC.optionalFieldOf("style").forGetter(ElixirHolder::getStyle),

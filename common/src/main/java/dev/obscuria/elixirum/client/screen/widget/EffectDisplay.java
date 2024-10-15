@@ -9,11 +9,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.network.chat.Component;
 
-public final class EffectDisplay extends HierarchicalWidget {
+public final class EffectDisplay extends HierarchicalWidget
+{
     private final PackedEffect effect;
     private MultiLineLabel label;
 
-    public EffectDisplay(PackedEffect effect) {
+    public EffectDisplay(PackedEffect effect)
+    {
         super(0, 0, 0, 0, Component.empty());
         this.setUpdateFlags(UPDATE_BY_WIDTH);
         this.effect = effect;
@@ -21,7 +23,8 @@ public final class EffectDisplay extends HierarchicalWidget {
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         if (!transform.isWithinScissor()) return;
         ElixirumScreen.debugRenderer(this, graphics, transform, mouseX, mouseY);
         final var font = Minecraft.getInstance().font;
@@ -44,7 +47,8 @@ public final class EffectDisplay extends HierarchicalWidget {
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
         final var font = Minecraft.getInstance().font;
         final var effectName = effect.getDisplayName();
         this.label = MultiLineLabel.create(font, effectName, getWidth() - 20);

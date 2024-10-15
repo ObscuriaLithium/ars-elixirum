@@ -1,14 +1,14 @@
 package dev.obscuria.elixirum.client;
 
 import com.google.common.collect.Sets;
-import dev.obscuria.elixirum.Elixirum;
+import dev.obscuria.core.api.v1.common.ObscureNetworking;
 import dev.obscuria.elixirum.common.alchemy.ElixirumProfile;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirHolder;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirRecipe;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
-import dev.obscuria.elixirum.network.ClientboundDiscoverPacket;
-import dev.obscuria.elixirum.network.ClientboundProfilePacket;
-import dev.obscuria.elixirum.network.ServerboundProfilePacket;
+import dev.obscuria.elixirum.network.ClientboundDiscoverPayload;
+import dev.obscuria.elixirum.network.ClientboundProfilePayload;
+import dev.obscuria.elixirum.network.ServerboundProfilePayload;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
@@ -75,15 +75,15 @@ public final class ClientElixirumProfile extends ElixirumProfile {
         this.getCollection().forEach(holder -> holder.consumeChanges(consumer));
         if (!changed.get()) return;
         this.changed = false;
-        Elixirum.PLATFORM.sendToServer(ServerboundProfilePacket.create(packCollection()));
+        ObscureNetworking.sendToServer(ServerboundProfilePayload.create(packCollection()));
     }
 
-    void handle(ClientboundProfilePacket packet) {
+    void handle(ClientboundProfilePayload packet) {
         ClientAlchemy.clearCache();
         this.unpack(packet.content());
     }
 
-    void handle(ClientboundDiscoverPacket packet) {
+    void handle(ClientboundDiscoverPayload packet) {
         this.discoveredEssences.compute(packet.item(), (key, value) -> Util.make(
                 value == null ? Sets.newHashSet() : value,
                 set -> set.add(packet.essence())));

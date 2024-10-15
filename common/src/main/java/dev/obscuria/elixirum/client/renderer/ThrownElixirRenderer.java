@@ -12,18 +12,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 
-public final class ThrownElixirRenderer extends EntityRenderer<ThrownElixirProjectile> {
+public final class ThrownElixirRenderer extends EntityRenderer<ThrownElixirProjectile>
+{
     private final ItemRenderer itemRenderer;
 
-    public ThrownElixirRenderer(EntityRendererProvider.Context context) {
+    public ThrownElixirRenderer(EntityRendererProvider.Context context)
+    {
         super(context);
         this.itemRenderer = context.getItemRenderer();
     }
 
     public void render(ThrownElixirProjectile entity, float yaw, float partialTick,
-                       PoseStack pose, MultiBufferSource bufferSource, int light) {
+                       PoseStack pose, MultiBufferSource bufferSource, int light)
+    {
 
-        if (entity.tickCount >= 2 || !(this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) < 12.25D)) {
+        if (entity.tickCount >= 2 || !(this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) < 12.25D))
+        {
             pose.pushPose();
             pose.translate(0, 0.12f, 0);
             pose.mulPose(Axis.YP.rotationDegrees(yaw));
@@ -40,7 +44,8 @@ public final class ThrownElixirRenderer extends EntityRenderer<ThrownElixirProje
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ThrownElixirProjectile entity) {
+    public ResourceLocation getTextureLocation(ThrownElixirProjectile entity)
+    {
         return InventoryMenu.BLOCK_ATLAS;
     }
 }

@@ -11,15 +11,18 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public final class PotionShelfRenderer implements BlockEntityRenderer<PotionShelfEntity> {
+public final class PotionShelfRenderer implements BlockEntityRenderer<PotionShelfEntity>
+{
     private final ItemRenderer itemRenderer;
 
-    public PotionShelfRenderer(BlockEntityRendererProvider.Context context) {
+    public PotionShelfRenderer(BlockEntityRendererProvider.Context context)
+    {
         this.itemRenderer = context.getItemRenderer();
     }
 
     @Override
-    public void render(PotionShelfEntity entity, float f, PoseStack pose, MultiBufferSource bufferSource, int light, int overlay) {
+    public void render(PotionShelfEntity entity, float f, PoseStack pose, MultiBufferSource bufferSource, int light, int overlay)
+    {
         final var firstStack = entity.getFirstStack();
         final var secondStack = entity.getSecondStack();
         final var thirdStack = entity.getThirdStack();
@@ -33,14 +36,16 @@ public final class PotionShelfRenderer implements BlockEntityRenderer<PotionShel
         pose.popPose();
     }
 
-    private void setupPose(PotionShelfEntity entity, PoseStack pose) {
+    private void setupPose(PotionShelfEntity entity, PoseStack pose)
+    {
         pose.translate(0.5, 0.5, 0.5);
         pose.mulPose(Axis.YP.rotationDegrees(-entity.getBlockState().getValue(PotionShelfBlock.FACING).toYRot() + 180));
         pose.scale(0.6f, 0.6f, 0.6f);
         pose.translate(0.55, 0.65, 0.475);
     }
 
-    private void renderStack(double offset, ItemStack stack, int light, int overlay, PoseStack pose, MultiBufferSource bufferSource) {
+    private void renderStack(double offset, ItemStack stack, int light, int overlay, PoseStack pose, MultiBufferSource bufferSource)
+    {
         if (stack.isEmpty()) return;
         pose.pushPose();
         pose.translate(offset, 0, 0);

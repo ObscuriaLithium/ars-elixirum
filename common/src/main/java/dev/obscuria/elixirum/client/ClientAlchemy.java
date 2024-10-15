@@ -3,9 +3,9 @@ package dev.obscuria.elixirum.client;
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.client.screen.section.collection.RootCollection;
 import dev.obscuria.elixirum.client.screen.section.recent.RootRecent;
-import dev.obscuria.elixirum.network.ClientboundDiscoverPacket;
-import dev.obscuria.elixirum.network.ClientboundItemEssencesPacket;
-import dev.obscuria.elixirum.network.ClientboundProfilePacket;
+import dev.obscuria.elixirum.network.ClientboundDiscoverPayload;
+import dev.obscuria.elixirum.network.ClientboundIngredientsPayload;
+import dev.obscuria.elixirum.network.ClientboundProfilePayload;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,18 +35,18 @@ public final class ClientAlchemy {
     }
 
     @ApiStatus.Internal
-    public static void handle(ClientboundItemEssencesPacket packet) {
+    public static void handle(ClientboundIngredientsPayload packet) {
         LOG.info("Loaded {} ingredients", packet.packed().properties().size());
         ingredients.unpack(packet.packed());
     }
 
     @ApiStatus.Internal
-    public static void handle(ClientboundProfilePacket packet) {
+    public static void handle(ClientboundProfilePayload packet) {
         profile.handle(packet);
     }
 
     @ApiStatus.Internal
-    public static void handle(ClientboundDiscoverPacket packet) {
+    public static void handle(ClientboundDiscoverPayload packet) {
         profile.handle(packet);
     }
 }

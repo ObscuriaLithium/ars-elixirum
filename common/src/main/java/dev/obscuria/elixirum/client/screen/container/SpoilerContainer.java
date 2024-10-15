@@ -12,13 +12,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class SpoilerContainer extends HierarchicalWidget {
+public class SpoilerContainer extends HierarchicalWidget
+{
     private static final ResourceLocation ARROW_UP = Elixirum.key("icon/arrow_up");
     private static final ResourceLocation ARROW_DOWN = Elixirum.key("icon/arrow_down");
     private boolean defaultExpanded;
     private Property<Boolean> property;
 
-    public SpoilerContainer(Component name) {
+    public SpoilerContainer(Component name)
+    {
         super(0, 0, 0, 0, name);
         this.setClickSound(ElixirumSounds.UI_CLICK_1);
         this.property = Property.create(
@@ -26,23 +28,27 @@ public class SpoilerContainer extends HierarchicalWidget {
                 value -> defaultExpanded = value);
     }
 
-    public SpoilerContainer setProperty(Property<Boolean> property) {
+    public SpoilerContainer setProperty(Property<Boolean> property)
+    {
         this.property = property;
         return this;
     }
 
-    public boolean isExpanded() {
+    public boolean isExpanded()
+    {
         return this.property.get();
     }
 
-    public void setExpanded(boolean value) {
+    public void setExpanded(boolean value)
+    {
         if (this.isExpanded() == value) return;
         this.property.set(value);
         this.setChanged(true);
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         final var headerHovered = transform.isMouseOver(mouseX, mouseY) && mouseY <= transform.rect().top() + 14;
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1, 1, 1, headerHovered ? 0.4f : 0.2f);
@@ -55,10 +61,12 @@ public class SpoilerContainer extends HierarchicalWidget {
     }
 
     @Override
-    public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button)
+    {
         if (transform.isMouseOver(mouseX, mouseY)
                 && mouseY <= transform.rect().top() + 14
-                && button == 0) {
+                && button == 0)
+        {
             this.playClickSound();
             this.setExpanded(!isExpanded());
             return true;
@@ -67,9 +75,11 @@ public class SpoilerContainer extends HierarchicalWidget {
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
         var maxHeight = 0;
-        for (var child : children()) {
+        for (var child : children())
+        {
             child.setX(getX());
             child.setY(getY() + 14);
             child.setWidth(getWidth());
@@ -79,7 +89,8 @@ public class SpoilerContainer extends HierarchicalWidget {
     }
 
     @Override
-    protected boolean hasContents() {
+    protected boolean hasContents()
+    {
         return true;
     }
 }

@@ -47,5 +47,5 @@ plugins {
 rootProject.name = 'Elixirum'
 include('common')
 include('platform:fabric')
-//include('platform:neoforge')
+include('platform:neoforge')
 //include('platform:forge')

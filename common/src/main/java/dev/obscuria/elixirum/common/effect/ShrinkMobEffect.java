@@ -8,9 +8,10 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-public final class ShrinkMobEffect extends MobEffect {
-
-    public ShrinkMobEffect() {
+public final class ShrinkMobEffect extends MobEffect
+{
+    public ShrinkMobEffect()
+    {
         super(MobEffectCategory.HARMFUL, 14270531);
 
         addAttributeModifier(Attributes.SCALE, -0.1);
@@ -30,7 +31,8 @@ public final class ShrinkMobEffect extends MobEffect {
         addAttributeModifier(Attributes.ATTACK_SPEED, 0.05);
     }
 
-    private void addAttributeModifier(Holder<Attribute> attribute, double amount) {
+    private void addAttributeModifier(Holder<Attribute> attribute, double amount)
+    {
         addAttributeModifier(attribute, Elixirum.key("effect.shrink"), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 }

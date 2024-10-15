@@ -1,27 +1,20 @@
 package dev.obscuria.elixirum.client;
 
-import com.google.common.collect.Maps;
 import dev.obscuria.elixirum.Elixirum;
-import dev.obscuria.elixirum.client.model.ModelGlassCauldron;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 
-import java.util.HashMap;
-import java.util.function.Supplier;
+public interface ElixirumLayers
+{
+    ModelLayerLocation GLASS_CAULDRON = create("glass_cauldron");
+    ModelLayerLocation GLASS_CAULDRON_FLUID = create("glass_cauldron", "fluid");
 
-public interface ElixirumLayers {
-    HashMap<ModelLayerLocation, Supplier<LayerDefinition>> VALUES = Maps.newHashMap();
-
-    ModelLayerLocation GLASS_CAULDRON = add("glass_cauldron.json", ModelGlassCauldron::createBodyLayer);
-    ModelLayerLocation GLASS_CAULDRON_FLUID = add("glass_cauldron.json", "fluid", ModelGlassCauldron::createFluidLayer);
-
-    private static ModelLayerLocation add(String name, Supplier<LayerDefinition> model) {
-        return add(name, "main", model);
+    private static ModelLayerLocation create(String name)
+    {
+        return create(name, "main");
     }
 
-    private static ModelLayerLocation add(String name, String layer, Supplier<LayerDefinition> model) {
-        final var location = new ModelLayerLocation(Elixirum.key(name), layer);
-        VALUES.put(location, model);
-        return location;
+    private static ModelLayerLocation create(String name, String layer)
+    {
+        return new ModelLayerLocation(Elixirum.key(name), layer);
     }
 }

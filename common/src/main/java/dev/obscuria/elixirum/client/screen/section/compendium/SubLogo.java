@@ -8,15 +8,18 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-final class SubLogo extends HierarchicalWidget {
+final class SubLogo extends HierarchicalWidget
+{
     private static final ResourceLocation LOGO = Elixirum.key("textures/logo.png");
 
-    public SubLogo() {
+    public SubLogo()
+    {
         super(0, 0, 0, 70, Component.empty());
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         RenderSystem.enableBlend();
         graphics.pose().pushPose();
         graphics.pose().translate(getX() + getWidth() / 2f, getY() + 35f, 0);
@@ -26,7 +29,8 @@ final class SubLogo extends HierarchicalWidget {
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
 
     }
 }

@@ -7,6 +7,7 @@ import dev.obscuria.elixirum.common.alchemy.elixir.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.elixir.ElixirStyle;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import dev.obscuria.elixirum.common.alchemy.style.Shape;
+import dev.obscuria.core.api.v1.common.ObscureRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,7 +23,8 @@ import java.util.function.Supplier;
 import static net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import static net.minecraft.world.item.CreativeModeTab.Output;
 
-public enum ElixirumCreativeTabs {
+public enum ElixirumCreativeTabs
+{
     ELIXIRUM_GENERIC("elixirum_generic",
             () -> ElixirumItems.ALCHEMIST_EYE.value().getDefaultInstance(),
             ElixirumCreativeTabs::tabGeneric),
@@ -30,14 +32,15 @@ public enum ElixirumCreativeTabs {
             () -> ElixirumItems.EXTRACT.value().getDefaultInstance(),
             ElixirumCreativeTabs::tabExtracts);
 
-    private final Holder<CreativeModeTab> holder;
-
     ElixirumCreativeTabs(String name,
                          Supplier<ItemStack> iconSupplier,
-                         CreativeModeTab.DisplayItemsGenerator generator) {
+                         CreativeModeTab.DisplayItemsGenerator generator)
+    {
 
-        this.holder = Elixirum.PLATFORM.registerReference(
-                BuiltInRegistries.CREATIVE_MODE_TAB, Elixirum.key(name),
+        ObscureRegistry.register(
+                Elixirum.MODID,
+                BuiltInRegistries.CREATIVE_MODE_TAB,
+                Elixirum.key(name),
                 () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, -1)
                         .title(Component.translatable("itemGroup." + name))
                         .icon(iconSupplier)
@@ -45,24 +48,19 @@ public enum ElixirumCreativeTabs {
                         .build());
     }
 
-    public Holder<CreativeModeTab> holder() {
-        return this.holder;
-    }
-
-    public CreativeModeTab value() {
-        return this.holder.value();
-    }
-
-    private static void tabGeneric(ItemDisplayParameters params, Output output) {
-        output.accept(ElixirumItems.ALCHEMIST_EYE);
-        output.accept(ElixirumItems.GLASS_CAULDRON);
-        output.accept(ElixirumItems.POTION_SHELF);
+    private static void tabGeneric(ItemDisplayParameters params, Output output)
+    {
+        output.accept(ElixirumItems.ALCHEMIST_EYE.value());
+        output.accept(ElixirumItems.GLASS_CAULDRON.value());
+        output.accept(ElixirumItems.POTION_SHELF.value());
         acceptAllElixirs(params.holders().lookupOrThrow(ElixirumRegistries.ESSENCE), output);
     }
 
-    private static void tabExtracts(ItemDisplayParameters params, Output output) {
+    private static void tabExtracts(ItemDisplayParameters params, Output output)
+    {
         params.holders().lookupOrThrow(ElixirumRegistries.ESSENCE).listElements().forEach(essence -> {
-            for (var i = 1; i <= 9; i++) {
+            for (var i = 1; i <= 9; i++)
+            {
                 var stack = ElixirumItems.EXTRACT.value().getDefaultInstance();
                 stack.set(ElixirumDataComponents.EXTRACT_CONTENTS, new ExtractContents(Optional.empty(), essence, i));
                 output.accept(stack);
@@ -70,16 +68,18 @@ public enum ElixirumCreativeTabs {
         });
     }
 
-    private static void acceptAllElixirs(HolderLookup<Essence> lookup, Output output) {
+    private static void acceptAllElixirs(HolderLookup<Essence> lookup, Output output)
+    {
         lookup.listElements().forEach(essence -> acceptVariants(
-                ElixirumItems.ELIXIR.asItem(), ElixirStyle.DEFAULT.withShape(Shape.FLASK_2), essence, output));
+                ElixirumItems.ELIXIR.value(), ElixirStyle.DEFAULT.withShape(Shape.FLASK_2), essence, output));
         lookup.listElements().forEach(essence -> acceptVariants(
-                ElixirumItems.SPLASH_ELIXIR.asItem(), ElixirStyle.DEFAULT, essence, output));
+                ElixirumItems.SPLASH_ELIXIR.value(), ElixirStyle.DEFAULT, essence, output));
         lookup.listElements().forEach(essence -> acceptVariants(
-                ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem(), ElixirStyle.DEFAULT, essence, output));
+                ElixirumItems.WITCH_TOTEM_OF_UNDYING.value(), ElixirStyle.DEFAULT, essence, output));
     }
 
-    private static void acceptVariants(Item item, ElixirStyle style, Holder<Essence> essence, Output output) {
+    private static void acceptVariants(Item item, ElixirStyle style, Holder<Essence> essence, Output output)
+    {
         final var stack = item.getDefaultInstance();
         if (style != ElixirStyle.DEFAULT)
             stack.set(ElixirumDataComponents.ELIXIR_STYLE, style);
@@ -88,14 +88,16 @@ public enum ElixirumCreativeTabs {
         output.accept(buildContents(essence, 100, 100).set(stack.copy()));
     }
 
-    private static ElixirContents buildContents(Holder<Essence> essence, double amplifierWeight, double durationWeight) {
+    private static ElixirContents buildContents(Holder<Essence> essence, double amplifierWeight, double durationWeight)
+    {
         return ElixirContents.create()
                 .addEffect(PackedEffect.byWeight(essence, amplifierWeight, durationWeight))
                 .computeContentColor()
                 .build();
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    public static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept("itemGroup.elixirum_generic", Elixirum.DISPLAY_NAME);
         consumer.accept("itemGroup.elixirum_extracts", Elixirum.DISPLAY_NAME + ": Extracts");
     }

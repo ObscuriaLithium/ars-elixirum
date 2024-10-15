@@ -10,7 +10,8 @@ import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
-public class Text extends HierarchicalWidget {
+public class Text extends HierarchicalWidget
+{
     private final Font font;
     private MultiLineLabel label;
     private Component content;
@@ -18,11 +19,13 @@ public class Text extends HierarchicalWidget {
     private float scale;
     private boolean centered;
 
-    public Text() {
+    public Text()
+    {
         this(0, 0, 0, 0);
     }
 
-    public Text(int x, int y, int width, int height) {
+    public Text(int x, int y, int width, int height)
+    {
         super(x, y, width, height, Component.empty());
         this.setUpdateFlags(UPDATE_BY_WIDTH);
         this.font = Minecraft.getInstance().font;
@@ -33,42 +36,51 @@ public class Text extends HierarchicalWidget {
         this.centered = false;
     }
 
-    public Text setContent(Component content) {
+    public Text setContent(Component content)
+    {
         this.content = content;
         this.setChanged(true);
         return this;
     }
 
-    public Text setStyle(Style style) {
+    public Text setStyle(Style style)
+    {
         this.style = style;
         this.setChanged(true);
         return this;
     }
 
-    public Text setScale(float scale) {
+    public Text setScale(float scale)
+    {
         this.scale = scale;
         this.setChanged(true);
         return this;
     }
 
-    public Text setCentered(boolean centered) {
+    public Text setCentered(boolean centered)
+    {
         this.centered = centered;
         this.setChanged(true);
         return this;
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         ElixirumScreen.debugRenderer(this, graphics, transform, mouseX, mouseY);
-        if (this.visible) {
-            if (this.centered) {
+        if (this.visible)
+        {
+            if (this.centered)
+            {
                 final var halfWidth = getX() + getWidth() / 2;
                 graphics.pose().pushPose();
                 graphics.pose().translate(halfWidth, getY(), 0);
                 graphics.pose().scale(scale, scale, scale);
                 label.renderCentered(graphics, 0, 0, 10, 0xFFFFFFFF);
                 graphics.pose().popPose();
-            } else {
+            }
+            else
+            {
                 graphics.pose().pushPose();
                 graphics.pose().translate(getX(), getY(), 0);
                 graphics.pose().scale(scale, scale, scale);
@@ -79,7 +91,8 @@ public class Text extends HierarchicalWidget {
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
         this.label = MultiLineLabel.create(font, content.copy().setStyle(style), (int) (getWidth() / scale));
         this.setHeight((int) Math.ceil((10 * label.getLineCount() - 1) * scale));
     }

@@ -14,13 +14,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 
 @Mixin(MusicManager.class)
-public abstract class MixinMusicManager {
-    @Shadow @Nullable private SoundInstance currentMusic;
-    @Shadow @Final private Minecraft minecraft;
-    @Shadow private int nextSongDelay;
+public abstract class MixinMusicManager
+{
+    @Shadow
+    @Nullable
+    private SoundInstance currentMusic;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+    @Shadow
+    private int nextSongDelay;
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void tick_Modify(CallbackInfo info) {
+    private void tick_Modify(CallbackInfo info)
+    {
         if (minecraft.screen instanceof ElixirumScreen
                 && currentMusic == null
                 && nextSongDelay > 0)

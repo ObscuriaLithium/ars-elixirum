@@ -12,10 +12,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-final class SubElixirsGrid extends GridContainer {
-
-    public SubElixirsGrid() {
-        for (var holder : ClientAlchemy.getCache().getRecentElixirs()) {
+final class SubElixirsGrid extends GridContainer
+{
+    public SubElixirsGrid()
+    {
+        for (var holder : ClientAlchemy.getCache().getRecentElixirs())
+        {
             this.addChild(new Entry(holder)
                     .setClickSound(ElixirumSounds.UI_CLICK_2)
                     .setClickAction(ClickAction.<Entry>left(widget -> {
@@ -25,28 +27,33 @@ final class SubElixirsGrid extends GridContainer {
         }
     }
 
-    static final class Entry extends AbstractElixirDisplay {
+    static final class Entry extends AbstractElixirDisplay
+    {
         private static final ResourceLocation CHECK_MARK = Elixirum.key("icon/check_mark");
         private final ElixirHolder holder;
 
-        public Entry(ElixirHolder holder) {
+        public Entry(ElixirHolder holder)
+        {
             super(holder.getCachedStack().orElse(ItemStack.EMPTY));
             this.holder = holder;
         }
 
-        public ElixirHolder getHolder() {
+        public ElixirHolder getHolder()
+        {
             return this.holder;
         }
 
         @Override
-        public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+        public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+        {
             super.render(graphics, transform, mouseX, mouseY);
             if (!ClientAlchemy.getProfile().isOnCollection(holder.getRecipe())) return;
             graphics.blitSprite(CHECK_MARK, getRight() - 6, getBottom() - 6, 6, 6);
         }
 
         @Override
-        protected boolean isSelected() {
+        protected boolean isSelected()
+        {
             return RootRecent.getSelectedHolder().map(holder::isSame).orElse(false);
         }
     }

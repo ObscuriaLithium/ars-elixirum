@@ -15,16 +15,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HumanoidArmorLayer.class)
-public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> extends RenderLayer<T, M> {
-
-    private MixinHumanoidArmorLayer(RenderLayerParent<T, M> renderer) {
+public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> extends RenderLayer<T, M>
+{
+    private MixinHumanoidArmorLayer(RenderLayerParent<T, M> renderer)
+    {
         super(renderer);
     }
 
     @Inject(method = "renderArmorPiece", at = @At("HEAD"), cancellable = true)
-    private void renderArmorPiece_Modify(PoseStack pose, MultiBufferSource source, T entity,
-                                         EquipmentSlot slot, int light, A model, CallbackInfo info) {
-
-        if (entity.getItemBySlot(slot).is(ElixirumItems.ALCHEMIST_EYE.asItem())) info.cancel();
+    private void renderArmorPiece_Modify(PoseStack pose,
+                                         MultiBufferSource source,
+                                         T entity,
+                                         EquipmentSlot slot,
+                                         int light,
+                                         A model,
+                                         CallbackInfo info)
+    {
+        if (entity.getItemBySlot(slot).is(ElixirumItems.ALCHEMIST_EYE.value())) info.cancel();
     }
 }

@@ -1,9 +1,9 @@
 package dev.obscuria.elixirum.client.screen.widget;
 
+import dev.obscuria.core.api.v1.common.text.TextWrapper;
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.client.ClientAlchemy;
 import dev.obscuria.elixirum.client.screen.ElixirumScreen;
-import dev.obscuria.elixirum.util.TextWrapper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,16 +17,19 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
-public final class ProgressDisplay extends AbstractWidget {
+public final class ProgressDisplay extends AbstractWidget
+{
     private static final ResourceLocation PROGRESS_BACK = Elixirum.key("textures/gui/progress_back.png");
     private static final ResourceLocation PROGRESS = Elixirum.key("textures/gui/progress.png");
 
-    public ProgressDisplay(int x, int y) {
+    public ProgressDisplay(int x, int y)
+    {
         super(x - 50, y + 10, 100, 24, Component.empty());
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    {
         final var total = ClientAlchemy.getIngredients().getTotalEssences();
         final var discovered = ClientAlchemy.getProfile().getTotalDiscoveredEssences();
         final var ratio = discovered / 1.0 / total;
@@ -41,11 +44,13 @@ public final class ProgressDisplay extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput output) {
+    protected void updateWidgetNarration(NarrationElementOutput output)
+    {
 
     }
 
-    private @Unmodifiable List<Component> getCustomTooltip() {
+    private @Unmodifiable List<Component> getCustomTooltip()
+    {
         final var tooltip = Lists.<Component>newArrayList();
         tooltip.add(Component.literal("Discovered Essences"));
         final var description = Component.translatable("elixirum.discovered_essences",
@@ -53,8 +58,8 @@ public final class ProgressDisplay extends AbstractWidget {
                 ClientAlchemy.getIngredients().getTotalEssences(),
                 ClientAlchemy.getIngredients().getTotalIngredients());
         tooltip.addAll(TextWrapper.create(description)
-                .setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
-                .setMaxLength(30)
+                .withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
+                .withMaxLength(30)
                 .build());
         return tooltip;
     }

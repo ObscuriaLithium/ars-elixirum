@@ -8,16 +8,19 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.RenderType;
 
-public final class ModelGlassCauldron extends Model {
+public final class ModelGlassCauldron extends Model
+{
     public final ModelPart root, main;
 
-    public ModelGlassCauldron(ModelPart root) {
+    public ModelGlassCauldron(ModelPart root)
+    {
         super(RenderType::entityTranslucent);
         this.root = root;
         this.main = root.getChild("main");
     }
 
-    public static LayerDefinition createBodyLayer() {
+    public static LayerDefinition createBodyLayer()
+    {
         final var meshDefinition = new MeshDefinition();
         final var partDefinition = meshDefinition.getRoot();
         final var main = partDefinition.addOrReplaceChild("main", CubeListBuilder.create(),
@@ -58,7 +61,8 @@ public final class ModelGlassCauldron extends Model {
         return LayerDefinition.create(meshDefinition, 64, 64);
     }
 
-    public static LayerDefinition createFluidLayer() {
+    public static LayerDefinition createFluidLayer()
+    {
         final var meshDefinition = new MeshDefinition();
         final var partDefinition = meshDefinition.getRoot();
         partDefinition.addOrReplaceChild("fluid", CubeListBuilder.create().texOffs(0, 0)
@@ -68,12 +72,14 @@ public final class ModelGlassCauldron extends Model {
         return LayerDefinition.create(meshDefinition, 64, 64);
     }
 
-    public void translateFluid(PoseStack pose) {
+    public void translateFluid(PoseStack pose)
+    {
         this.main.translateAndRotate(pose);
     }
 
     @Override
-    public void renderToBuffer(PoseStack pose, VertexConsumer consumer, int light, int overlay, int color) {
+    public void renderToBuffer(PoseStack pose, VertexConsumer consumer, int light, int overlay, int color)
+    {
         this.main.render(pose, consumer, light, overlay, color);
     }
 }

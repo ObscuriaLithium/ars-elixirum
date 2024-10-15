@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.obscuria.elixirum.common.Easing;
+import dev.obscuria.core.api.v1.common.easing.Easing;
 import dev.obscuria.elixirum.common.particle.ElixirBubbleParticleOptions;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -15,12 +15,14 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public final class ElixirBubbleParticle extends Particle {
+public final class ElixirBubbleParticle extends Particle
+{
     private static final List<Vector3f> RAW_POINTS;
 
     private ElixirBubbleParticle(ClientLevel level, ElixirBubbleParticleOptions options,
                                  double x, double y, double z,
-                                 double xd, double yd, double zd) {
+                                 double xd, double yd, double zd)
+    {
         super(level, x, y, z);
         this.setColor(options.getColor().x, options.getColor().y, options.getColor().z);
         this.setLifetime(80);
@@ -32,10 +34,11 @@ public final class ElixirBubbleParticle extends Particle {
     }
 
     @Override
-    public void render(VertexConsumer ignored, Camera camera, float delta) {
+    public void render(VertexConsumer ignored, Camera camera, float delta)
+    {
         final var lifeFactor = Mth.clamp((this.age + delta) / this.lifetime, 0, 1);
-        final var scale = 0.1f * Easing.EASE_OUT_CUBIC.reversed().get(lifeFactor);
-        this.alpha = Easing.EASE_IN_CUBIC.mergeOut(Easing.EASE_OUT_CUBIC, 0.1f).get(lifeFactor);
+        final var scale = 0.1f * Easing.EASE_OUT_CUBIC.reversed().compute(lifeFactor);
+        this.alpha = Easing.EASE_IN_CUBIC.mergeOut(Easing.EASE_OUT_CUBIC, 0.1f).compute(lifeFactor);
 
         final var bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         final var cameraPos = camera.getPosition();
@@ -59,7 +62,8 @@ public final class ElixirBubbleParticle extends Particle {
         bufferSource.endBatch();
     }
 
-    private void quad(VertexConsumer consumer, Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4) {
+    private void quad(VertexConsumer consumer, Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4)
+    {
         consumer.addVertex(v1.x(), v1.y(), v1.z()).setColor(this.rCol, this.gCol, this.bCol, this.alpha);
         consumer.addVertex(v2.x(), v2.y(), v2.z()).setColor(this.rCol, this.gCol, this.bCol, this.alpha);
         consumer.addVertex(v3.x(), v3.y(), v3.z()).setColor(this.rCol, this.gCol, this.bCol, this.alpha);
@@ -67,23 +71,27 @@ public final class ElixirBubbleParticle extends Particle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
+    public ParticleRenderType getRenderType()
+    {
         return ParticleRenderType.CUSTOM;
     }
 
 
-    public static class Provider implements ParticleProvider<ElixirBubbleParticleOptions> {
+    public static class Provider implements ParticleProvider<ElixirBubbleParticleOptions>
+    {
 
         public Provider() {}
 
         public Particle createParticle(ElixirBubbleParticleOptions options, ClientLevel level,
                                        double x, double y, double z,
-                                       double xd, double yd, double zd) {
+                                       double xd, double yd, double zd)
+        {
             return new ElixirBubbleParticle(level, options, x, y, z, xd, yd, zd);
         }
     }
 
-    static {
+    static
+    {
         RAW_POINTS = List.of(
                 new Vector3f(-1.0F, -1.0F, 1.0F),
                 new Vector3f(-1.0F, 1.0F, 1.0F),

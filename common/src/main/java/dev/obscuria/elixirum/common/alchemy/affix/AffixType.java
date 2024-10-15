@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-public enum AffixType implements StringRepresentable {
+public enum AffixType implements StringRepresentable
+{
     ABSOLUTE(AffixType::applyAbsolute),
     NEXT(AffixType::applyNext),
     PREVIOUS(AffixType::applyPrevious),
@@ -29,74 +30,90 @@ public enum AffixType implements StringRepresentable {
     private static final Predicate<Essence> ANY = essence -> true;
     private final Processor processor;
 
-    AffixType(Processor processor) {
+    AffixType(Processor processor)
+    {
         this.processor = processor;
     }
 
-    public static AffixType pickIngredientBound(RandomSource source) {
+    public static AffixType pickIngredientBound(RandomSource source)
+    {
         return INGREDIENT_BOUND.get(source.nextInt(INGREDIENT_BOUND.size()));
     }
 
-    public static AffixType pickEssenceBound(RandomSource source) {
+    public static AffixType pickEssenceBound(RandomSource source)
+    {
         return ESSENCE_BOUND.get(source.nextInt(ESSENCE_BOUND.size()));
     }
 
-    public Affix create(double modifier) {
+    public Affix create(double modifier)
+    {
         return new Affix(this, modifier);
     }
 
-    public void apply(Affix affix, BrewingProcessor processor, int index) {
+    public void apply(Affix affix, BrewingProcessor processor, int index)
+    {
         this.processor.apply(affix, processor, index);
     }
 
-    public String getDescriptionId() {
+    public String getDescriptionId()
+    {
         return "affix.elixirum." + getSerializedName();
     }
 
     @Override
-    public String getSerializedName() {
+    public String getSerializedName()
+    {
         return this.toString().toLowerCase();
     }
 
-    private static void applyAbsolute(Affix affix, BrewingProcessor processor, int index) {
+    private static void applyAbsolute(Affix affix, BrewingProcessor processor, int index)
+    {
         processor.listEssences(ANY)
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 
-    private static void applyNext(Affix affix, BrewingProcessor processor, int index) {
+    private static void applyNext(Affix affix, BrewingProcessor processor, int index)
+    {
         processor.getElement(index + 1).stream()
                 .flatMap(ingredient -> ingredient.listEssences(ANY))
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 
-    private static void applyPrevious(Affix affix, BrewingProcessor processor, int index) {
+    private static void applyPrevious(Affix affix, BrewingProcessor processor, int index)
+    {
         processor.getElement(index + 1).stream()
                 .flatMap(ingredient -> ingredient.listEssences(ANY))
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 
-    private static void applyOffensive(Affix affix, BrewingProcessor processor, int index) {
+    private static void applyOffensive(Affix affix, BrewingProcessor processor, int index)
+    {
         applyByCategory(affix, processor, EssenceCategory.OFFENSIVE);
     }
 
-    private static void applyDefensive(Affix affix, BrewingProcessor processor, int index) {
+    private static void applyDefensive(Affix affix, BrewingProcessor processor, int index)
+    {
         applyByCategory(affix, processor, EssenceCategory.DEFENSIVE);
     }
 
-    private static void applyEnhancing(Affix affix, BrewingProcessor processor, int index) {
+    private static void applyEnhancing(Affix affix, BrewingProcessor processor, int index)
+    {
         applyByCategory(affix, processor, EssenceCategory.ENHANCING);
     }
 
-    private static void applyDiminishing(Affix affix, BrewingProcessor processor, int index) {
+    private static void applyDiminishing(Affix affix, BrewingProcessor processor, int index)
+    {
         applyByCategory(affix, processor, EssenceCategory.DIMINISHING);
     }
 
-    private static void applyByCategory(Affix affix, BrewingProcessor processor, EssenceCategory category) {
+    private static void applyByCategory(Affix affix, BrewingProcessor processor, EssenceCategory category)
+    {
         processor.listEssences(essence -> essence.category() == category)
                 .forEach(info -> info.addModifier(affix.modifier()));
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    public static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept(ABSOLUTE.getDescriptionId(), "%s%% weight to all effects");
         consumer.accept(NEXT.getDescriptionId(), "%s%% weight to next ingredient");
         consumer.accept(PREVIOUS.getDescriptionId(), "%s%% weight to previous ingredient");
@@ -106,7 +123,8 @@ public enum AffixType implements StringRepresentable {
         consumer.accept(DIMINISHING.getDescriptionId(), "%s%% weight to diminishing effects");
     }
 
-    static {
+    static
+    {
         CODEC = StringRepresentable.fromEnum(AffixType::values);
         STREAM_CODEC = StreamCodec.ofMember(
                 (type, buf) -> buf.writeEnum(type),
@@ -114,8 +132,8 @@ public enum AffixType implements StringRepresentable {
     }
 
     @FunctionalInterface
-    interface Processor {
-
+    interface Processor
+    {
         void apply(Affix affix, BrewingProcessor processor, int index);
     }
 }

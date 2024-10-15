@@ -1,57 +1,46 @@
 package dev.obscuria.elixirum.registry;
 
+import dev.obscuria.core.api.Deferred;
+import dev.obscuria.core.api.v1.common.ObscureRegistry;
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.item.*;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public enum ElixirumItems implements ItemLike, Supplier<Item> {
-    ALCHEMIST_EYE("alchemist_eye", AlchemistEyeItem::new),
-    ELIXIR("elixir", ElixirItem::new),
-    SPLASH_ELIXIR("splash_elixir", SplashElixirItem::new),
-    EXTRACT("extract", ExtractItem::new),
-    WITCH_TOTEM_OF_UNDYING("witch_totem_of_undying", WitchTotemOfUndyingItem::new),
-    GLASS_CAULDRON("glass_cauldron", blockItem(ElixirumBlocks.GLASS_CAULDRON.holder(), new Item.Properties())),
-    POTION_SHELF("potion_shelf", blockItem(ElixirumBlocks.POTION_SHELF.holder(), new Item.Properties()));
+public interface ElixirumItems
+{
+    Deferred<Item, AlchemistEyeItem> ALCHEMIST_EYE = register("alchemist_eye", AlchemistEyeItem::new);
+    Deferred<Item, ElixirItem> ELIXIR = register("elixir", ElixirItem::new);
+    Deferred<Item, SplashElixirItem> SPLASH_ELIXIR = register("splash_elixir", SplashElixirItem::new);
+    Deferred<Item, ExtractItem> EXTRACT = register("extract", ExtractItem::new);
+    Deferred<Item, WitchTotemOfUndyingItem> WITCH_TOTEM_OF_UNDYING = register("witch_totem_of_undying", WitchTotemOfUndyingItem::new);
+    Deferred<Item, BlockItem> GLASS_CAULDRON = register("glass_cauldron", blockItem(ElixirumBlocks.GLASS_CAULDRON, new Item.Properties()));
+    Deferred<Item, BlockItem> POTION_SHELF = register("potion_shelf", blockItem(ElixirumBlocks.POTION_SHELF, new Item.Properties()));
 
-    private final Holder<Item> holder;
-
-    ElixirumItems(String name, Supplier<Item> supplier) {
-        this.holder = Elixirum.PLATFORM.registerReference(
-                BuiltInRegistries.ITEM, Elixirum.key(name),
+    private static <T extends Item> Deferred<Item, T> register(String name,
+                                                               Supplier<T> supplier)
+    {
+        return ObscureRegistry.register(
+                Elixirum.MODID,
+                BuiltInRegistries.ITEM,
+                Elixirum.key(name),
                 supplier);
     }
 
-    public Holder<Item> holder() {
-        return this.holder;
-    }
-
-    public Item value() {
-        return this.holder.value();
-    }
-
-    @Override
-    public Item asItem() {
-        return this.value();
-    }
-
-    @Override
-    public Item get() {
-        return this.value();
-    }
-
-    private static Supplier<Item> blockItem(Holder<Block> block, Item.Properties properties) {
+    private static Supplier<BlockItem>
+    blockItem(Deferred<Block, ? extends Block> block,
+              Item.Properties properties)
+    {
         return () -> new BlockItem(block.value(), properties);
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept(ALCHEMIST_EYE.value().getDescriptionId(), "Alchemist Eye");
         consumer.accept(ELIXIR.value().getDescriptionId(), "Elixir");
         consumer.accept(SPLASH_ELIXIR.value().getDescriptionId(), "Splash Elixir");
@@ -59,5 +48,5 @@ public enum ElixirumItems implements ItemLike, Supplier<Item> {
         consumer.accept(WITCH_TOTEM_OF_UNDYING.value().getDescriptionId(), "Witch Totem of Undying");
     }
 
-    public static void init() {}
+    static void init() {}
 }

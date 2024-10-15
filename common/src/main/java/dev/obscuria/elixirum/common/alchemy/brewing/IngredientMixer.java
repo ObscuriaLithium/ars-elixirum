@@ -11,7 +11,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 
-public final class IngredientMixer {
+public final class IngredientMixer
+{
     public static final Codec<IngredientMixer> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, IngredientMixer> STREAM_CODEC;
     private ElixirContents result = ElixirContents.WATER;
@@ -20,32 +21,39 @@ public final class IngredientMixer {
 
     public IngredientMixer() {}
 
-    public IngredientMixer(ElixirRecipe recipe) {
+    public IngredientMixer(ElixirRecipe recipe)
+    {
         this.recipe = recipe;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return this.recipe.isEmpty();
     }
 
-    public void clear() {
+    public void clear()
+    {
         this.recipe = ElixirRecipe.EMPTY;
         this.changed = true;
     }
 
-    public ElixirRecipe getRecipe() {
+    public ElixirRecipe getRecipe()
+    {
         return this.recipe;
     }
 
-    public ElixirContents getResult(HolderGetter<Essence> getter) {
-        if (changed) {
+    public ElixirContents getResult(HolderGetter<Essence> getter)
+    {
+        if (changed)
+        {
             this.result = BrewingProcessor.brew(getter, recipe);
             this.changed = false;
         }
         return this.result;
     }
 
-    public boolean append(Item item) {
+    public boolean append(Item item)
+    {
         if (recipe.getSize() >= 9) return false;
         var essences = Elixirum.getIngredients().getProperties(item);
         if (essences.isEmpty()) return false;
@@ -54,11 +62,13 @@ public final class IngredientMixer {
         return true;
     }
 
-    public int getColor(HolderGetter<Essence> getter) {
+    public int getColor(HolderGetter<Essence> getter)
+    {
         return getResult(getter).color();
     }
 
-    static {
+    static
+    {
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ElixirRecipe.CODEC.fieldOf("recipe").forGetter(IngredientMixer::getRecipe)
         ).apply(instance, IngredientMixer::new));

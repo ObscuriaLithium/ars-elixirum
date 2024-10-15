@@ -1,39 +1,36 @@
 package dev.obscuria.elixirum.registry;
 
+import dev.obscuria.core.api.Deferred;
+import dev.obscuria.core.api.v1.common.ObscureRegistry;
 import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.block.GlassCauldronBlock;
 import dev.obscuria.elixirum.common.block.PotionShelfBlock;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public enum ElixirumBlocks {
-    GLASS_CAULDRON("glass_cauldron", GlassCauldronBlock::new),
-    POTION_SHELF("potion_shelf", PotionShelfBlock::new);
+public interface ElixirumBlocks
+{
+    Deferred<Block, GlassCauldronBlock> GLASS_CAULDRON = register("glass_cauldron", GlassCauldronBlock::new);
+    Deferred<Block, PotionShelfBlock> POTION_SHELF = register("potion_shelf", PotionShelfBlock::new);
 
-    private final Holder<Block> holder;
-
-    ElixirumBlocks(String name, Supplier<Block> supplier) {
-        this.holder = Elixirum.PLATFORM.registerReference(
-                BuiltInRegistries.BLOCK, Elixirum.key(name),
+    private static <T extends Block> Deferred<Block, T> register(final String name,
+                                                          Supplier<T> supplier)
+    {
+        return ObscureRegistry.register(
+                Elixirum.MODID,
+                BuiltInRegistries.BLOCK,
+                Elixirum.key(name),
                 supplier);
     }
 
-    public Holder<Block> holder() {
-        return this.holder;
-    }
-
-    public Block value() {
-        return this.holder.value();
-    }
-
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept(GLASS_CAULDRON.value().getDescriptionId(), "Glass Cauldron");
         consumer.accept(POTION_SHELF.value().getDescriptionId(), "Potion Shelf");
     }
 
-    public static void init() {}
+    static void init() {}
 }

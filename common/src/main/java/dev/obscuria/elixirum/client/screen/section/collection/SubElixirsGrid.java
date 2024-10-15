@@ -8,15 +8,18 @@ import dev.obscuria.elixirum.common.alchemy.elixir.ElixirHolder;
 import dev.obscuria.elixirum.registry.ElixirumSounds;
 import net.minecraft.world.item.ItemStack;
 
-final class SubElixirsGrid extends GridContainer {
-
-    public SubElixirsGrid() {
+final class SubElixirsGrid extends GridContainer
+{
+    public SubElixirsGrid()
+    {
         this.update();
     }
 
-    public void update() {
+    public void update()
+    {
         this.children().clear();
-        for (var holder : ClientAlchemy.getProfile().getCollection()) {
+        for (var holder : ClientAlchemy.getProfile().getCollection())
+        {
             this.addChild(new Entry(holder)
                     .setClickSound(ElixirumSounds.UI_CLICK_2)
                     .setClickAction(ClickAction.<Entry>left(widget -> {
@@ -26,20 +29,24 @@ final class SubElixirsGrid extends GridContainer {
         }
     }
 
-    static final class Entry extends AbstractElixirDisplay {
+    static final class Entry extends AbstractElixirDisplay
+    {
         private final ElixirHolder holder;
 
-        public Entry(ElixirHolder holder) {
+        public Entry(ElixirHolder holder)
+        {
             super(holder.getCachedStack().orElse(ItemStack.EMPTY));
             this.holder = holder;
         }
 
-        public ElixirHolder getHolder() {
+        public ElixirHolder getHolder()
+        {
             return this.holder;
         }
 
         @Override
-        protected boolean isSelected() {
+        protected boolean isSelected()
+        {
             return RootCollection.getSelectedHolder().map(holder::isSame).orElse(false);
         }
     }

@@ -17,18 +17,20 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
-public abstract class MixinItemStack {
-
+public abstract class MixinItemStack
+{
     @Inject(method = "getTooltipLines",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/core/component/DataComponents;UNBREAKABLE:Lnet/minecraft/core/component/DataComponentType;",
                     shift = At.Shift.AFTER,
                     ordinal = 0))
-    private void getTooltipLines_Modify(Item.TooltipContext context, @Nullable Player player,
-                                        TooltipFlag flag, CallbackInfoReturnable<List<Component>> info,
-                                        @Local Consumer<Component> consumer) {
-
+    private void getTooltipLines_Modify(Item.TooltipContext context,
+                                        @Nullable Player player,
+                                        TooltipFlag flag,
+                                        CallbackInfoReturnable<List<Component>> info,
+                                        @Local Consumer<Component> consumer)
+    {
         ItemStackHooks.getTooltipLines((ItemStack) (Object) this, player, consumer);
     }
 }

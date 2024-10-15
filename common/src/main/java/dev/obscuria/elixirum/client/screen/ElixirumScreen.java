@@ -23,7 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public final class ElixirumScreen extends Screen {
+public final class ElixirumScreen extends Screen
+{
     public static final Music MUSIC;
     public static final ResourceLocation SPRITE_PANEL = Elixirum.key("panel");
     public static final ResourceLocation SPRITE_PANEL_DARK = Elixirum.key("panel/dark");
@@ -34,65 +35,79 @@ public final class ElixirumScreen extends Screen {
     public static @Nullable TooltipProvider tooltipProvider;
     private static AbstractSection.Type selectedSection;
 
-    public ElixirumScreen() {
+    public ElixirumScreen()
+    {
         super(Component.literal(Elixirum.DISPLAY_NAME));
     }
 
-    public static void debugRenderer(AbstractWidget widget, GuiGraphics graphics, GlobalTransform rect, int mouseX, int mouseY) {
+    public static void debugRenderer(AbstractWidget widget, GuiGraphics graphics, GlobalTransform rect, int mouseX, int mouseY)
+    {
         if (true) return;
         graphics.renderOutline(
                 widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(),
                 rect.isMouseOver(mouseX, mouseY) ? 0xFF006FDE : 0xFFDE6F00);
     }
 
-    public static void update() {
+    public static void update()
+    {
         if (Minecraft.getInstance().screen instanceof ElixirumScreen elixirumScreen)
             elixirumScreen.findSection(selectedSection).ifPresent(AbstractSection::updateSection);
     }
 
-    public int left(int offset) {
+    public int left(int offset)
+    {
         return 23 + offset;
     }
 
-    public int right(int offset) {
+    public int right(int offset)
+    {
         return width + offset;
     }
 
-    public int top(int offset) {
+    public int top(int offset)
+    {
         return offset;
     }
 
-    public int bottom(int offset) {
+    public int bottom(int offset)
+    {
         return height + offset;
     }
 
-    public int width(int offset) {
+    public int width(int offset)
+    {
         return width - 23 + offset;
     }
 
-    public int height(int offset) {
+    public int height(int offset)
+    {
         return height + offset;
     }
 
     @Override
-    public Music getBackgroundMusic() {
+    public Music getBackgroundMusic()
+    {
         return MUSIC;
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean isPauseScreen()
+    {
         return false;
     }
 
     @Override
-    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget) {
+    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget)
+    {
         return super.addRenderableWidget(widget);
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    {
         super.render(graphics, mouseX, mouseY, partialTick);
-        if (tooltipProvider != null) {
+        if (tooltipProvider != null)
+        {
             graphics.renderTooltip(
                     Minecraft.getInstance().font, tooltipProvider.getTooltip(),
                     Optional.empty(), mouseX, mouseY);
@@ -101,7 +116,8 @@ public final class ElixirumScreen extends Screen {
     }
 
     @Override
-    public void tick() {
+    public void tick()
+    {
         this.children().stream()
                 .filter(HierarchicalWidget.class::isInstance)
                 .map(HierarchicalWidget.class::cast)
@@ -109,13 +125,15 @@ public final class ElixirumScreen extends Screen {
     }
 
     @Override
-    public void onClose() {
+    public void onClose()
+    {
         super.onClose();
         ClientAlchemy.getProfile().syncWithServer();
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphics graphics) {
+    protected void renderMenuBackground(GuiGraphics graphics)
+    {
         super.renderMenuBackground(graphics);
         graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), 0xBF090013);
         graphics.fill(0, 0, 22, height, 0xFF231D2B);
@@ -123,7 +141,8 @@ public final class ElixirumScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void init()
+    {
         this.addRenderableWidget(new RootRecent(height / 2, this::onTabPressed));
         this.addRenderableWidget(new RootCollection(height / 2, this::onTabPressed));
         this.addRenderableWidget(new RootCompendium(height / 2, this::onTabPressed));
@@ -133,7 +152,8 @@ public final class ElixirumScreen extends Screen {
         });
     }
 
-    private Optional<AbstractSection> findSection(AbstractSection.Type type) {
+    private Optional<AbstractSection> findSection(AbstractSection.Type type)
+    {
         return this.children().stream()
                 .filter(AbstractSection.class::isInstance)
                 .map(AbstractSection.class::cast)
@@ -141,13 +161,15 @@ public final class ElixirumScreen extends Screen {
                 .findFirst();
     }
 
-    private void onTabPressed(AbstractSection tab) {
+    private void onTabPressed(AbstractSection tab)
+    {
         if (selectedSection == tab.getType()) return;
         selectedSection = tab.getType();
         this.rebuildWidgets();
     }
 
-    static {
+    static
+    {
         MUSIC = new Music(ElixirumSounds.MUSIC_ELIXIRUM, 600, 1200, false);
         selectedSection = ClientAlchemy.getCache().getRecentElixirs().isEmpty()
                 ? AbstractSection.Type.COMPENDIUM
@@ -155,7 +177,8 @@ public final class ElixirumScreen extends Screen {
     }
 
     @FunctionalInterface
-    public interface TooltipProvider {
+    public interface TooltipProvider
+    {
 
         List<Component> getTooltip();
     }

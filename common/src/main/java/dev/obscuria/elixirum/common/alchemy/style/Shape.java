@@ -4,7 +4,8 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.BiConsumer;
 
-public enum Shape {
+public enum Shape
+{
     BOTTLE_1(1, 0.00, "shape/bottle_1", "overlay/bottle_1"),
     BOTTLE_2(2, 0.05, "shape/bottle_2", "overlay/bottle_2"),
     BOTTLE_3(3, 0.10, "shape/bottle_3", "overlay/bottle_3"),
@@ -30,53 +31,64 @@ public enum Shape {
     private final String texture;
     private final String overlay;
 
-    Shape(int id, double requiredProgress, String texture, String overlay) {
+    Shape(int id, double requiredProgress, String texture, String overlay)
+    {
         this.id = id;
         this.requiredProgress = requiredProgress;
         this.texture = texture;
         this.overlay = overlay;
     }
 
-    public static Shape getById(int id) {
+    public static Shape getById(int id)
+    {
         for (var shape : values())
             if (shape.getId() == id)
                 return shape;
         return DEFAULT;
     }
 
-    public int getRequiredProgress(int total) {
+    public int getRequiredProgress(int total)
+    {
         return (int) (total * requiredProgress);
     }
 
-    public boolean isLocked(int discovered, int total) {
+    public boolean isLocked(int discovered, int total)
+    {
         return discovered < getRequiredProgress(total);
     }
 
-    public int getId() {
+    public int getId()
+    {
         return this.id;
     }
 
-    public double getPredicate() {
+    public double getPredicate()
+    {
         return getId() / 100.0;
     }
 
-    public String getTexture() {
+    public String getTexture()
+    {
         return this.texture;
     }
 
-    public String getOverlay() {
+    public String getOverlay()
+    {
         return this.overlay;
     }
 
-    public String getDescriptionId() {
+    public String getDescriptionId()
+    {
         return "elixirum.elixir_shape." + toString().toLowerCase();
     }
 
-    public Component getDisplayName() {
+    public Component getDisplayName()
+    {
         return Component.translatable(getDescriptionId());
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    public static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept(BOTTLE_1.getDescriptionId(), "Bottle 1");
         consumer.accept(BOTTLE_2.getDescriptionId(), "Bottle 2");
         consumer.accept(BOTTLE_3.getDescriptionId(), "Bottle 3");

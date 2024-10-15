@@ -23,7 +23,8 @@ import net.minecraft.world.item.Item;
 
 import java.util.function.BiConsumer;
 
-public final class EssenceCommand {
+public final class EssenceCommand
+{
     private static final Dynamic2CommandExceptionType ERROR_NO_ESSENCE = new Dynamic2CommandExceptionType(
             (item, essence) -> Component.translatableEscape("commands.elixirum.essence.failed.no_essence", item, essence));
     private static final DynamicCommandExceptionType ERROR_NO_ESSENCES = new DynamicCommandExceptionType(
@@ -35,7 +36,11 @@ public final class EssenceCommand {
     private static final DynamicCommandExceptionType NOTHING_TO_CHANGE = new DynamicCommandExceptionType(
             (player) -> Component.translatableEscape("commands.elixirum.essence.failed.nothing_to_change", player));
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher,
+                                CommandBuildContext context,
+                                Commands.CommandSelection environment)
+    {
+
         dispatcher.register(Commands.literal(Elixirum.MODID).requires(source -> source.hasPermission(3))
                 .then(Commands.literal("essence")
                         .then(Commands.literal("set")
@@ -76,7 +81,8 @@ public final class EssenceCommand {
                                                         ItemArgument.getItem(command, "target").getItem())))))));
     }
 
-    private static int set(CommandSourceStack source, Item item, Holder.Reference<Essence> essence, int weight) throws CommandSyntaxException {
+    private static int set(CommandSourceStack source, Item item, Holder.Reference<Essence> essence, int weight) throws CommandSyntaxException
+    {
         var map = ServerAlchemy.getIngredients();
         var properties = map.getProperties(item);
         if (properties.getWeight(essence.key().location()) == weight)
@@ -94,7 +100,8 @@ public final class EssenceCommand {
         return 1;
     }
 
-    private static int remove(CommandSourceStack source, Item item, Holder.Reference<Essence> essence) throws CommandSyntaxException {
+    private static int remove(CommandSourceStack source, Item item, Holder.Reference<Essence> essence) throws CommandSyntaxException
+    {
         var map = ServerAlchemy.getIngredients();
         var properties = map.getProperties(item);
         if (!properties.contains(essence.key().location()))
@@ -110,7 +117,8 @@ public final class EssenceCommand {
         return 1;
     }
 
-    private static int clear(CommandSourceStack source, Item item) throws CommandSyntaxException {
+    private static int clear(CommandSourceStack source, Item item) throws CommandSyntaxException
+    {
         var map = ServerAlchemy.getIngredients();
         map.removeProperties(item);
         if (!map.getProperties(item).isEmpty())
@@ -123,19 +131,22 @@ public final class EssenceCommand {
         return 1;
     }
 
-    private static int discover(CommandSourceStack source, ServerPlayer player, Item item) throws CommandSyntaxException {
+    private static int discover(CommandSourceStack source, ServerPlayer player, Item item) throws CommandSyntaxException
+    {
         final var getter = source.registryAccess().lookupOrThrow(ElixirumRegistries.ESSENCE);
         final var profile = ServerAlchemy.getProfile(player);
         final var properties = ServerAlchemy.getIngredients().getProperties(item);
         if (properties.isEmpty())
             throw ERROR_NO_ESSENCES.create(Component.translatableEscape(item.getDescriptionId()).getString());
         var total = 0;
-        for (var essence : properties.getEssences(getter).keySet()) {
+        for (var essence : properties.getEssences(getter).keySet())
+        {
             if (profile.isEssenceDiscovered(item, essence)) continue;
             profile.discoverEssence(item, essence, false);
             total += 1;
         }
-        if (total > 0) {
+        if (total > 0)
+        {
             profile.syncWithPlayer();
             final var totalDiscovered = total;
             source.sendSuccess(() -> Component.translatableEscape(
@@ -143,23 +154,29 @@ public final class EssenceCommand {
                     player.getName(),
                     totalDiscovered), true);
             return total;
-        } else {
+        }
+        else
+        {
             throw NOTHING_TO_CHANGE.create(player.getName());
         }
     }
 
-    private static int discoverAll(CommandSourceStack source, ServerPlayer player) throws CommandSyntaxException {
+    private static int discoverAll(CommandSourceStack source, ServerPlayer player) throws CommandSyntaxException
+    {
         final var getter = source.registryAccess().lookupOrThrow(ElixirumRegistries.ESSENCE);
         final var profile = ServerAlchemy.getProfile(player);
         var total = 0;
-        for (var entry : ServerAlchemy.getIngredients()) {
-            for (var essence : entry.properties().getEssences(getter).keySet()) {
+        for (var entry : ServerAlchemy.getIngredients())
+        {
+            for (var essence : entry.properties().getEssences(getter).keySet())
+            {
                 if (profile.isEssenceDiscovered(entry.item(), essence)) continue;
                 profile.discoverEssence(entry.item(), essence, false);
                 total += 1;
             }
         }
-        if (total > 0) {
+        if (total > 0)
+        {
             profile.syncWithPlayer();
             final var totalDiscovered = total;
             source.sendSuccess(() -> Component.translatableEscape(
@@ -167,12 +184,15 @@ public final class EssenceCommand {
                     player.getName(),
                     totalDiscovered), true);
             return total;
-        } else {
+        }
+        else
+        {
             throw NOTHING_TO_CHANGE.create(player.getName());
         }
     }
 
-    private static int forget(CommandSourceStack source, ServerPlayer player, Item item) throws CommandSyntaxException {
+    private static int forget(CommandSourceStack source, ServerPlayer player, Item item) throws CommandSyntaxException
+    {
         final var getter = source.registryAccess().lookupOrThrow(ElixirumRegistries.ESSENCE);
         final var profile = ServerAlchemy.getProfile(player);
         final var discovered = profile.getDiscoveredEssences(item);
@@ -180,12 +200,14 @@ public final class EssenceCommand {
         if (properties.isEmpty())
             throw ERROR_NO_ESSENCES.create(Component.translatableEscape(item.getDescriptionId()).getString());
         var total = 0;
-        for (var essence : properties.getEssences(getter).keySet()) {
+        for (var essence : properties.getEssences(getter).keySet())
+        {
             if (!discovered.contains(essence)) continue;
             profile.forgetEssence(item, essence);
             total += 1;
         }
-        if (total > 0) {
+        if (total > 0)
+        {
             profile.syncWithPlayer();
             final var totalForgot = total;
             source.sendSuccess(() -> Component.translatableEscape(
@@ -193,23 +215,29 @@ public final class EssenceCommand {
                     player.getName(),
                     totalForgot), true);
             return total;
-        } else {
+        }
+        else
+        {
             throw NOTHING_TO_CHANGE.create(player.getName());
         }
     }
 
-    private static int forgetAll(CommandSourceStack source, ServerPlayer player) throws CommandSyntaxException {
+    private static int forgetAll(CommandSourceStack source, ServerPlayer player) throws CommandSyntaxException
+    {
         final var getter = source.registryAccess().lookupOrThrow(ElixirumRegistries.ESSENCE);
         final var profile = ServerAlchemy.getProfile(player);
         var total = 0;
-        for (var entry : ServerAlchemy.getIngredients()) {
-            for (var essence : entry.properties().getEssences(getter).keySet()) {
+        for (var entry : ServerAlchemy.getIngredients())
+        {
+            for (var essence : entry.properties().getEssences(getter).keySet())
+            {
                 if (!profile.isEssenceDiscovered(entry.item(), essence)) continue;
                 profile.forgetEssence(entry.item(), essence);
                 total += 1;
             }
         }
-        if (total > 0) {
+        if (total > 0)
+        {
             profile.syncWithPlayer();
             final var totalForgot = total;
             source.sendSuccess(() -> Component.translatableEscape(
@@ -217,12 +245,15 @@ public final class EssenceCommand {
                     player.getName(),
                     totalForgot), true);
             return total;
-        } else {
+        }
+        else
+        {
             throw NOTHING_TO_CHANGE.create(player.getName());
         }
     }
 
-    public static void acceptTranslations(BiConsumer<String, String> consumer) {
+    public static void acceptTranslations(BiConsumer<String, String> consumer)
+    {
         consumer.accept("commands.elixirum.essence.success.set", "Applied essence %s (x%s) to %s");
         consumer.accept("commands.elixirum.essence.success.remove", "Removed essence %s from %s");
         consumer.accept("commands.elixirum.essence.success.clear", "Removed all properties from %s");

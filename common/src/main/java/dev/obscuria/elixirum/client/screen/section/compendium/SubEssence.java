@@ -18,12 +18,14 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
-final class SubEssence extends HierarchicalWidget {
+final class SubEssence extends HierarchicalWidget
+{
     private final Holder<Essence> essenceHolder;
     private final int index;
     private final boolean light;
 
-    public SubEssence(Holder<Essence> essenceHolder, int index, boolean light) {
+    public SubEssence(Holder<Essence> essenceHolder, int index, boolean light)
+    {
         super(0, 0, 0, 22, Component.empty());
         this.essenceHolder = essenceHolder;
         this.index = index;
@@ -31,14 +33,18 @@ final class SubEssence extends HierarchicalWidget {
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         if (!transform.isWithinScissor()) return;
 
         RenderSystem.enableBlend();
-        if (light) {
+        if (light)
+        {
             RenderSystem.setShaderColor(1, 1, 1, 0.1f);
             graphics.blitSprite(ElixirumScreen.SPRITE_PANEL_LIGHT, getX(), getY(), getWidth(), getHeight());
-        } else {
+        }
+        else
+        {
             RenderSystem.setShaderColor(1, 1, 1, 0.2f);
             graphics.blitSprite(ElixirumScreen.SPRITE_PANEL_DARK, getX(), getY(), getWidth(), getHeight());
         }
@@ -54,7 +60,8 @@ final class SubEssence extends HierarchicalWidget {
         graphics.blit(getX() + 22, getY() + 2, 0, 18, 18, textures.get(mobEffect));
         graphics.drawString(font, essenceHolder.value().getDisplayName(), getX() + 44, getY() + 7, ElixirumPalette.LIGHT);
 
-        if (transform.isMouseOver(mouseX, mouseY)) {
+        if (transform.isMouseOver(mouseX, mouseY))
+        {
             graphics.blitSprite(ElixirumScreen.SPRITE_OUTLINE_PURPLE, getX(), getY(), getWidth(), getHeight());
             ElixirumScreen.tooltipProvider = this::getCustomTooltip;
         }
@@ -64,7 +71,8 @@ final class SubEssence extends HierarchicalWidget {
     protected void reorganize() {}
 
     @Contract(" -> new")
-    private @Unmodifiable List<Component> getCustomTooltip() {
+    private @Unmodifiable List<Component> getCustomTooltip()
+    {
         final var essence = essenceHolder.value();
         return List.of(
                 essence.getDisplayName(),
@@ -76,12 +84,14 @@ final class SubEssence extends HierarchicalWidget {
                 Component.translatable("elixirum.essence_description.pale_if", essence.requiredIngredients()).withStyle(ChatFormatting.GRAY));
     }
 
-    private Component formatAmplifier(int amplifier) {
+    private Component formatAmplifier(int amplifier)
+    {
         if (amplifier <= 0) return Component.literal("I");
         return Component.translatable("potion.potency." + amplifier);
     }
 
-    private Component formatDuration(int duration) {
+    private Component formatDuration(int duration)
+    {
         if (duration <= 0) return Component.translatable("elixir.status.instantenous");
         final var ticks = Mth.floor(20 * duration);
         return Component.literal(StringUtil.formatTickDuration(ticks, 20f));

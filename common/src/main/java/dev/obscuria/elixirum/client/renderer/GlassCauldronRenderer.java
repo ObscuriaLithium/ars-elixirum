@@ -15,20 +15,23 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public final class GlassCauldronRenderer implements BlockEntityRenderer<GlassCauldronEntity> {
+public final class GlassCauldronRenderer implements BlockEntityRenderer<GlassCauldronEntity>
+{
     private static final ResourceLocation CAULDRON_TEXTURE = Elixirum.key("textures/entity/cauldron.png");
     private static final ResourceLocation CAULDRON_GLASS_TEXTURE = Elixirum.key("textures/entity/cauldron_glass.png");
     private static final ResourceLocation CAULDRON_FLUID_TEXTURE = Elixirum.key("textures/entity/cauldron_fluid.png");
     private final ModelGlassCauldron modelCauldron;
     private final ModelPart modelFluid;
 
-    public GlassCauldronRenderer(BlockEntityRendererProvider.Context context) {
+    public GlassCauldronRenderer(BlockEntityRendererProvider.Context context)
+    {
         this.modelCauldron = new ModelGlassCauldron(context.bakeLayer(ElixirumLayers.GLASS_CAULDRON));
         this.modelFluid = context.bakeLayer(ElixirumLayers.GLASS_CAULDRON_FLUID);
     }
 
     @Override
-    public void render(GlassCauldronEntity entity, float partialTick, PoseStack pose, MultiBufferSource source, int light, int overlay) {
+    public void render(GlassCauldronEntity entity, float partialTick, PoseStack pose, MultiBufferSource source, int light, int overlay)
+    {
         pose.pushPose();
         this.setupPose(pose);
         this.animate(entity, partialTick);
@@ -38,12 +41,14 @@ public final class GlassCauldronRenderer implements BlockEntityRenderer<GlassCau
         pose.popPose();
     }
 
-    private void setupPose(PoseStack pose) {
+    private void setupPose(PoseStack pose)
+    {
         pose.translate(0.5, 1.5, 0.5);
         pose.scale(-1, -1, 1);
     }
 
-    private void animate(GlassCauldronEntity entity, float partialTick) {
+    private void animate(GlassCauldronEntity entity, float partialTick)
+    {
         final var rotation = entity.getRotation(partialTick);
         //final var instability = entity.getInstability();
         this.modelCauldron.main.yRot = rotation;
@@ -51,15 +56,20 @@ public final class GlassCauldronRenderer implements BlockEntityRenderer<GlassCau
         //this.modelCauldron.main.zRot = (float) (Math.cos(rotation * 2 * instability) * 0.05f * instability);
     }
 
-    private void renderCauldron(PoseStack pose, MultiBufferSource source, int light, int overlay) {
+    private void renderCauldron(PoseStack pose, MultiBufferSource source, int light, int overlay)
+    {
         this.modelCauldron.renderToBuffer(pose, this.getBuffer(source), light, overlay, 0xFFFFFFFF);
     }
 
-    private void renderFluid(GlassCauldronEntity entity, PoseStack pose, MultiBufferSource source, int light) {
+    private void renderFluid(GlassCauldronEntity entity, PoseStack pose, MultiBufferSource source, int light)
+    {
         final var contentType = entity.getContentType();
-        if (contentType.isNone()) {
+        if (contentType.isNone())
+        {
             this.modelFluid.visible = false;
-        } else {
+        }
+        else
+        {
             pose.pushPose();
             this.modelFluid.visible = true;
             this.modelCauldron.translateFluid(pose);
@@ -70,19 +80,23 @@ public final class GlassCauldronRenderer implements BlockEntityRenderer<GlassCau
         }
     }
 
-    private void renderGlass(PoseStack pose, MultiBufferSource source, int light, int overlay) {
+    private void renderGlass(PoseStack pose, MultiBufferSource source, int light, int overlay)
+    {
         this.modelCauldron.renderToBuffer(pose, this.getGlassBuffer(source), light, overlay, 0xFFFFFFFF);
     }
 
-    private VertexConsumer getBuffer(MultiBufferSource source) {
+    private VertexConsumer getBuffer(MultiBufferSource source)
+    {
         return source.getBuffer(RenderType.entityCutoutNoCull(CAULDRON_TEXTURE));
     }
 
-    private VertexConsumer getGlassBuffer(MultiBufferSource source) {
+    private VertexConsumer getGlassBuffer(MultiBufferSource source)
+    {
         return source.getBuffer(RenderType.entityTranslucent(CAULDRON_GLASS_TEXTURE));
     }
 
-    private VertexConsumer getFluidBuffer(MultiBufferSource source) {
+    private VertexConsumer getFluidBuffer(MultiBufferSource source)
+    {
         return source.getBuffer(RenderType.entityTranslucent(CAULDRON_FLUID_TEXTURE));
     }
 }

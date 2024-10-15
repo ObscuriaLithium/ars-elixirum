@@ -11,18 +11,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerList.class)
-public abstract class MixinPlayerList {
-
+public abstract class MixinPlayerList
+{
     @Inject(method = "placeNewPlayer", at = @At(value = "TAIL"))
-    private void placeNewPlayer_Listener(Connection connection, ServerPlayer player,
-                                         CommonListenerCookie cookie, CallbackInfo ci) {
-
+    private void placeNewPlayer_Listener(Connection connection,
+                                         ServerPlayer player,
+                                         CommonListenerCookie cookie,
+                                         CallbackInfo info)
+    {
         PlayerListHooks.playerJoined(player);
     }
 
     @Inject(method = "remove", at = @At(value = "TAIL"))
-    private void remove_Listener(ServerPlayer player, CallbackInfo ci) {
-
+    private void remove_Listener(ServerPlayer player,
+                                 CallbackInfo info)
+    {
         PlayerListHooks.playerLeaved(player);
     }
 }

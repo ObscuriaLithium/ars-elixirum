@@ -1,25 +1,30 @@
 package dev.obscuria.elixirum.client.screen.tool;
 
-public record Property<T>(Getter<T> getter, Setter<T> setter) {
-
-    public static <T> Property<T> create(Getter<T> getter, Setter<T> setter) {
+public record Property<T>(Getter<T> getter, Setter<T> setter)
+{
+    public static <T> Property<T> create(Getter<T> getter, Setter<T> setter)
+    {
         return new Property<>(getter, setter);
     }
 
-    public T get() {
+    public T get()
+    {
         return this.getter.get();
     }
 
-    public void set(T value) {
+    public void set(T value)
+    {
         this.setter.set(value);
     }
 
     @FunctionalInterface
-    public interface Getter<T> {
+    public interface Getter<T>
+    {
         T get();
     }
 
-    public interface Setter<T> {
+    public interface Setter<T>
+    {
         void set(T t);
     }
 }

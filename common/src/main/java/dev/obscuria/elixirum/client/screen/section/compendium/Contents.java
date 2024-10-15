@@ -11,24 +11,28 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
-final class Contents extends HierarchicalWidget {
+final class Contents extends HierarchicalWidget
+{
     private final ContentsType type;
     private @Nullable MultiLineLabel label;
     private float highlight;
     private float highlightO;
 
-    public Contents(ContentsType type) {
+    public Contents(ContentsType type)
+    {
         super(0, 0, 0, 0, Component.empty());
         this.setUpdateFlags(UPDATE_BY_WIDTH);
         this.type = type;
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         if (label == null) return;
         this.isHovered = transform.isMouseOver(mouseX, mouseY);
         final var highlight = getHighlight();
-        if (highlight > 0.001f) {
+        if (highlight > 0.001f)
+        {
             graphics.pose().pushPose();
             graphics.pose().translate(getX(), getY() + 1, 0);
             graphics.pose().scale(highlight, 1, 1);
@@ -46,18 +50,21 @@ final class Contents extends HierarchicalWidget {
     }
 
     @Override
-    public void tick() {
+    public void tick()
+    {
         this.highlightO = this.highlight;
         this.highlight = Math.clamp(isHovered ? highlight + 0.5f : highlight - 0.2f, 0f, 1f);
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
         this.label = MultiLineLabel.create(Minecraft.getInstance().font, type.getDisplayName(), getWidth() - 6);
         this.setHeight(6 + 10 * label.getLineCount() - 1);
     }
 
-    private float getHighlight() {
+    private float getHighlight()
+    {
         final var delta = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
         return (float) Math.pow(Mth.lerp(delta, highlightO, highlight), 2);
     }

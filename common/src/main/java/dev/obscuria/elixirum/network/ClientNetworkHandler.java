@@ -3,17 +3,20 @@ package dev.obscuria.elixirum.network;
 import dev.obscuria.elixirum.client.ClientAlchemy;
 import net.minecraft.world.entity.player.Player;
 
-public final class ClientNetworkHandler {
-
-    public static void handle(ClientboundItemEssencesPacket packet, Player player) {
-        ClientAlchemy.handle(packet);
+final class ClientNetworkHandler
+{
+    static void handle(Player player, ClientboundIngredientsPayload payload)
+    {
+        ClientAlchemy.handle(payload);
     }
 
-    public static void handle(ClientboundProfilePacket packet, Player player) {
-        ClientAlchemy.handle(packet);
+    static void handle(Player player, ClientboundProfilePayload payload)
+    {
+        ClientAlchemy.handle(payload);
     }
 
-    public static void handle(ClientboundDiscoverPacket packet, Player player) {
-        ClientAlchemy.handle(packet);
+    static void handle(Player player, ClientboundDiscoverPayload payload)
+    {
+        ClientAlchemy.handle(payload);
     }
 }

@@ -12,22 +12,28 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-public final class WitchTotemOfUndyingRecipe extends CustomRecipe {
-
-    public WitchTotemOfUndyingRecipe(CraftingBookCategory category) {
+public final class WitchTotemOfUndyingRecipe extends CustomRecipe
+{
+    public WitchTotemOfUndyingRecipe(CraftingBookCategory category)
+    {
         super(category);
     }
 
     @Override
-    public boolean matches(CraftingInput input, Level level) {
+    public boolean matches(CraftingInput input, Level level)
+    {
         var elixirs = 0;
         var totems = 0;
-        for (var stack : input.items()) {
+        for (var stack : input.items())
+        {
             if (stack.isEmpty()) continue;
-            if (stack.is(ElixirumItems.ELIXIR.asItem())) {
+            if (stack.is(ElixirumItems.ELIXIR.value()))
+            {
                 elixirs += 1;
                 continue;
-            } else if (stack.is(Items.TOTEM_OF_UNDYING)) {
+            }
+            else if (stack.is(Items.TOTEM_OF_UNDYING))
+            {
                 totems++;
                 continue;
             }
@@ -37,21 +43,24 @@ public final class WitchTotemOfUndyingRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
+    public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider)
+    {
         final var contents = ElixirContents.get(input.items().stream()
-                .filter(stack -> stack.is(ElixirumItems.ELIXIR.asItem()))
+                .filter(stack -> stack.is(ElixirumItems.ELIXIR.value()))
                 .findFirst().orElse(ItemStack.EMPTY));
-        final var result = new ItemStack(ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem());
+        final var result = new ItemStack(ElixirumItems.WITCH_TOTEM_OF_UNDYING.value());
         return contents.set(result);
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height)
+    {
         return width + height >= 2;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer()
+    {
         return ElixirumRecipeSerializers.WITCH_TOTEM_OF_UNDYING;
     }
 }

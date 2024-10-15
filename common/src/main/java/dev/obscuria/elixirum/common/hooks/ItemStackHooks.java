@@ -15,15 +15,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public final class ItemStackHooks {
-
+public final class ItemStackHooks
+{
     public static void getTooltipLines(ItemStack stack,
                                        @Nullable Player player,
-                                       Consumer<Component> consumer) {
+                                       Consumer<Component> consumer)
+    {
 
-        if (player == null 
+        if (player == null
                 || !player.level().isClientSide
-                || !player.getItemBySlot(EquipmentSlot.HEAD).is(ElixirumItems.ALCHEMIST_EYE.asItem())) return;
+                || !player.getItemBySlot(EquipmentSlot.HEAD).is(ElixirumItems.ALCHEMIST_EYE.value())) return;
         final var properties = ClientAlchemy.getIngredients().getProperties(stack.getItem());
         if (properties.isEmpty()) return;
         final var getter = player.registryAccess().lookupOrThrow(ElixirumRegistries.ESSENCE);
@@ -36,7 +37,8 @@ public final class ItemStackHooks {
     private static void appendAlchemyProperties(IngredientProperties properties,
                                                 HolderGetter<Essence> getter,
                                                 ItemStack stack,
-                                                Consumer<Component> consumer) {
+                                                Consumer<Component> consumer)
+    {
 
         final var discovered = properties.getEssences(getter).object2IntEntrySet().stream()
                 .filter(entry -> ClientAlchemy.getProfile().isDiscovered(stack.getItem(), entry.getKey()))
@@ -48,12 +50,15 @@ public final class ItemStackHooks {
                         entry.getKey().value().getDisplayName())
                 .withStyle(ChatFormatting.LIGHT_PURPLE)));
 
-        if (discovered.size() >= properties.getEssences().size()) {
+        if (discovered.size() >= properties.getEssences().size())
+        {
             properties.getAffixes().forEach(affix -> consumer.accept(Component
                     .translatable("elixirum.alchemy_properties.affix",
                             affix.getDescription())
                     .withStyle(ChatFormatting.GOLD)));
-        } else {
+        }
+        else
+        {
             consumer.accept(Component
                     .translatable("elixirum.alchemy_properties.unknown")
                     .withStyle(ChatFormatting.DARK_GRAY));

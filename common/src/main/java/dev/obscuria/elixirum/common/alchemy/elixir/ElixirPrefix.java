@@ -9,11 +9,13 @@ import net.minecraft.world.effect.MobEffect;
 
 import java.util.Optional;
 
-public record ElixirPrefix(Optional<Holder<MobEffect>> source, String key) {
+public record ElixirPrefix(Optional<Holder<MobEffect>> source, String key)
+{
     public static final Codec<ElixirPrefix> DIRECT_CODEC;
     public static final Codec<Holder<ElixirPrefix>> CODEC;
 
-    static {
+    static
+    {
         DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 MobEffect.CODEC.optionalFieldOf("source").forGetter(ElixirPrefix::source),
                 Codec.STRING.fieldOf("key").forGetter(ElixirPrefix::key)

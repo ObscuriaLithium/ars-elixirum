@@ -20,6 +20,7 @@ dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    api rootProject.files('libs/obscure_api-common-1.21.1-16-api.jar')
 }
 
 configurations {
@@ -50,6 +51,4 @@ artifacts {
     commonResources sourceSets.main.resources.sourceDirectories.singleFile
     commonGeneratedResources sourceSets.generated.resources.sourceDirectories.singleFile
 }
-
-DuplicatesStrategy.INCLUDE
 

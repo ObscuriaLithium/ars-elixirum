@@ -2,6 +2,12 @@ plugins {
     id 'mod-platform'
     id 'fabric-loom'
 }
+
+repositories {
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases/" }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered {
@@ -10,6 +16,10 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${fabric_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modApi rootProject.files('libs/obscure_api-fabric-1.21.1-16.jar')
 }
 
 loom {

@@ -11,18 +11,21 @@ import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-final class SubStepChar extends HierarchicalWidget {
+final class SubStepChar extends HierarchicalWidget
+{
     private final char index;
     private @Nullable MultiLineLabel label;
 
-    public SubStepChar(char index, Component content) {
+    public SubStepChar(char index, Component content)
+    {
         super(0, 0, 0, 0, content);
         this.setUpdateFlags(UPDATE_BY_WIDTH);
         this.index = index;
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         if (label == null) return;
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 0.2f);
@@ -37,7 +40,8 @@ final class SubStepChar extends HierarchicalWidget {
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
         this.label = MultiLineLabel.create(Minecraft.getInstance().font, getMessage(), getWidth() - 25);
         this.setHeight(10 + 10 * label.getLineCount() - 1);
     }

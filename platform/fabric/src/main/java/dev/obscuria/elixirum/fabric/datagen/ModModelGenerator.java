@@ -29,18 +29,18 @@ final class ModModelGenerator extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerators generators) {
         generateElixirVariants(generators);
         generateBaseElixir(generators);
-        generators.generateFlatItem(ElixirumItems.ALCHEMIST_EYE.asItem(), ModelTemplates.FLAT_ITEM);
-        generators.generateFlatItem(ElixirumItems.GLASS_CAULDRON.asItem(), ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ElixirumItems.ALCHEMIST_EYE.value(), ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ElixirumItems.GLASS_CAULDRON.value(), ModelTemplates.FLAT_ITEM);
         generators.generateLayeredItem(
-                ModelLocationUtils.getModelLocation(ElixirumItems.SPLASH_ELIXIR.asItem()),
+                ModelLocationUtils.getModelLocation(ElixirumItems.SPLASH_ELIXIR.value()),
                 Elixirum.key("item/splash_elixir"),
                 Elixirum.key("item/splash_elixir_overlay"));
         generators.generateLayeredItem(
-                ModelLocationUtils.getModelLocation(ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem()),
+                ModelLocationUtils.getModelLocation(ElixirumItems.WITCH_TOTEM_OF_UNDYING.value()),
                 Elixirum.key("item/witch_totem_of_undying"),
                 Elixirum.key("item/witch_totem_of_undying_overlay"));
         generators.generateLayeredItem(
-                ModelLocationUtils.getModelLocation(ElixirumItems.EXTRACT.asItem()),
+                ModelLocationUtils.getModelLocation(ElixirumItems.EXTRACT.value()),
                 Elixirum.key("item/extract"),
                 Elixirum.key("item/extract_overlay"));
     }

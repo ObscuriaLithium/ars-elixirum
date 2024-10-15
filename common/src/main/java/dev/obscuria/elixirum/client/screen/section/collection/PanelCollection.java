@@ -8,10 +8,12 @@ import dev.obscuria.elixirum.client.screen.widget.Text;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-final class PanelCollection extends PanelContainer {
+final class PanelCollection extends PanelContainer
+{
     private @Nullable SubElixirsGrid elixirsGrid;
 
-    public PanelCollection(int x, int y, int width, int height) {
+    public PanelCollection(int x, int y, int width, int height)
+    {
         super(x, y, width, height);
         final var Header = this.setHeader(new ListContainer());
         Header.addChild(new Text()
@@ -23,7 +25,8 @@ final class PanelCollection extends PanelContainer {
         this.elixirsGrid = scroll.addChild(new SubElixirsGrid());
     }
 
-    public void update() {
+    public void update()
+    {
         if (elixirsGrid != null) elixirsGrid.update();
     }
 }

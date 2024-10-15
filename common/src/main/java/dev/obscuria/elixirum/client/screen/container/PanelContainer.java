@@ -12,7 +12,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PanelContainer extends HierarchicalWidget {
+public class PanelContainer extends HierarchicalWidget
+{
     private static final int BORDER = 14;
     private @Nullable HierarchicalWidget headerChild;
     private @Nullable HierarchicalWidget footerChild;
@@ -20,30 +21,35 @@ public class PanelContainer extends HierarchicalWidget {
     private int headerHeight;
     private int footerHeight;
 
-    public PanelContainer(int x, int y, int width, int height) {
+    public PanelContainer(int x, int y, int width, int height)
+    {
         super(x, y, width, height, Component.empty());
     }
 
-    public <T extends HierarchicalWidget> T setHeader(T widget) {
+    public <T extends HierarchicalWidget> T setHeader(T widget)
+    {
         this.headerChild = widget;
         this.setChanged(true);
         return widget;
     }
 
-    public <T extends HierarchicalWidget> T setFooter(T widget) {
+    public <T extends HierarchicalWidget> T setFooter(T widget)
+    {
         this.footerChild = widget;
         this.setChanged(true);
         return widget;
     }
 
-    public <T extends HierarchicalWidget> T setContent(T widget) {
+    public <T extends HierarchicalWidget> T setContent(T widget)
+    {
         this.contentChild = widget;
         this.setChanged(true);
         return widget;
     }
 
     @Override
-    public List<HierarchicalWidget> children() {
+    public List<HierarchicalWidget> children()
+    {
         final var result = Lists.<HierarchicalWidget>newArrayList();
         if (headerChild != null) result.add(headerChild);
         if (contentChild != null) result.add(contentChild);
@@ -52,7 +58,8 @@ public class PanelContainer extends HierarchicalWidget {
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         while (isAnyChanged()) consumeChanges();
 
         RenderSystem.enableBlend();
@@ -68,11 +75,13 @@ public class PanelContainer extends HierarchicalWidget {
     }
 
     @Override
-    protected void reorganize() {
+    protected void reorganize()
+    {
         final var childWidth = getWidth() - BORDER * 2;
 
         this.headerHeight = 0;
-        if (this.headerChild != null) {
+        if (this.headerChild != null)
+        {
             this.headerChild.setX(getX() + BORDER);
             this.headerChild.setY(getY() + BORDER);
             this.headerChild.setWidth(childWidth);
@@ -80,7 +89,8 @@ public class PanelContainer extends HierarchicalWidget {
         }
 
         this.footerHeight = 0;
-        if (this.footerChild != null) {
+        if (this.footerChild != null)
+        {
             final var height = footerChild.getHeight();
             this.footerChild.setX(getX() + BORDER);
             this.footerChild.setY(getBottom() - BORDER - height);
@@ -88,7 +98,8 @@ public class PanelContainer extends HierarchicalWidget {
             this.footerHeight = footerChild.getHeight() + 5;
         }
 
-        if (this.contentChild != null) {
+        if (this.contentChild != null)
+        {
             this.contentChild.setX(getX() + BORDER);
             this.contentChild.setY(getY() + BORDER + headerHeight);
             this.contentChild.setWidth(childWidth);
@@ -97,17 +108,20 @@ public class PanelContainer extends HierarchicalWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    {
         return this.mouseClicked(GlobalTransform.of(this, Rect.of(this)), mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY)
+    {
         return this.mouseScrolled(GlobalTransform.of(this, Rect.of(this)), pMouseX, pMouseY, pScrollX, pScrollY);
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    {
         this.render(graphics, GlobalTransform.of(this, Rect.of(this)), mouseX, mouseY);
     }
 }

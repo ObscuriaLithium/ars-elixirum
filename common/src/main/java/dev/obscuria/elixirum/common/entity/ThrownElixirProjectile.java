@@ -23,45 +23,56 @@ import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 
-public final class ThrownElixirProjectile extends ThrowableItemProjectile {
-
-    public ThrownElixirProjectile(EntityType<? extends ThrownElixirProjectile> type, Level level) {
+public final class ThrownElixirProjectile extends ThrowableItemProjectile
+{
+    public ThrownElixirProjectile(EntityType<? extends ThrownElixirProjectile> type, Level level)
+    {
         super(type, level);
     }
 
-    public ThrownElixirProjectile(Level level, LivingEntity entity) {
-        super(ElixirumEntityTypes.THROWN_ELIXIR, entity, level);
+    public ThrownElixirProjectile(Level level, LivingEntity entity)
+    {
+        super(ElixirumEntityTypes.THROWN_ELIXIR.value(), entity, level);
     }
 
     @Override
-    protected Item getDefaultItem() {
+    protected Item getDefaultItem()
+    {
         return ElixirumItems.SPLASH_ELIXIR.value();
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult hitResult) {
+    protected void onHitBlock(BlockHitResult hitResult)
+    {
         super.onHitBlock(hitResult);
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide)
+        {
             final var contents = ElixirContents.get(getItem());
             final var direction = hitResult.getDirection();
             final var pos = hitResult.getBlockPos().relative(direction);
-            if (contents.isEmpty()) {
+            if (contents.isEmpty())
+            {
                 this.dowseFire(pos);
                 this.dowseFire(pos.relative(direction.getOpposite()));
-                for(var horizontalDirection : Direction.Plane.HORIZONTAL)
+                for (var horizontalDirection : Direction.Plane.HORIZONTAL)
                     this.dowseFire(pos.relative(horizontalDirection));
             }
         }
     }
 
     @Override
-    protected void onHit(HitResult hitResult) {
+    protected void onHit(HitResult hitResult)
+    {
         super.onHit(hitResult);
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide)
+        {
             final var contents = ElixirContents.get(getItem());
-            if (contents.isEmpty()) {
+            if (contents.isEmpty())
+            {
                 this.applyWater();
-            } else {
+            }
+            else
+            {
                 this.applySplash(contents,
                         hitResult instanceof EntityHitResult entityHitResult
                                 ? entityHitResult.getEntity()
@@ -75,11 +86,14 @@ public final class ThrownElixirProjectile extends ThrowableItemProjectile {
         }
     }
 
-    private void applyWater() {
+    private void applyWater()
+    {
         final var area = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
-        for (var entity : this.level().getEntitiesOfClass(LivingEntity.class, area, ThrownPotion.WATER_SENSITIVE_OR_ON_FIRE)) {
+        for (var entity : this.level().getEntitiesOfClass(LivingEntity.class, area, ThrownPotion.WATER_SENSITIVE_OR_ON_FIRE))
+        {
             final var distance = this.distanceToSqr(entity);
-            if (distance < 16.0D) {
+            if (distance < 16.0D)
+            {
                 if (entity.isSensitiveToWater())
                     entity.hurt(this.damageSources().indirectMagic(this, this.getOwner()), 1.0F);
                 if (entity.isOnFire() && entity.isAlive())
@@ -90,15 +104,20 @@ public final class ThrownElixirProjectile extends ThrowableItemProjectile {
             axolotl.rehydrate();
     }
 
-    private void applySplash(ElixirContents contents, @Nullable Entity entity) {
+    private void applySplash(ElixirContents contents, @Nullable Entity entity)
+    {
         final var area = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
         final var targets = this.level().getEntitiesOfClass(LivingEntity.class, area);
-        if (!targets.isEmpty()) {
+        if (!targets.isEmpty())
+        {
             final var source = this.getEffectSource();
-            for (var target : targets) {
-                if (target.isAffectedByPotions()) {
+            for (var target : targets)
+            {
+                if (target.isAffectedByPotions())
+                {
                     final var distance = this.distanceToSqr(target);
-                    if (distance < 16.0D) {
+                    if (distance < 16.0D)
+                    {
                         final var scale = target == entity ? 1D : 1D - Math.sqrt(distance) / 4D;
                         contents.scale(scale).apply(target, this, source);
                     }
@@ -107,13 +126,19 @@ public final class ThrownElixirProjectile extends ThrowableItemProjectile {
         }
     }
 
-    private void dowseFire(BlockPos pos) {
+    private void dowseFire(BlockPos pos)
+    {
         var state = this.level().getBlockState(pos);
-        if (state.is(BlockTags.FIRE)) {
+        if (state.is(BlockTags.FIRE))
+        {
             this.level().destroyBlock(pos, false, this);
-        } else if (AbstractCandleBlock.isLit(state)) {
+        }
+        else if (AbstractCandleBlock.isLit(state))
+        {
             AbstractCandleBlock.extinguish(null, state, this.level(), pos);
-        } else if (CampfireBlock.isLitCampfire(state)) {
+        }
+        else if (CampfireBlock.isLitCampfire(state))
+        {
             this.level().levelEvent(null, 1009, pos, 0);
             CampfireBlock.dowse(this.getOwner(), this.level(), pos, state);
             this.level().setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, Boolean.FALSE));

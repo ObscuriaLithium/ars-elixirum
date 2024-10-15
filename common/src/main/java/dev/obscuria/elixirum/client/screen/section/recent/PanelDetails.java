@@ -7,15 +7,17 @@ import dev.obscuria.elixirum.common.alchemy.elixir.ElixirHolder;
 
 import java.util.Optional;
 
-final class PanelDetails extends AbstractDetailsPanel {
-
-    public PanelDetails(ElixirOverview overview, int x, int y, int width, int height) {
+final class PanelDetails extends AbstractDetailsPanel
+{
+    public PanelDetails(ElixirOverview overview, int x, int y, int width, int height)
+    {
         super(overview, x, y, width, height);
         RootRecent.setSelectionListener(holder -> update(holder.orElseGet(ElixirHolder::empty)));
     }
 
     @Override
-    protected Optional<HierarchicalWidget> createFooter() {
+    protected Optional<HierarchicalWidget> createFooter()
+    {
         return Optional.of(new SubSaveButton());
     }
 }

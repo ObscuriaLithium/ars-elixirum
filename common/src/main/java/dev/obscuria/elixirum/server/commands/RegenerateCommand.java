@@ -8,15 +8,19 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-public final class RegenerateCommand {
-
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
+public final class RegenerateCommand
+{
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher,
+                                CommandBuildContext context,
+                                Commands.CommandSelection environment)
+    {
         dispatcher.register(Commands.literal(Elixirum.MODID).requires(source -> source.hasPermission(3))
                 .then(Commands.literal("regenerate")
                         .executes(command -> regenerate(command.getSource()))));
     }
 
-    private static int regenerate(CommandSourceStack source) {
+    private static int regenerate(CommandSourceStack source)
+    {
         ServerAlchemy.getIngredients().regenerate();
         ServerAlchemy.syncIngredients();
         ServerAlchemy.validateProfiles();

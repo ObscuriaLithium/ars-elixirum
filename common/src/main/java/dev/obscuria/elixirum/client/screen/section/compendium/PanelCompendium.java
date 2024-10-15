@@ -12,10 +12,12 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 
-final class PanelCompendium extends PanelContainer {
+final class PanelCompendium extends PanelContainer
+{
     private static final Map<Integer, Boolean> sectionsCache;
 
-    public PanelCompendium(int x, int y, int width, int height) {
+    public PanelCompendium(int x, int y, int width, int height)
+    {
         super(x, y, width, height);
         this.setHeader(new Text()
                 .setContent(Component.literal("Compendium"))
@@ -45,7 +47,8 @@ final class PanelCompendium extends PanelContainer {
         RootCompendium.bind(pageScroll, page);
     }
 
-    private static void addSection(int id, ListContainer parent, Component title, ContentsType... contentsTypes) {
+    private static void addSection(int id, ListContainer parent, Component title, ContentsType... contentsTypes)
+    {
         final var property = Property.create(
                 () -> sectionsCache.getOrDefault(id, false),
                 value -> sectionsCache.put(id, value));
@@ -60,7 +63,8 @@ final class PanelCompendium extends PanelContainer {
                     })));
     }
 
-    static {
+    static
+    {
         sectionsCache = Util.make(Maps.newHashMap(), map -> map.put(1, true));
     }
 }

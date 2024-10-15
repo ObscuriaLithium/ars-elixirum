@@ -15,20 +15,24 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public final class ElixirOverview extends AbstractWidget {
+public final class ElixirOverview extends AbstractWidget
+{
     private static final ResourceLocation SHINE_TEXTURE = Elixirum.key("textures/gui/shine.png");
     private ItemStack stack = ItemStack.EMPTY;
 
-    public ElixirOverview(int x, int y) {
+    public ElixirOverview(int x, int y)
+    {
         super(x, y, 0, 0, Component.empty());
     }
 
-    public void setStack(ItemStack stack) {
+    public void setStack(ItemStack stack)
+    {
         this.stack = stack;
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    {
         if (stack.isEmpty()) return;
         final var minecraft = Minecraft.getInstance();
         final var timer = ElixirumClient.getSeconds();

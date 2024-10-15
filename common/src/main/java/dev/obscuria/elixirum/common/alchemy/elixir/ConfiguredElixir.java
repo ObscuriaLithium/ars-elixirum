@@ -9,30 +9,37 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
-public record ConfiguredElixir(List<Variant> variants) {
+public record ConfiguredElixir(List<Variant> variants)
+{
     public static final Codec<ConfiguredElixir> DIRECT_CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ConfiguredElixir> STREAM_CODEC;
 
-    public static ConfiguredElixir create(Variant... variants) {
+    public static ConfiguredElixir create(Variant... variants)
+    {
         return new ConfiguredElixir(List.of(variants));
     }
 
-    public static Variant variant(Variant.Template... templates) {
+    public static Variant variant(Variant.Template... templates)
+    {
         return new Variant(List.of(templates));
     }
 
-    public static Variant.Template template(ResourceLocation essence, int amplifier, int duration) {
+    public static Variant.Template template(ResourceLocation essence, int amplifier, int duration)
+    {
         return new Variant.Template(essence, amplifier, duration);
     }
 
-    public record Variant(List<Template> templates) {
+    public record Variant(List<Template> templates)
+    {
 
-        public record Template(ResourceLocation essence, int amplifier, int duration) {
+        public record Template(ResourceLocation essence, int amplifier, int duration)
+        {
 
         }
     }
 
-    static {
+    static
+    {
         final var templateCodec = RecordCodecBuilder.<Variant.Template>create(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("essence").forGetter(Variant.Template::essence),
                 Codec.INT.fieldOf("amplifier").forGetter(Variant.Template::amplifier),

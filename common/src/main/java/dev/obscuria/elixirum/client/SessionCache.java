@@ -17,23 +17,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public final class SessionCache {
+public final class SessionCache
+{
     private final Map<ElixirRecipe, ItemStack> stackByRecipe = Maps.newHashMap();
     private final List<ElixirHolder> recentElixirs = Lists.newArrayList();
 
     @Contract(pure = true)
-    public @Unmodifiable List<ElixirHolder> getRecentElixirs() {
+    public @Unmodifiable List<ElixirHolder> getRecentElixirs()
+    {
         return List.copyOf(recentElixirs);
     }
 
-    public void saveRecent(ElixirRecipe recipe) {
+    public void saveRecent(ElixirRecipe recipe)
+    {
         if (recentElixirs.stream().anyMatch(recent -> recent.is(recipe))) return;
         this.recentElixirs.addFirst(ClientAlchemy.getProfile()
                 .searchInCollection(recipe)
                 .orElseGet(recipe::asHolder));
     }
 
-    public ItemStack getOrCreateStack(ElixirHolder holder) {
+    public ItemStack getOrCreateStack(ElixirHolder holder)
+    {
         return stackByRecipe.compute(holder.getRecipe(), (key, value) -> {
             if (value != null) return value;
             return essenceGetter()
@@ -42,17 +46,20 @@ public final class SessionCache {
         });
     }
 
-    public void remove(ElixirHolder holder) {
+    public void remove(ElixirHolder holder)
+    {
         if (recentElixirs.contains(holder)) return;
         stackByRecipe.remove(holder.getRecipe());
     }
 
-    public void clear() {
+    public void clear()
+    {
         this.stackByRecipe.clear();
         this.recentElixirs.clear();
     }
 
-    private static Optional<HolderGetter<Essence>> essenceGetter() {
+    private static Optional<HolderGetter<Essence>> essenceGetter()
+    {
         return Optional.ofNullable(Minecraft.getInstance().level)
                 .flatMap(level -> level.registryAccess().lookup(ElixirumRegistries.ESSENCE));
     }

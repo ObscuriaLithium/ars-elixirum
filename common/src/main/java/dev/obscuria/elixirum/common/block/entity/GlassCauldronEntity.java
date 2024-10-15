@@ -42,7 +42,8 @@ import net.minecraft.world.phys.AABB;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public final class GlassCauldronEntity extends BlockEntity {
+public final class GlassCauldronEntity extends BlockEntity
+{
     private static final String TAG_FILLED = "Filled";
     private static final String TAG_TEMPERATURE = "Temperature";
     private static final String TAG_BOTTLES = "Bottles";
@@ -54,31 +55,38 @@ public final class GlassCauldronEntity extends BlockEntity {
     private float rotation;
     private float rotationO;
 
-    public GlassCauldronEntity(BlockPos pos, BlockState state) {
-        super(ElixirumBlockEntityTypes.GLASS_CAULDRON, pos, state);
+    public GlassCauldronEntity(BlockPos pos, BlockState state)
+    {
+        super(ElixirumBlockEntityTypes.GLASS_CAULDRON.value(), pos, state);
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return !this.filled;
     }
 
-    public boolean isFilled() {
+    public boolean isFilled()
+    {
         return this.filled;
     }
 
-    public boolean isBoil() {
+    public boolean isBoil()
+    {
         return this.temperature >= 1;
     }
 
-    public boolean hasElixir() {
+    public boolean hasElixir()
+    {
         return this.isFilled() && !this.mixer.isEmpty();
     }
 
-    public double getTemperature() {
+    public double getTemperature()
+    {
         return this.temperature;
     }
 
-    public void fillWithWater() {
+    public void fillWithWater()
+    {
         this.filled = true;
         this.temperature = 0;
         this.bottles = 3;
@@ -86,7 +94,8 @@ public final class GlassCauldronEntity extends BlockEntity {
         this.updateClients();
     }
 
-    public void pickUpWater() {
+    public void pickUpWater()
+    {
         this.filled = false;
         this.temperature = 0;
         this.bottles = 0;
@@ -94,7 +103,8 @@ public final class GlassCauldronEntity extends BlockEntity {
         this.updateClients();
     }
 
-    public void flushElixir() {
+    public void flushElixir()
+    {
         this.filled = false;
         this.temperature = 0;
         this.bottles = 0;
@@ -103,16 +113,20 @@ public final class GlassCauldronEntity extends BlockEntity {
         this.updateClients();
     }
 
-    public ItemStack brew(Player player) {
+    public ItemStack brew(Player player)
+    {
         final var contents = this.mixer.getResult(essenceGetter());
         if (contents.isEmpty()) return ItemStack.EMPTY;
         final var stack = ElixirumItems.ELIXIR.value().getDefaultInstance();
         stack.set(ElixirumDataComponents.ELIXIR_CONTENTS, contents);
-        if (player instanceof ServerPlayer serverPlayer) {
+        if (player instanceof ServerPlayer serverPlayer)
+        {
             ServerAlchemy.getProfile(serverPlayer)
                     .searchInCollection(mixer.getRecipe())
                     .ifPresent(holder -> holder.applyAppearance(stack));
-        } else {
+        }
+        else
+        {
             ClientAlchemy.getCache().saveRecent(mixer.getRecipe());
         }
 
@@ -122,28 +136,33 @@ public final class GlassCauldronEntity extends BlockEntity {
         return stack;
     }
 
-    public float getRotation(float delta) {
+    public float getRotation(float delta)
+    {
         return Mth.lerp(delta, this.rotationO, this.rotation);
     }
 
-    public void rotate(float radians) {
+    public void rotate(float radians)
+    {
         this.rotationO = this.rotation;
         this.rotation += radians;
     }
 
-    public ContentType getContentType() {
+    public ContentType getContentType()
+    {
         if (this.isEmpty()) return ContentType.NONE;
         if (this.hasElixir()) return ContentType.ELIXIR;
         return ContentType.WATER;
     }
 
-    public void playSound(SoundEvent sound, float volume, float pitch) {
+    public void playSound(SoundEvent sound, float volume, float pitch)
+    {
         if (this.level != null)
             this.level.playSound(null, this.getBlockPos(), sound,
                     SoundSource.BLOCKS, volume, pitch);
     }
 
-    public boolean hasHeatSource() {
+    public boolean hasHeatSource()
+    {
         if (this.level == null) return false;
         final var state = this.level.getBlockState(this.getBlockPos().below());
         if (state.is(ElixirumTags.Blocks.HEAT_SOURCES))
@@ -153,15 +172,18 @@ public final class GlassCauldronEntity extends BlockEntity {
         return false;
     }
 
-    public void addTemperature(double amount) {
+    public void addTemperature(double amount)
+    {
         final var temperature = Math.clamp(this.temperature + amount, 0, 1);
-        if (this.temperature != temperature) {
+        if (this.temperature != temperature)
+        {
             this.temperature = temperature;
             this.setChanged();
         }
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity) {
+    public static void tick(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity)
+    {
         for (var behavior : BehaviorQueue.values())
             if (behavior.canUse(entity))
                 if (behavior.tick(level, pos, state, entity))
@@ -170,12 +192,17 @@ public final class GlassCauldronEntity extends BlockEntity {
         entity.rotate(0.01f + (float) entity.temperature * 0.1f);
     }
 
-    public boolean addIngredient(ItemStack stack) {
+    public boolean addIngredient(ItemStack stack)
+    {
         if (level == null) return false;
-        if (mixer.append(stack.getItem())) {
-            if (level.isClientSide) {
+        if (mixer.append(stack.getItem()))
+        {
+            if (level.isClientSide)
+            {
                 this.createSplashParticles(20);
-            } else {
+            }
+            else
+            {
                 stack.shrink(1);
                 this.setChanged();
                 this.updateClients();
@@ -187,17 +214,20 @@ public final class GlassCauldronEntity extends BlockEntity {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
+    public Packet<ClientGamePacketListener> getUpdatePacket()
+    {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider)
+    {
         return this.saveCustomOnly(provider);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    {
         super.loadAdditional(tag, provider);
         if (tag.contains(TAG_FILLED))
             this.filled = tag.getBoolean(TAG_FILLED);
@@ -205,7 +235,8 @@ public final class GlassCauldronEntity extends BlockEntity {
             this.temperature = tag.getDouble(TAG_TEMPERATURE);
         if (tag.contains(TAG_BOTTLES))
             this.bottles = tag.getInt(TAG_BOTTLES);
-        if (tag.contains(TAG_ELIXIR_MIXER, Tag.TAG_COMPOUND)) {
+        if (tag.contains(TAG_ELIXIR_MIXER, Tag.TAG_COMPOUND))
+        {
             final var registryOps = RegistryOps.create(NbtOps.INSTANCE, provider);
             IngredientMixer.CODEC.decode(registryOps, tag.getCompound(TAG_ELIXIR_MIXER))
                     .ifSuccess(result -> this.mixer = result.getFirst())
@@ -217,7 +248,8 @@ public final class GlassCauldronEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    {
         super.saveAdditional(tag, provider);
         tag.putBoolean(TAG_FILLED, this.filled);
         tag.putDouble(TAG_TEMPERATURE, this.temperature);
@@ -231,16 +263,19 @@ public final class GlassCauldronEntity extends BlockEntity {
                 });
     }
 
-    private void consumeNearbyIngredients() {
+    private void consumeNearbyIngredients()
+    {
         if (level == null) return;
-        for (var entity : level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()))) {
+        for (var entity : level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos())))
+        {
             final var stack = entity.getItem();
             if (this.addIngredient(stack))
                 entity.setItem(stack);
         }
     }
 
-    private void createSplashParticles(int count) {
+    private void createSplashParticles(int count)
+    {
         if (this.level == null) return;
         final var center = this.getBlockPos().getCenter();
         final var color = this.getContentType().getColor(this);
@@ -252,7 +287,8 @@ public final class GlassCauldronEntity extends BlockEntity {
                     0, 1, 0);
     }
 
-    private void createBubbleParticles(int count) {
+    private void createBubbleParticles(int count)
+    {
         if (this.level == null) return;
         final var center = this.getBlockPos().getCenter();
         final var color = this.getContentType().getColor(this);
@@ -264,7 +300,8 @@ public final class GlassCauldronEntity extends BlockEntity {
                     0, 0, 0);
     }
 
-    private void updateClients() {
+    private void updateClients()
+    {
         if (this.level == null) return;
         this.level.sendBlockUpdated(
                 this.getBlockPos(),
@@ -273,12 +310,14 @@ public final class GlassCauldronEntity extends BlockEntity {
                 Block.UPDATE_CLIENTS);
     }
 
-    private HolderGetter<Essence> essenceGetter() {
+    private HolderGetter<Essence> essenceGetter()
+    {
         if (level == null) throw new IllegalStateException("Level should not be null");
         return level.holderLookup(ElixirumRegistries.ESSENCE);
     }
 
-    public enum ContentType {
+    public enum ContentType
+    {
         NONE(false, entity -> 0xFFFFFFFF),
         WATER(false, entity -> FastColor.ARGB32.lerp((float) entity.getTemperature(), 0xFF5575DD, 0xFFAABBDD)),
         ELIXIR(true, entity -> entity.mixer.getColor(entity.essenceGetter())),
@@ -287,25 +326,30 @@ public final class GlassCauldronEntity extends BlockEntity {
         private final boolean glowing;
         private final Function<GlassCauldronEntity, Integer> colorFunction;
 
-        ContentType(boolean glowing, Function<GlassCauldronEntity, Integer> colorFunction) {
+        ContentType(boolean glowing, Function<GlassCauldronEntity, Integer> colorFunction)
+        {
             this.glowing = glowing;
             this.colorFunction = colorFunction;
         }
 
-        public int getColor(GlassCauldronEntity entity) {
+        public int getColor(GlassCauldronEntity entity)
+        {
             return this.colorFunction.apply(entity);
         }
 
-        public boolean isGlowing() {
+        public boolean isGlowing()
+        {
             return this.glowing;
         }
 
-        public boolean isNone() {
+        public boolean isNone()
+        {
             return this == NONE;
         }
     }
 
-    private enum BehaviorQueue {
+    private enum BehaviorQueue
+    {
         COOLING_DOWN(entity -> entity.isFilled()
                 && !entity.hasHeatSource()
                 && entity.temperature > 0.0, BehaviorQueue::tickCoolingDown),
@@ -319,22 +363,27 @@ public final class GlassCauldronEntity extends BlockEntity {
         private final Predicate<GlassCauldronEntity> predicate;
         private final Behavior behavior;
 
-        BehaviorQueue(Predicate<GlassCauldronEntity> predicate, Behavior behavior) {
+        BehaviorQueue(Predicate<GlassCauldronEntity> predicate, Behavior behavior)
+        {
             this.predicate = predicate;
             this.behavior = behavior;
         }
 
-        public boolean canUse(GlassCauldronEntity entity) {
+        public boolean canUse(GlassCauldronEntity entity)
+        {
             return this.predicate.test(entity);
         }
 
-        public boolean tick(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity) {
+        public boolean tick(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity)
+        {
             return this.behavior.tick(level, pos, state, entity);
         }
 
-        private static boolean tickCoolingDown(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity) {
+        private static boolean tickCoolingDown(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity)
+        {
             entity.addTemperature(-0.002);
-            if (level.isClientSide) {
+            if (level.isClientSide)
+            {
                 final var random = level.random.nextFloat();
                 if (random <= 0.2f * entity.getTemperature())
                     entity.createSplashParticles(1);
@@ -342,9 +391,11 @@ public final class GlassCauldronEntity extends BlockEntity {
             return true;
         }
 
-        private static boolean tickHeating(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity) {
+        private static boolean tickHeating(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity)
+        {
             entity.addTemperature(0.002);
-            if (level.isClientSide) {
+            if (level.isClientSide)
+            {
                 ElixirumClient.playBoilingSound(entity);
                 final var random = level.random.nextFloat();
                 if (random <= 0.2f * entity.getTemperature())
@@ -353,9 +404,11 @@ public final class GlassCauldronEntity extends BlockEntity {
             return true;
         }
 
-        private static boolean tickBoiling(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity) {
+        private static boolean tickBoiling(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity)
+        {
             entity.consumeNearbyIngredients();
-            if (level.isClientSide) {
+            if (level.isClientSide)
+            {
                 ElixirumClient.playBoilingSound(entity);
                 entity.createSplashParticles(1);
                 entity.createBubbleParticles(1);
@@ -364,8 +417,8 @@ public final class GlassCauldronEntity extends BlockEntity {
         }
 
         @FunctionalInterface
-        private interface Behavior {
-
+        private interface Behavior
+        {
             boolean tick(Level level, BlockPos pos, BlockState state, GlassCauldronEntity entity);
         }
     }

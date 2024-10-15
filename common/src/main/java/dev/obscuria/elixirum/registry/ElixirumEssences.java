@@ -4,7 +4,8 @@ import dev.obscuria.elixirum.Elixirum;
 import dev.obscuria.elixirum.common.alchemy.essence.Essence;
 import net.minecraft.resources.ResourceKey;
 
-public interface ElixirumEssences {
+public interface ElixirumEssences
+{
     ResourceKey<Essence> ABSORPTION = key("absorption");
     ResourceKey<Essence> BLINDNESS = key("blindness");
     ResourceKey<Essence> FIRE_RESISTANCE = key("fire_resistance");
@@ -35,7 +36,8 @@ public interface ElixirumEssences {
     ResourceKey<Essence> WEAKNESS = key("weakness");
     ResourceKey<Essence> WITHER = key("wither");
 
-    private static ResourceKey<Essence> key(String name) {
+    private static ResourceKey<Essence> key(String name)
+    {
         return ResourceKey.create(ElixirumRegistries.ESSENCE, Elixirum.key(name));
     }
 }

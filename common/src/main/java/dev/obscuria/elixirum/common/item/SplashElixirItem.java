@@ -18,40 +18,48 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 @EssenceBlacklist
-public final class SplashElixirItem extends Item {
-
-    public SplashElixirItem() {
+public final class SplashElixirItem extends Item
+{
+    public SplashElixirItem()
+    {
         super(new Properties()
                 .stacksTo(8)
                 .craftRemainder(Items.GLASS_BOTTLE));
     }
 
     @Override
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(ItemStack stack)
+    {
         return ElixirTier.get(stack).isFoil();
     }
 
     @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity)
+    {
         return 72000;
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public UseAnim getUseAnimation(ItemStack stack)
+    {
         return UseAnim.SPEAR;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    {
         return ItemUtils.startUsingInstantly(level, player, hand);
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remainingTicks) {
-        if (entity instanceof Player player) {
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remainingTicks)
+    {
+        if (entity instanceof Player player)
+        {
             final var tick = this.getUseDuration(stack, entity) - remainingTicks;
             if (tick < 4) return;
-            if (!level.isClientSide) {
+            if (!level.isClientSide)
+            {
                 final var projectile = new ThrownElixirProjectile(level, player);
                 projectile.setItem(stack);
                 projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, Math.min(2F, (float) tick / 10), 1.0F);
@@ -68,12 +76,14 @@ public final class SplashElixirItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+    {
         ElixirContents.get(stack).addToTooltip(context, tooltip::add, flag);
     }
 
     @Override
-    public Component getName(ItemStack stack) {
+    public Component getName(ItemStack stack)
+    {
         return ElixirContents.getOptional(stack)
                 .<Component>map(contents -> Component
                         .translatable("elixir.compound_name",

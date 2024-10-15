@@ -11,16 +11,18 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 @EssenceBlacklist
-public final class WitchTotemOfUndyingItem extends Item {
-
-    public WitchTotemOfUndyingItem() {
+public final class WitchTotemOfUndyingItem extends Item
+{
+    public WitchTotemOfUndyingItem()
+    {
         super(new Item.Properties()
                 .stacksTo(1)
                 .rarity(Rarity.UNCOMMON));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+    {
         ElixirContents.get(stack).addToTooltip(context, tooltip::add, flag);
     }
 }

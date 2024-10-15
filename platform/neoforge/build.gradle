@@ -38,4 +38,8 @@ neoForge {
     }
 }
 
+dependencies {
+    api rootProject.files('libs/obscure_api-neoforge-1.21.1-16.jar')
+}
+
 sourceSets.main.resources { srcDir 'src/generated/resources' }

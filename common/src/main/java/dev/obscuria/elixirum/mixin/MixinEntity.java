@@ -8,15 +8,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(Entity.class)
-public abstract class MixinEntity {
-
+public abstract class MixinEntity
+{
     @ModifyVariable(
             method = "playSound(Lnet/minecraft/sounds/SoundEvent;FF)V",
             at = @At("HEAD"),
             argsOnly = true,
             index = 3)
-    private float playSound_Modify(float pitch) {
-        if (((Object) this) instanceof LivingEntity living) {
+    private float playSound_Modify(float pitch)
+    {
+        if (((Object) this) instanceof LivingEntity living)
+        {
             var shrink = living.getEffect(ElixirumMobEffects.SHRINK.holder());
             if (shrink != null) return Math.clamp(pitch * (1F + 0.1F * (1 + shrink.getAmplifier())), 0F, 2F);
             var grow = living.getEffect(ElixirumMobEffects.GROW.holder());

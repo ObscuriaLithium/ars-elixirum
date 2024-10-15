@@ -20,51 +20,60 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import java.util.List;
 
 @EssenceBlacklist
-public final class ElixirItem extends Item {
-
-    public ElixirItem() {
+public final class ElixirItem extends Item
+{
+    public ElixirItem()
+    {
         super(new Properties()
                 .stacksTo(8)
                 .craftRemainder(Items.GLASS_BOTTLE));
     }
 
     @Override
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(ItemStack stack)
+    {
         return ElixirTier.get(stack).isFoil();
     }
 
     @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity)
+    {
         return 32;
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public UseAnim getUseAnimation(ItemStack stack)
+    {
         return UseAnim.DRINK;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    {
         return ItemUtils.startUsingInstantly(level, player, hand);
     }
 
     @Override
-    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int tick) {
+    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int tick)
+    {
         if (tick != 32) return;
         level.playSound(null, entity, ElixirumSounds.ITEM_BOTTLE_OPEN, SoundSource.PLAYERS, 1f, 1f);
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity)
+    {
         if (!(entity instanceof Player player)) return stack;
 
-        if (player instanceof ServerPlayer serverPlayer) {
+        if (player instanceof ServerPlayer serverPlayer)
+        {
             CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
             ElixirContents.get(stack).apply(player, player, player);
         }
 
         player.awardStat(Stats.ITEM_USED.get(this));
-        if (!player.getAbilities().instabuild) {
+        if (!player.getAbilities().instabuild)
+        {
             stack.shrink(1);
             if (stack.isEmpty()) return new ItemStack(Items.GLASS_BOTTLE);
             player.getInventory().add(new ItemStack(Items.GLASS_BOTTLE));
@@ -74,12 +83,14 @@ public final class ElixirItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+    {
         ElixirContents.get(stack).addToTooltip(context, tooltip::add, flag);
     }
 
     @Override
-    public Component getName(ItemStack stack) {
+    public Component getName(ItemStack stack)
+    {
         return ElixirContents.getOptional(stack)
                 .<Component>map(contents -> Component
                         .translatable("elixir.compound_name",

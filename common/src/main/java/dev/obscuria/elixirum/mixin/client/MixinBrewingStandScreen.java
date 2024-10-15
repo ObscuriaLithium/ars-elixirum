@@ -12,14 +12,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandScreen.class)
-public abstract class MixinBrewingStandScreen extends AbstractContainerScreen<BrewingStandMenu> {
-
-    private MixinBrewingStandScreen(BrewingStandMenu menu, Inventory inventory, Component title) {
+public abstract class MixinBrewingStandScreen extends AbstractContainerScreen<BrewingStandMenu>
+{
+    private MixinBrewingStandScreen(BrewingStandMenu menu,
+                                    Inventory inventory,
+                                    Component title)
+    {
         super(menu, inventory, title);
     }
 
     @Inject(method = "init", at = @At("TAIL"))
-    private void init_Modify(CallbackInfo info) {
+    private void init_Modify(CallbackInfo info)
+    {
         this.addRenderableWidget(new FunctionalityTip(
                 (width + imageWidth) / 2 + 2,
                 (height - imageHeight) / 2 + 2));

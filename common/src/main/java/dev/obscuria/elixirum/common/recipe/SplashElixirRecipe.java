@@ -12,26 +12,34 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-public final class SplashElixirRecipe extends CustomRecipe {
-
-    public SplashElixirRecipe(CraftingBookCategory category) {
+public final class SplashElixirRecipe extends CustomRecipe
+{
+    public SplashElixirRecipe(CraftingBookCategory category)
+    {
         super(category);
     }
 
     @Override
-    public boolean matches(CraftingInput input, Level level) {
+    public boolean matches(CraftingInput input, Level level)
+    {
         var elixirs = 0;
         var gunPowders = 0;
         var bottles = 0;
-        for (var stack : input.items()) {
+        for (var stack : input.items())
+        {
             if (stack.isEmpty()) continue;
-            if (stack.is(ElixirumItems.ELIXIR.asItem())) {
+            if (stack.is(ElixirumItems.ELIXIR.value()))
+            {
                 elixirs += 1;
                 continue;
-            } else if (stack.is(Items.GUNPOWDER)) {
+            }
+            else if (stack.is(Items.GUNPOWDER))
+            {
                 gunPowders += 1;
                 continue;
-            } else if (stack.is(Items.GLASS_BOTTLE)) {
+            }
+            else if (stack.is(Items.GLASS_BOTTLE))
+            {
                 bottles += 1;
                 continue;
             }
@@ -41,24 +49,27 @@ public final class SplashElixirRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
+    public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider)
+    {
         final var bottles = (int) input.items().stream()
                 .filter(stack -> stack.is(Items.GLASS_BOTTLE))
                 .count();
         final var contents = ElixirContents.get(input.items().stream()
-                .filter(stack -> stack.is(ElixirumItems.ELIXIR.asItem()))
+                .filter(stack -> stack.is(ElixirumItems.ELIXIR.value()))
                 .findFirst().orElse(ItemStack.EMPTY));
-        final var result = new ItemStack(ElixirumItems.SPLASH_ELIXIR.asItem(), bottles);
+        final var result = new ItemStack(ElixirumItems.SPLASH_ELIXIR.value(), bottles);
         return contents.split(bottles).set(result);
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height)
+    {
         return width + height >= 3;
     }
 
     @Override
-    public RecipeSerializer<SplashElixirRecipe> getSerializer() {
+    public RecipeSerializer<SplashElixirRecipe> getSerializer()
+    {
         return ElixirumRecipeSerializers.SPLASH_ELIXIR;
     }
 }

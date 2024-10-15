@@ -14,7 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class HierarchicalWidget extends AbstractWidget {
+public abstract class HierarchicalWidget extends AbstractWidget
+{
     protected static final int UPDATE_BY_WIDTH = 1;
     protected static final int UPDATE_BY_HEIGHT = 1 << 1;
     private final List<HierarchicalWidget> children = Lists.newArrayList();
@@ -23,7 +24,8 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     private boolean changed = true;
     private int updateFlags;
 
-    protected HierarchicalWidget(int x, int y, int width, int height, Component name) {
+    protected HierarchicalWidget(int x, int y, int width, int height, Component name)
+    {
         super(x, y, width, height, name);
     }
 
@@ -31,12 +33,14 @@ public abstract class HierarchicalWidget extends AbstractWidget {
 
     protected abstract void reorganize();
 
-    public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button)
+    {
         if (!visible) return false;
         if (transform.isMouseOver(mouseX, mouseY)
                 && clickAction != null
                 && clickAction.canConsume(button)
-                && clickAction.invokeCast(this)) {
+                && clickAction.invokeCast(this))
+        {
             this.playClickSound();
             return true;
         }
@@ -46,12 +50,14 @@ public abstract class HierarchicalWidget extends AbstractWidget {
         return false;
     }
 
-    public void tick() {
+    public void tick()
+    {
         for (var child : children())
             child.tick();
     }
 
-    public boolean mouseScrolled(GlobalTransform transform, double mouseX, double mouseY, double scrollX, double scrollY) {
+    public boolean mouseScrolled(GlobalTransform transform, double mouseX, double mouseY, double scrollX, double scrollY)
+    {
         if (!visible) return false;
         for (var child : children())
             if (child.mouseScrolled(transform.child(child), mouseX, mouseY, scrollX, scrollY))
@@ -59,34 +65,40 @@ public abstract class HierarchicalWidget extends AbstractWidget {
         return false;
     }
 
-    public <T extends HierarchicalWidget> T addChild(T widget) {
+    public <T extends HierarchicalWidget> T addChild(T widget)
+    {
         this.children.add(widget);
         this.setChanged(true);
         return widget;
     }
 
-    public List<HierarchicalWidget> children() {
+    public List<HierarchicalWidget> children()
+    {
         return this.children;
     }
 
-    public final HierarchicalWidget setClickAction(ClickAction<?> action) {
+    public final HierarchicalWidget setClickAction(ClickAction<?> action)
+    {
         this.clickAction = action;
         return this;
     }
 
-    public final HierarchicalWidget setClickSound(SoundEvent sound) {
+    public final HierarchicalWidget setClickSound(SoundEvent sound)
+    {
         this.clickSound = sound;
         return this;
     }
 
-    public final void setVisible(boolean value) {
+    public final void setVisible(boolean value)
+    {
         this.visible = value;
         for (var child : children())
             child.setVisible(value);
     }
 
     @Override
-    public final void setX(int value) {
+    public final void setX(int value)
+    {
         final var difference = value - getX();
         super.setX(value);
         for (var child : children())
@@ -94,7 +106,8 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     }
 
     @Override
-    public final void setY(int value) {
+    public final void setY(int value)
+    {
         final var difference = value - getY();
         super.setY(value);
         for (var child : children())
@@ -102,44 +115,53 @@ public abstract class HierarchicalWidget extends AbstractWidget {
     }
 
     @Override
-    public final void setWidth(int width) {
+    public final void setWidth(int width)
+    {
         if (this.hasUpdateFlag(UPDATE_BY_WIDTH) && getWidth() != width)
             this.setChanged(true);
         super.setWidth(width);
     }
 
     @Override
-    public final void setHeight(int height) {
+    public final void setHeight(int height)
+    {
         if (this.hasUpdateFlag(UPDATE_BY_HEIGHT) && getHeight() != height)
             this.setChanged(true);
         super.setHeight(height);
     }
 
-    protected boolean hasContents() {
+    protected boolean hasContents()
+    {
         return false;
     }
 
-    protected final boolean hasVisibleContents() {
+    protected final boolean hasVisibleContents()
+    {
         return (visible && hasContents()) || children().stream().anyMatch(HierarchicalWidget::hasVisibleContents);
     }
 
-    protected final void setUpdateFlags(int flags) {
+    protected final void setUpdateFlags(int flags)
+    {
         this.updateFlags = flags;
     }
 
-    protected final boolean hasUpdateFlag(int flag) {
+    protected final boolean hasUpdateFlag(int flag)
+    {
         return (this.updateFlags & flag) == flag;
     }
 
-    protected final void setChanged(boolean value) {
+    protected final void setChanged(boolean value)
+    {
         this.changed = value;
     }
 
-    protected final boolean isChanged() {
+    protected final boolean isChanged()
+    {
         return this.changed;
     }
 
-    protected final boolean isAnyChanged() {
+    protected final boolean isAnyChanged()
+    {
         if (isChanged()) return true;
         for (var child : children())
             if (child.isAnyChanged())
@@ -147,19 +169,22 @@ public abstract class HierarchicalWidget extends AbstractWidget {
         return false;
     }
 
-    protected final void consumeChanges() {
+    protected final void consumeChanges()
+    {
         this.children().forEach(HierarchicalWidget::consumeChanges);
         this.setChanged(false);
         this.reorganize();
     }
 
-    protected final void defaultRender(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    protected final void defaultRender(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY)
+    {
         if (!visible) return;
         for (var child : children())
             child.render(graphics, transform.child(child), mouseX, mouseY);
     }
 
-    protected final void playClickSound() {
+    protected final void playClickSound()
+    {
         if (clickSound == null) return;
         final var manager = Minecraft.getInstance().getSoundManager();
         manager.play(SimpleSoundInstance.forUI(clickSound, 1.0F));

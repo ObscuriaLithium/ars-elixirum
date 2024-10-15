@@ -12,16 +12,18 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 @EssenceBlacklist
-public final class AlchemistEyeItem extends ArmorItem {
-
-    public AlchemistEyeItem() {
+public final class AlchemistEyeItem extends ArmorItem
+{
+    public AlchemistEyeItem()
+    {
         super(ArmorMaterials.IRON, Type.HELMET, new Properties()
                 .rarity(Rarity.UNCOMMON)
                 .durability(512)
                 .attributes(defaultAttributeModifiers()));
     }
 
-    private static ItemAttributeModifiers defaultAttributeModifiers() {
+    private static ItemAttributeModifiers defaultAttributeModifiers()
+    {
         return ItemAttributeModifiers.builder()
                 .add(Attributes.BLOCK_INTERACTION_RANGE,
                         new AttributeModifier(

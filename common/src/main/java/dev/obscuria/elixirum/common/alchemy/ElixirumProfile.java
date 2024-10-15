@@ -20,7 +20,8 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 
-public abstract class ElixirumProfile {
+public abstract class ElixirumProfile
+{
     public static final Codec<ElixirumProfile.Packed> CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, ElixirumProfile.Packed> STREAM_CODEC;
 
@@ -28,23 +29,27 @@ public abstract class ElixirumProfile {
     protected final Map<Item, Set<Holder<Essence>>> discoveredEssences = Maps.newHashMap();
     private int totalDiscoveredEssences;
 
-    public int getTotalDiscoveredEssences() {
+    public int getTotalDiscoveredEssences()
+    {
         return this.totalDiscoveredEssences;
     }
 
-    public Packed pack() {
+    public Packed pack()
+    {
         return new Packed(
                 Optional.of(ImmutableList.copyOf(collection)),
                 Optional.of(ImmutableMap.copyOf(discoveredEssences)));
     }
 
-    public Packed packCollection() {
+    public Packed packCollection()
+    {
         return new Packed(
                 Optional.of(ImmutableList.copyOf(collection)),
                 Optional.empty());
     }
 
-    public void unpack(Packed packed) {
+    public void unpack(Packed packed)
+    {
         packed.collection.ifPresent(collection -> {
             this.collection.clear();
             this.collection.addAll(collection);
@@ -56,21 +61,24 @@ public abstract class ElixirumProfile {
         });
     }
 
-    public void unpackCollection(Packed packed) {
+    public void unpackCollection(Packed packed)
+    {
         packed.collection.ifPresent(collection -> {
             this.collection.clear();
             this.collection.addAll(collection);
         });
     }
 
-    protected void computeTotalDiscoveredEssences() {
+    protected void computeTotalDiscoveredEssences()
+    {
         this.totalDiscoveredEssences = discoveredEssences.values().stream().mapToInt(Set::size).sum();
     }
 
     public record Packed(@Unmodifiable Optional<List<ElixirHolder>> collection,
-                         @Unmodifiable Optional<Map<Item, Set<Holder<Essence>>>> discoveredEssences) { }
+                         @Unmodifiable Optional<Map<Item, Set<Holder<Essence>>>> discoveredEssences) {}
 
-    static {
+    static
+    {
         final var setCodec = Essence.CODEC.listOf().xmap(ElixirumProfile::setFactory, ElixirumProfile::listFactory);
         final var mapCodec = Codec.unboundedMap(BuiltInRegistries.ITEM.byNameCodec(), setCodec);
         CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -85,15 +93,18 @@ public abstract class ElixirumProfile {
                 Packed::new);
     }
 
-    private static Map<Item, Set<Holder<Essence>>> mapFactory(int size) {
+    private static Map<Item, Set<Holder<Essence>>> mapFactory(int size)
+    {
         return new HashMap<>(size);
     }
 
-    private static <V> Set<V> setFactory(List<V> list) {
+    private static <V> Set<V> setFactory(List<V> list)
+    {
         return Sets.newHashSet(list);
     }
 
-    private static <V> List<V> listFactory(Set<V> set) {
+    private static <V> List<V> listFactory(Set<V> set)
+    {
         return Lists.newArrayList(set.iterator());
     }
 }

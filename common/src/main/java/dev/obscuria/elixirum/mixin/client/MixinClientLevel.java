@@ -8,10 +8,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
-public abstract class MixinClientLevel {
-
+public abstract class MixinClientLevel
+{
     @Inject(method = "disconnect", at = @At("HEAD"))
-    private void disconnect_Listener(CallbackInfo info) {
+    private void disconnect_Listener(CallbackInfo info)
+    {
         ClientHooks.onDisconnect();
     }
 }

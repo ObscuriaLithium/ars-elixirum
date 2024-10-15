@@ -1,11 +1,13 @@
 package dev.obscuria.elixirum.registry;
 
 import dev.obscuria.elixirum.Elixirum;
+import dev.obscuria.core.api.v1.common.ObscureRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 
-public interface ElixirumSounds {
+public interface ElixirumSounds
+{
     SoundEvent ITEM_BOTTLE_PUT = register("item.bottle_put");
     SoundEvent ITEM_BOTTLE_SHAKE = register("item.bottle_shake");
     SoundEvent ITEM_BOTTLE_SLOSH = register("item.bottle_slosh");
@@ -18,17 +20,26 @@ public interface ElixirumSounds {
     Holder<SoundEvent> MUSIC_ELIXIRUM = registerHolder("music.elixirum");
 
     private static SoundEvent
-    register(final String name) {
+    register(final String name)
+    {
         final var value = SoundEvent.createVariableRangeEvent(Elixirum.key(name));
-        Elixirum.PLATFORM.registerReference(BuiltInRegistries.SOUND_EVENT, Elixirum.key(name), () -> value);
+        ObscureRegistry.register(
+                Elixirum.MODID,
+                BuiltInRegistries.SOUND_EVENT,
+                Elixirum.key(name),
+                () -> value);
         return value;
     }
 
     private static Holder<SoundEvent>
-    registerHolder(final String name) {
-        return Elixirum.PLATFORM.registerReference(BuiltInRegistries.SOUND_EVENT, Elixirum.key(name),
-                () -> SoundEvent.createVariableRangeEvent(Elixirum.key(name)));
+    registerHolder(final String name)
+    {
+        return ObscureRegistry.register(
+                Elixirum.MODID,
+                BuiltInRegistries.SOUND_EVENT,
+                Elixirum.key(name),
+                () -> SoundEvent.createVariableRangeEvent(Elixirum.key(name))).holder();
     }
 
-    static void setup() {}
+    static void init() {}
 }

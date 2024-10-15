@@ -6,10 +6,12 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
-public interface ElixirumKeyMappings {
+public interface ElixirumKeyMappings
+{
     KeyMapping MENU = new KeyMapping("key.elixirum.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "category.elixirum");
 
-    static void menuPressed(Minecraft minecraft) {
+    static void menuPressed(Minecraft minecraft)
+    {
         if (minecraft.screen != null) return;
         minecraft.setScreen(new ElixirumScreen());
     }
