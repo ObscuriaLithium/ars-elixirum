@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_poison",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:poison": 20
+    }
+  }
+}

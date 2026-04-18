@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_blindness",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:blindness": 20
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "show_notification": true,
+  "category": "misc",
+  "key": {
+    "0": { "item": "minecraft:glass_bottle" },
+    "1": { "item": "minecraft:honeycomb" }
+  },
+  "pattern": [
+    "000",
+    "010",
+    "000"
+  ],
+  "result": {
+    "item": "elixirum:honey_solvent",
+    "count": 8
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "values": [
+    "elixirum:elixir",
+    "elixirum:extract",
+    "elixirum:honey_solvent",
+    "minecraft:potion",
+    "minecraft:splash_potion",
+    "minecraft:lingering_potion",
+    "minecraft:glass_bottle"
+  ]
+}

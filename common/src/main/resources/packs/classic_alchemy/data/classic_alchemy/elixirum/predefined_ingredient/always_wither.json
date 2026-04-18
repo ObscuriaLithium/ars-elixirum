@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_wither",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:wither": 20
+    }
+  }
+}

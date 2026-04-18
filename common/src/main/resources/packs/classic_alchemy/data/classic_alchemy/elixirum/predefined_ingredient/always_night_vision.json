@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_night_vision",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:night_vision": 20
+    }
+  }
+}

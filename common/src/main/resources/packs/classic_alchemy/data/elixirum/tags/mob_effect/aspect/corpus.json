@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:strength",
+    "minecraft:weakness",
+    "minecraft:haste",
+    "minecraft:mining_fatigue",
+    "minecraft:jump_boost",
+    "minecraft:slowness",
+    "minecraft:speed",
+    "minecraft:resistance",
+    "minecraft:absorption",
+    "minecraft:health_boost",
+    "minecraft:nausea"
+  ]
+}

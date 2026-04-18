@@ -1,0 +1,6 @@
+{
+  "effect": "minecraft:wither",
+  "max_amplifier": 3,
+  "max_duration": 3000,
+  "min_quality": 10
+}

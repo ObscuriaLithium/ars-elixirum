@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "elixirum:item/elixir/shape/bottle_5",
+    "layer1": "elixirum:item/elixir/overlay/bottle_5",
+    "layer2": "elixirum:item/elixir/cap/blue_wood"
+  }
+}

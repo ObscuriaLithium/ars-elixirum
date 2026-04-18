@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_strength",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:strength": 20
+    }
+  }
+}

@@ -1,0 +1,178 @@
+package dev.obscuria.elixirum.common.alchemy.basics;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.obscuria.elixirum.ArsElixirumHelper;
+import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
+import dev.obscuria.fragmentum.registry.BootstrapContext;
+import dev.obscuria.fragmentum.util.color.Colors;
+import dev.obscuria.fragmentum.util.color.RGB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringUtil;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+
+import java.util.function.Function;
+
+public interface EffectProvider extends Comparable<EffectProvider> {
+
+    Codec<EffectProvider> CODEC = ElixirumRegistries.EFFECT_PROVIDER_TYPE.byNameCodec().dispatch(EffectProvider::codec, Function.identity());
+
+    Codec<? extends EffectProvider> codec();
+
+    EssenceHolder holder();
+
+    double quality();
+
+    int amplifier();
+
+    int duration();
+
+    EffectProvider splitBy(int amount);
+
+    MobEffectInstance instantiate(double mastery, double immunity);
+
+    default MobEffect mobEffect() {
+        return holder().require().effect().value();
+    }
+
+    default boolean isInstantaneous() {
+        return mobEffect().isInstantenous();
+    }
+
+    default boolean isBeneficial() {
+        return mobEffect().isBeneficial();
+    }
+
+    default boolean isVoided() {
+        return quality() < holder().require().minQuality();
+    }
+
+    default Component displayName() {
+        return mobEffect().getDisplayName();
+    }
+
+    default Component displayNameWithPotency() {
+        if (amplifier() <= 0) return displayName();
+        var potency = Component.translatable("potion.potency." + amplifier());
+        return Component.translatable("potion.withAmplifier", displayName(), potency);
+    }
+
+    default Component statusOrDuration() {
+        return mobEffect().isInstantenous()
+                ? Component.literal("Instant")
+                : Component.literal(StringUtil.formatTickDuration(duration()));
+    }
+
+    default RGB color() {
+        return Colors.rgbOf(mobEffect().getColor());
+    }
+
+    default int compareTo(EffectProvider other) {
+        var result = Double.compare(other.quality(), quality());
+        if (result != 0) return result;
+        return mobEffect().getDescriptionId().compareTo(other.mobEffect().getDescriptionId());
+    }
+
+    static void bootstrap(BootstrapContext<Codec<? extends EffectProvider>> context) {
+        context.register("packed", () -> Packed.CODEC);
+        context.register("direct", () -> Direct.CODEC);
+    }
+
+    record Packed(
+            EssenceHolder holder,
+            double weight,
+            double temper
+    ) implements EffectProvider {
+
+        public static final Codec<Packed> CODEC;
+
+        @Override
+        public Codec<Packed> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public double quality() {
+            return weight;
+        }
+
+        @Override
+        public int amplifier() {
+            return holder.require().unpackAmplifier(weight * ArsElixirumHelper.amplifierFactor(temper));
+        }
+
+        @Override
+        public int duration() {
+            return holder.require().unpackDuration(weight * ArsElixirumHelper.durationFactor(temper));
+        }
+
+        @Override
+        public EffectProvider splitBy(int amount) {
+            return new Packed(holder, weight * (1.0 / amount), temper);
+        }
+
+        @Override
+        public MobEffectInstance instantiate(double mastery, double immunity) {
+            final var tickDuration = duration();
+            final var scaledDuration = isBeneficial()
+                    ? tickDuration + 20.0 * mastery
+                    : tickDuration - 20.0 * immunity;
+            final var actualDuration = Mth.clamp(scaledDuration, tickDuration * 0.5, tickDuration * 1.5);
+            return new MobEffectInstance(mobEffect(), (int) actualDuration, amplifier());
+        }
+
+        static {
+            CODEC = RecordCodecBuilder.create(codec -> codec.group(
+                    EssenceHolder.CODEC.fieldOf("essence").forGetter(Packed::holder),
+                    Codec.DOUBLE.fieldOf("weight").forGetter(Packed::weight),
+                    Codec.DOUBLE.fieldOf("temper").forGetter(Packed::temper)
+            ).apply(codec, Packed::new));
+        }
+    }
+
+    record Direct(
+            EssenceHolder holder,
+            int amplifier,
+            int duration
+    ) implements EffectProvider {
+
+        public static final Codec<Direct> CODEC;
+
+        @Override
+        public Codec<Direct> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public double quality() {
+            final var packedAmplifier = holder.require().packAmplifier(amplifier);
+            final var packedDuration = holder.require().packDuration(duration);
+            return Mth.clamp((packedAmplifier + packedDuration) * 0.5, 0.0, 100.0);
+        }
+
+        @Override
+        public EffectProvider splitBy(int amount) {
+            final var newAmplifier = amplifier * (1.0 / amount);
+            final var newDuration = duration * (1.0 / amount);
+            return new Direct(holder, (int) newAmplifier, (int) newDuration);
+        }
+
+        @Override
+        public MobEffectInstance instantiate(double mastery, double immunity) {
+            final var tickDuration = duration;
+            final var scaledDuration = isBeneficial() ? tickDuration + 20.0 * mastery : tickDuration - 20.0 * immunity;
+            final var actualDuration = Mth.clamp(scaledDuration, tickDuration * 0.5, tickDuration * 1.5);
+            return new MobEffectInstance(mobEffect(), (int) actualDuration, amplifier);
+        }
+
+        static {
+            CODEC = RecordCodecBuilder.create(codec -> codec.group(
+                    EssenceHolder.CODEC.fieldOf("essence").forGetter(Direct::holder),
+                    Codec.INT.fieldOf("amplifier").forGetter(Direct::amplifier),
+                    Codec.INT.fieldOf("duration").forGetter(Direct::duration)
+            ).apply(codec, Direct::new));
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "show_notification": true,
+  "category": "misc",
+  "key": {
+    "0": { "item": "minecraft:gray_stained_glass" },
+    "1": { "item": "minecraft:iron_ingot" }
+  },
+  "pattern": [
+    "1 1",
+    "0 0",
+    "000"
+  ],
+  "result": {
+    "item": "elixirum:glass_cauldron",
+    "count": 1
+  }
+}

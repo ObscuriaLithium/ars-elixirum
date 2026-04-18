@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_water_breathing",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:water_breathing": 20
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "effect": "minecraft:glowing",
+  "max_amplifier": 1,
+  "max_duration": 12000,
+  "min_quality": 10
+}

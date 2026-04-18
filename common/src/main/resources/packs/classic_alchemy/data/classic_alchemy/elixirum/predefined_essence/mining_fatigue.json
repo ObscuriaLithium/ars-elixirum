@@ -1,0 +1,6 @@
+{
+  "effect": "minecraft:mining_fatigue",
+  "max_amplifier": 3,
+  "max_duration": 6000,
+  "min_quality": 10
+}

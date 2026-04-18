@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "elixirum:block/potion_shelf",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "elixirum:block/potion_shelf"
+    },
+    "facing=south": {
+      "model": "elixirum:block/potion_shelf",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "elixirum:block/potion_shelf",
+      "y": 270
+    }
+  }
+}

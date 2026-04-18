@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_fire_resistance",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:fire_resistance": 20
+    }
+  }
+}

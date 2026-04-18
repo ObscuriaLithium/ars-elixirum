@@ -1,0 +1,6 @@
+{
+  "effect": "minecraft:blindness",
+  "max_amplifier": 1,
+  "max_duration": 6000,
+  "min_quality": 10
+}

@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_jump_boost",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:jump_boost": 20
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_saturation",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:saturation": 20
+    }
+  }
+}

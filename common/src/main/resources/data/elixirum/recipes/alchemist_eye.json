@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "show_notification": true,
+  "category": "equipment",
+  "key": {
+    "0": { "item": "minecraft:ender_eye" },
+    "1": { "item": "minecraft:iron_ingot" },
+    "2": { "item": "minecraft:string" }
+  },
+  "pattern": [
+    " 22",
+    "1 2",
+    "01 "
+  ],
+  "result": {
+    "item": "elixirum:alchemist_eye",
+    "count": 1
+  }
+}

@@ -1,0 +1,2276 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "elixirum:item/elixir/1",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/2",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/3",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/4",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/5",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/6",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/7",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/8",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/9",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/10",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/11",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/12",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/13",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/14",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/15",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/16",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/17",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/18",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.01
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/19",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/20",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/21",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/22",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/23",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/24",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/25",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/26",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/27",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/28",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/29",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/30",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/31",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/32",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/33",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/34",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/35",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/36",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.02
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/37",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/38",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/39",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/40",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/41",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/42",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/43",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/44",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/45",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/46",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/47",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/48",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/49",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/50",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/51",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/52",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/53",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/54",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.03
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/55",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/56",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/57",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/58",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/59",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/60",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/61",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/62",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/63",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/64",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/65",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/66",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/67",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/68",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/69",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/70",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/71",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/72",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.04
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/73",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/74",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/75",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/76",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/77",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/78",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/79",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/80",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/81",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/82",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/83",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/84",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/85",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/86",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/87",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/88",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/89",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/90",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.05
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/91",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/92",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/93",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/94",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/95",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/96",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/97",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/98",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/99",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/100",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/101",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/102",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/103",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/104",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/105",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/106",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/107",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/108",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.06
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/109",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/110",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/111",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/112",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/113",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/114",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/115",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/116",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/117",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/118",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/119",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/120",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/121",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/122",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/123",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/124",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/125",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/126",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.21
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/127",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/128",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/129",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/130",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/131",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/132",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/133",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/134",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/135",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/136",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/137",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/138",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/139",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/140",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/141",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/142",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/143",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/144",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.22
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/145",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/146",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/147",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/148",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/149",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/150",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/151",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/152",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/153",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/154",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/155",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/156",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/157",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/158",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/159",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/160",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/161",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/162",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.23
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/163",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/164",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/165",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/166",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/167",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/168",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/169",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/170",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/171",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/172",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/173",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/174",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/175",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/176",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/177",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/178",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/179",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/180",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.24
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/181",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/182",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/183",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/184",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/185",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/186",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/187",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/188",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/189",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/190",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/191",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/192",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/193",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/194",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/195",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/196",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/197",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/198",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.25
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/199",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/200",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/201",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/202",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/203",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/204",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/205",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/206",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/207",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/208",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/209",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/210",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/211",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/212",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/213",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/214",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/215",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/216",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.26
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/217",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/218",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/219",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/220",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/221",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/222",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/223",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/224",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/225",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/226",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/227",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/228",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/229",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/230",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/231",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/232",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/233",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/234",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.41
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/235",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/236",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/237",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/238",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/239",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/240",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/241",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/242",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/243",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/244",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/245",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/246",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/247",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/248",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/249",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/250",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/251",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/252",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.42
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/253",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/254",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/255",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/256",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/257",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/258",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/259",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/260",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/261",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/262",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/263",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/264",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/265",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/266",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/267",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/268",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/269",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/270",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.43
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/271",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/272",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/273",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/274",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/275",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/276",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/277",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/278",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/279",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/280",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/281",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/282",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/283",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/284",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/285",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/286",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/287",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/288",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.44
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/289",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/290",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/291",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/292",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/293",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/294",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/295",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/296",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/297",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/298",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/299",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/300",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/301",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/302",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/303",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/304",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/305",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/306",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.45
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/307",
+      "predicate": {
+        "elixirum:cap": 0.01,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/308",
+      "predicate": {
+        "elixirum:cap": 0.02,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/309",
+      "predicate": {
+        "elixirum:cap": 0.03,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/310",
+      "predicate": {
+        "elixirum:cap": 0.04,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/311",
+      "predicate": {
+        "elixirum:cap": 0.05,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/312",
+      "predicate": {
+        "elixirum:cap": 0.06,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/313",
+      "predicate": {
+        "elixirum:cap": 0.07,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/314",
+      "predicate": {
+        "elixirum:cap": 0.08,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/315",
+      "predicate": {
+        "elixirum:cap": 0.09,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/316",
+      "predicate": {
+        "elixirum:cap": 0.1,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/317",
+      "predicate": {
+        "elixirum:cap": 0.11,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/318",
+      "predicate": {
+        "elixirum:cap": 0.12,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/319",
+      "predicate": {
+        "elixirum:cap": 0.13,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/320",
+      "predicate": {
+        "elixirum:cap": 0.14,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/321",
+      "predicate": {
+        "elixirum:cap": 0.15,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/322",
+      "predicate": {
+        "elixirum:cap": 0.16,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/323",
+      "predicate": {
+        "elixirum:cap": 0.17,
+        "elixirum:shape": 0.46
+      }
+    },
+    {
+      "model": "elixirum:item/elixir/324",
+      "predicate": {
+        "elixirum:cap": 0.18,
+        "elixirum:shape": 0.46
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "minecraft:item/glass_bottle"
+  }
+}

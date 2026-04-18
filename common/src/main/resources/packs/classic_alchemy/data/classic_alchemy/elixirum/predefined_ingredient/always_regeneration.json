@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_regeneration",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:regeneration": 20
+    }
+  }
+}

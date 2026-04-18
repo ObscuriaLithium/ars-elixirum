@@ -1,0 +1,114 @@
+{
+  "item.bottle.put": {
+    "sounds": [
+      { "name": "elixirum:item_bottle_put_1", "pitch": 0.9 },
+      { "name": "elixirum:item_bottle_put_1", "pitch": 1.0 },
+      { "name": "elixirum:item_bottle_put_1", "pitch": 1.1 },
+      { "name": "elixirum:item_bottle_put_2", "pitch": 0.9 },
+      { "name": "elixirum:item_bottle_put_2", "pitch": 1.0 },
+      { "name": "elixirum:item_bottle_put_2", "pitch": 1.1 }
+    ]
+  },
+  "item.bottle.shake": {
+    "sounds": [
+      { "name": "elixirum:item_bottle_shake", "pitch": 0.9 },
+      { "name": "elixirum:item_bottle_shake", "pitch": 1.0 },
+      { "name": "elixirum:item_bottle_shake", "pitch": 1.1 }
+    ]
+  },
+  "item.bottle.slosh": {
+    "sounds": [
+      { "name": "elixirum:item_bottle_slosh_1", "pitch": 0.9 },
+      { "name": "elixirum:item_bottle_slosh_1", "pitch": 1.0 },
+      { "name": "elixirum:item_bottle_slosh_1", "pitch": 1.1 },
+      { "name": "elixirum:item_bottle_slosh_2", "pitch": 0.9 },
+      { "name": "elixirum:item_bottle_slosh_2", "pitch": 1.0 },
+      { "name": "elixirum:item_bottle_slosh_2", "pitch": 1.1 }
+    ]
+  },
+  "item.bottle.open": {
+    "sounds": [
+      "elixirum:item_bottle_open_1",
+      "elixirum:item_bottle_open_2",
+      "elixirum:item_bottle_open_3",
+      "elixirum:item_bottle_open_4",
+      "elixirum:item_bottle_open_5"
+    ]
+  },
+  "block.cauldron.boil": {
+    "sounds": [
+      "elixirum:block_cauldron_boil"
+    ]
+  },
+  "ui.click_1": {
+    "sounds": [
+      { "name": "elixirum:ui_click_1", "pitch": 0.9 },
+      { "name": "elixirum:ui_click_1", "pitch": 1.0 },
+      { "name": "elixirum:ui_click_1", "pitch": 1.1 }
+    ]
+  },
+  "ui.click_2": {
+    "sounds": [
+      { "name": "elixirum:ui_click_2", "pitch": 0.9 },
+      { "name": "elixirum:ui_click_2", "pitch": 1.0 },
+      { "name": "elixirum:ui_click_2", "pitch": 1.1 }
+    ]
+  },
+  "ui.bell": {
+    "sounds": [
+      { "name": "elixirum:ui_bell", "pitch": 0.9 },
+      { "name": "elixirum:ui_bell", "pitch": 1.0 },
+      { "name": "elixirum:ui_bell", "pitch": 1.1 }
+    ]
+  },
+  "ui.scroll": {
+    "sounds": [
+      { "name": "elixirum:ui_scroll", "pitch": 0.9 },
+      { "name": "elixirum:ui_scroll", "pitch": 1.0 },
+      { "name": "elixirum:ui_scroll", "pitch": 1.1 }
+    ]
+  },
+  "ui.bottle_clink": {
+    "sounds": [
+      "elixirum:ui_bottle_clink_1",
+      "elixirum:ui_bottle_clink_2",
+      "elixirum:ui_bottle_clink_3",
+      "elixirum:ui_bottle_clink_4"
+    ]
+  },
+  "ui.bottle_open": {
+    "sounds": [
+      "elixirum:ui_bottle_open_1",
+      "elixirum:ui_bottle_open_2",
+      "elixirum:ui_bottle_open_3",
+      "elixirum:ui_bottle_open_4"
+    ]
+  },
+  "ui.bottle_dye": {
+    "sounds": [
+      "elixirum:ui_bottle_dye_1",
+      "elixirum:ui_bottle_dye_2",
+      "elixirum:ui_bottle_dye_3",
+      "elixirum:ui_bottle_dye_4"
+    ]
+  },
+  "ui.mastery.level_up": {
+    "sounds": [
+      { "name": "elixirum:ui_mastery_level_up", "pitch": 0.9 },
+      { "name": "elixirum:ui_mastery_level_up", "pitch": 1.0 },
+      { "name": "elixirum:ui_mastery_level_up", "pitch": 1.1 }
+    ]
+  },
+  "record.wunschpunsch": {
+    "sounds": [
+      { "name": "elixirum:record_wunschpunsch", "stream": true }
+    ]
+  },
+  "music.elixirum": {
+    "sounds": [
+      { "name": "elixirum:music/numa_expandia", "stream": true },
+      { "name": "elixirum:music/numa_luzia", "stream": true },
+      { "name": "elixirum:music/numa_naima", "stream": true }
+    ]
+  }
+}

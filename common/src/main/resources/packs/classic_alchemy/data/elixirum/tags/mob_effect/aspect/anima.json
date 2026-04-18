@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:night_vision",
+    "minecraft:blindness",
+    "minecraft:darkness",
+    "minecraft:glowing",
+    "minecraft:levitation",
+    "minecraft:slow_falling"
+  ]
+}

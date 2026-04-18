@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_slow_falling",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:slow_falling": 20
+    }
+  }
+}

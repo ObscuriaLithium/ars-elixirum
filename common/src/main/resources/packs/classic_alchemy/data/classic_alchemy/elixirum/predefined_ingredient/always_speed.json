@@ -1,0 +1,10 @@
+{
+  "items": "#classic_alchemy:always_speed",
+  "properties": {
+    "type": "fixed",
+    "aspect": "corpus",
+    "essences": {
+      "minecraft:speed": 20
+    }
+  }
+}
