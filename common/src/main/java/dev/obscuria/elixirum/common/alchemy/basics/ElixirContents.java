@@ -34,7 +34,7 @@ public record ElixirContents(
     }
 
     public Aspect aspect() {
-        return providers.isEmpty() ? Aspect.NONE : providers.get(0).holder().require().aspect();
+        return providers.isEmpty() ? Aspect.NONE : providers.get(0).holder().map(Essence::aspect).orElse(Aspect.NONE);
     }
 
     public double quality() {

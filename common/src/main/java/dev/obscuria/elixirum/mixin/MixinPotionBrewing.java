@@ -52,7 +52,7 @@ public abstract class MixinPotionBrewing {
             var extracted = essences.get(RandomUtils.nextInt(0, essences.size()));
             var map = EssenceHolderMap.single(extracted.getKey(), extracted.getIntValue());
             ArsElixirumHelper.setExtractContents(result, new ExtractContents(map));
-            ItemStackCache.suppressedEssences(reagent).add(extracted.getKey().require());
+            extracted.getKey().get().ifPresent(it -> ItemStackCache.suppressedEssences(reagent).add(it));
         } else {
             ArsElixirumHelper.setExtractContents(result, new ExtractContents(properties.essences()));
         }

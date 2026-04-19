@@ -53,7 +53,7 @@ public record ClientCompositionTooltip(
     private static List<ChartElement> buildChart(ItemStack stack, EssenceProvider provider) {
         return provider.streamSorted()
                 .map(entry -> new ChartElement(
-                        entry.getKey().require().color(),
+                        entry.getKey().color(),
                         entry.getIntValue()))
                 .toList();
     }
@@ -61,9 +61,9 @@ public record ClientCompositionTooltip(
     private static List<LineInfo> buildLines(ItemStack stack, EssenceProvider provider) {
         return provider.streamSorted()
                 .map(entry -> new LineInfo(
-                        entry.getKey().require().color(),
+                        entry.getKey().color(),
                         Component.literal("%s x%s".formatted(
-                                entry.getKey().require().displayName().getString(),
+                                entry.getKey().displayName().getString(),
                                 entry.getIntValue()))))
                 .toList();
     }

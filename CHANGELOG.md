@@ -1,4 +1,3 @@
-* Added the ability to remove recipes from the collection
-- Fixed incorrect elixir tier detection (was being reduced by 1 tier)
-- Fixed an invalid elixir being added to Recently Brewed when collecting the last portion from a cauldron
-- Fixed missing scroll sound
+* Fixed a crash when joining a world after removing mods that add items which could be used as elixir ingredients
+* Fixed a crash caused by elixirs containing potion effects from removed mods
+* Fixed server synchronization for removing recipes from the collection

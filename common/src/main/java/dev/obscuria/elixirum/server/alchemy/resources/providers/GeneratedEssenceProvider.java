@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.server.alchemy.resources.providers;
 
 import com.mojang.serialization.Codec;
+import dev.obscuria.elixirum.common.alchemy.basics.Essence;
 import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolderMap;
 import dev.obscuria.elixirum.common.alchemy.basics.Aspect;
 import dev.obscuria.elixirum.common.alchemy.ingredient.provider.CountProvider;
@@ -27,6 +28,6 @@ public record GeneratedEssenceProvider() implements IEssenceProvider {
     public Aspect resolveAspect(EssenceHolderMap essences) {
         return essences.isEmpty()
                 ? Aspect.NONE
-                : essences.dominant().require().aspect();
+                : essences.dominant().map(Essence::aspect).orElse(Aspect.NONE);
     }
 }

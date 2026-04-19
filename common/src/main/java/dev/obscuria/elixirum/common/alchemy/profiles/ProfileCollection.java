@@ -37,6 +37,10 @@ public record ProfileCollection(
         return recipes.remove(recipe);
     }
 
+    public boolean removeRecipe(AlchemyRecipe recipe) {
+        return findConfig(recipe.uuid()).map(this::removeRecipe).orElse(false);
+    }
+
     public Optional<ConfiguredRecipe> findConfig(UUID recipe) {
         for (var configured : recipes) {
             if (!configured.recipe().isSame(recipe)) continue;

@@ -48,7 +48,7 @@ public class EssenceHolderMap implements EssenceProvider {
     public RGB dominantColor() {
         return holderToWeight.isEmpty()
                 ? ElixirContents.WATER.color()
-                : dominant().require().color();
+                : dominant().map(Essence::color).orElseGet(ElixirContents.WATER::color);
     }
 
     public boolean contains(EssenceHolder essence) {

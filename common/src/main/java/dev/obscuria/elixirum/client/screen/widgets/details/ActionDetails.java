@@ -6,6 +6,8 @@ import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
 import dev.obscuria.elixirum.client.screen.toolkit.Texture;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.ButtonControl;
 import dev.obscuria.elixirum.client.screen.widgets.pages.AbstractPage;
+import dev.obscuria.elixirum.common.network.ServerboundRecipeRemoveRequest;
+import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import net.minecraft.network.chat.Component;
 
 public class ActionDetails extends AbstractDetails {
@@ -44,6 +46,7 @@ public class ActionDetails extends AbstractDetails {
             if (isAwaitingConfirmation) {
                 this.isAwaitingConfirmation = false;
                 ClientAlchemy.INSTANCE.localProfile().collection().removeRecipe(elixir.configured());
+                FragmentumNetworking.sendToServer(new ServerboundRecipeRemoveRequest(elixir.recipe()));
                 AbstractPage.lastKind.open();
             } else {
                 this.isAwaitingConfirmation = true;

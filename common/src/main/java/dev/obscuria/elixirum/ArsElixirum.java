@@ -82,6 +82,11 @@ public final class ArsElixirum {
                 ServerboundRecipeSaveRequest::decode,
                 ServerboundRecipeSaveRequest::handle);
         registrar.registerServerbound(
+                ServerboundRecipeRemoveRequest.class,
+                ServerboundRecipeRemoveRequest::encode,
+                ServerboundRecipeRemoveRequest::decode,
+                ServerboundRecipeRemoveRequest::handle);
+        registrar.registerServerbound(
                 ServerboundSetStyleRequest.class,
                 ServerboundSetStyleRequest::encode,
                 ServerboundSetStyleRequest::decode,

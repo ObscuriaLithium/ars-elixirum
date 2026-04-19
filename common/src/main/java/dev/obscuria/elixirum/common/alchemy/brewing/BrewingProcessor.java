@@ -108,7 +108,7 @@ public final class BrewingProcessor {
             for (var entry : weights.entrySet()) {
                 var essence = entry.getKey();
 
-                if (essence.require().aspect() == q) {
+                if (essence.aspect() == q) {
                     entry.setValue(shift.apply(essence, entry.getValue()));
                 }
             }
@@ -118,7 +118,7 @@ public final class BrewingProcessor {
     private void applyConcordance(Map<EssenceHolder, Double> weights, Aspect stabilizer) {
         for (var entry : weights.entrySet()) {
             var essence = entry.getKey();
-            ConcordanceTier tier = getConcordance(essence.require().aspect(), stabilizer);
+            ConcordanceTier tier = getConcordance(essence.aspect(), stabilizer);
             entry.setValue(tier.apply(entry.getValue()));
         }
     }

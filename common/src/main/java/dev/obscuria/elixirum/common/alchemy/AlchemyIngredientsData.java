@@ -1,11 +1,14 @@
 package dev.obscuria.elixirum.common.alchemy;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolderMap;
 import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyProperties;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,9 +69,16 @@ public final class AlchemyIngredientsData {
         source.remove(key);
     }
 
+    private static DataResult<Item> findItemByKey(ResourceLocation key) {
+        var item = BuiltInRegistries.ITEM.get(key);
+        return item != Items.AIR
+                ? DataResult.success(item)
+                : DataResult.error(() -> "Unknown item '%s'".formatted(key));
+    }
+
     static {
         CODEC = Codec
-                .unboundedMap(BuiltInRegistries.ITEM.byNameCodec(), AlchemyProperties.CODEC)
+                .unboundedMap(ResourceLocation.CODEC.comapFlatMap(AlchemyIngredientsData::findItemByKey, BuiltInRegistries.ITEM::getKey), AlchemyProperties.CODEC)
                 .xmap(AlchemyIngredientsData::copyOf, it -> it.source);
     }
 }

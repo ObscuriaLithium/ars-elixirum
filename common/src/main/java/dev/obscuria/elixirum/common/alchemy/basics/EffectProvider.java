@@ -7,11 +7,13 @@ import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
 import dev.obscuria.fragmentum.registry.BootstrapContext;
 import dev.obscuria.fragmentum.util.color.Colors;
 import dev.obscuria.fragmentum.util.color.RGB;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 import java.util.function.Function;
 
@@ -34,7 +36,7 @@ public interface EffectProvider extends Comparable<EffectProvider> {
     MobEffectInstance instantiate(double mastery, double immunity);
 
     default MobEffect mobEffect() {
-        return holder().require().effect().value();
+        return holder().map(Essence::effect).map(Holder::value).orElse(MobEffects.UNLUCK);
     }
 
     default boolean isInstantaneous() {
@@ -46,7 +48,7 @@ public interface EffectProvider extends Comparable<EffectProvider> {
     }
 
     default boolean isVoided() {
-        return quality() < holder().require().minQuality();
+        return quality() < holder().map(Essence::minQuality).orElse(999);
     }
 
     default Component displayName() {
@@ -100,12 +102,12 @@ public interface EffectProvider extends Comparable<EffectProvider> {
 
         @Override
         public int amplifier() {
-            return holder.require().unpackAmplifier(weight * ArsElixirumHelper.amplifierFactor(temper));
+            return holder.map(it -> it.unpackAmplifier(weight * ArsElixirumHelper.amplifierFactor(temper))).orElse(0);
         }
 
         @Override
         public int duration() {
-            return holder.require().unpackDuration(weight * ArsElixirumHelper.durationFactor(temper));
+            return holder.map(it -> it.unpackDuration(weight * ArsElixirumHelper.durationFactor(temper))).orElse(0);
         }
 
         @Override
@@ -147,8 +149,8 @@ public interface EffectProvider extends Comparable<EffectProvider> {
 
         @Override
         public double quality() {
-            final var packedAmplifier = holder.require().packAmplifier(amplifier);
-            final var packedDuration = holder.require().packDuration(duration);
+            final var packedAmplifier = holder.map(it -> it.packAmplifier(amplifier)).orElse(0.0);
+            final var packedDuration = holder.map(it -> it.packDuration(duration)).orElse(0.0);
             return Mth.clamp((packedAmplifier + packedDuration) * 0.5, 0.0, 100.0);
         }
 
