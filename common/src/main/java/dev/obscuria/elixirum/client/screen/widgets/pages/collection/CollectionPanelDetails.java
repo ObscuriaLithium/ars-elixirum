@@ -25,7 +25,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-class CollectionPanelDetails extends AbstractDetailsPanel {
+class CollectionPanelDetails extends AbstractDetailsPanel<CachedElixir> {
 
     private final SelectionState<TabType> tabSelection;
     private final Signal0 styleUpdated;
@@ -48,6 +48,16 @@ class CollectionPanelDetails extends AbstractDetailsPanel {
     @Override
     protected Component getPlaceholder() {
         return CommonComponents.EMPTY;
+    }
+
+    @Override
+    protected Component getDisplayName(CachedElixir target) {
+        return target.displayName();
+    }
+
+    @Override
+    protected boolean isEmpty(CachedElixir target) {
+        return target.isEmpty();
     }
 
     @Override

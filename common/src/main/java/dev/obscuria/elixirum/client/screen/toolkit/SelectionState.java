@@ -14,6 +14,10 @@ public final class SelectionState<T> {
         this.value = initial;
     }
 
+    public boolean is(T value) {
+        return Objects.equals(this.value, value);
+    }
+
     public T get() {
         return value;
     }

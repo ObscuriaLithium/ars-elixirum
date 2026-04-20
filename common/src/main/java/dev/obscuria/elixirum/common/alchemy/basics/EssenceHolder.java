@@ -77,6 +77,11 @@ public final class EssenceHolder {
         value = essence;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof EssenceHolder holder && key.equals(holder.key);
+    }
+
     static {
         CODEC = ResourceLocation.CODEC.xmap(EssenceHolder::getOrCreate, EssenceHolder::key);
         HOLDERS = Maps.newHashMap();

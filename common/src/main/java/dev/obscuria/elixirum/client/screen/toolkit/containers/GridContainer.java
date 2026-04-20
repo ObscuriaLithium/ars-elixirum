@@ -8,12 +8,23 @@ import net.minecraft.network.chat.Component;
 public class GridContainer extends HierarchicalControl {
 
     private final int separation;
-    private final int margin = 0;
-    private final int fitContents = 80;
+
+    private final int marginLeft;
+    private final int marginRight;
+    private final int marginTop;
+    private final int marginBottom;
 
     public GridContainer(int separation) {
+        this(separation, 0, 0, 0, 0);
+    }
+
+    public GridContainer(int separation, int marginLeft, int marginRight, int marginTop, int marginBottom) {
         super(0, 0, 0, 0, Component.empty());
         this.separation = separation;
+        this.marginLeft = marginLeft;
+        this.marginRight = marginRight;
+        this.marginTop = marginTop;
+        this.marginBottom = marginBottom;
         this.setUpdateFlags(UPDATE_BY_WIDTH);
     }
 
@@ -25,23 +36,30 @@ public class GridContainer extends HierarchicalControl {
     @Override
     public void reorganize() {
 
-        var offsetX = margin;
-        var offsetY = margin;
+        var offsetX = marginLeft;
+        var offsetY = marginTop;
         var maxHeight = 0;
+
         for (var child : listChildren().toList()) {
             final var width = offsetX + separation + child.rect.width();
-            if (width > fitContents && width > rect.width()) {
-                offsetX = margin;
+
+            if (width > rect.width()) {
+                offsetX = marginLeft;
                 offsetY += maxHeight + separation;
                 maxHeight = 0;
-            } else if (rect.width() < width) {
-                rect.setWidth(width + margin - 1);
+            } else if (rect.width() < width + marginRight) {
+                rect.setWidth(width + marginRight - 1);
             }
+
             child.rect.setX(rect.x() + offsetX);
             child.rect.setY(rect.y() + offsetY);
+
             offsetX += separation + child.rect.width();
             maxHeight = Math.max(maxHeight, child.rect.height());
         }
-        rect.setHeight(hasChildren() ? offsetY + maxHeight + margin : 0);
+
+        rect.setHeight(hasChildren()
+                ? offsetY + maxHeight + marginBottom
+                : 0);
     }
 }

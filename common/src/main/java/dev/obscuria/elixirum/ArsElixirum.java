@@ -75,6 +75,11 @@ public final class ArsElixirum {
                 ClientboundMasteryLevelUpPayload::encode,
                 ClientboundMasteryLevelUpPayload::decode,
                 ClientboundMasteryLevelUpPayload::handle);
+        registrar.registerClientbound(
+                ClientboundDiscoverEssencePayload.class,
+                ClientboundDiscoverEssencePayload::encode,
+                ClientboundDiscoverEssencePayload::decode,
+                ClientboundDiscoverEssencePayload::handle);
 
         registrar.registerServerbound(
                 ServerboundRecipeSaveRequest.class,

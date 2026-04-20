@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "glass_bottle",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "elixirum:extract"
+    }
+  ],
+  "result": {
+    "item": "minecraft:glass_bottle",
+    "count": 1
+  }
+}

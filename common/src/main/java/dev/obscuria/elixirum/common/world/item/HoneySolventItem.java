@@ -19,8 +19,7 @@ public class HoneySolventItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
-        components.addAll(Tooltips.process(
-                Component.translatable("tooltip.elixirum.honey_solvent"),
-                TooltipOptions.DEFAULT));
+        var tooltip = Component.translatable("tooltip.elixirum.honey_solvent");
+        components.addAll(Tooltips.process(tooltip, true, TooltipOptions.DESCRIPTION));
     }
 }

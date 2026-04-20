@@ -36,35 +36,35 @@ public class PotionShelfEntity extends BlockEntity {
     public void setItem(int slot, ItemStack stack) {
         this.container.setItem(slot, stack);
         this.setChanged();
-        updateClients();
+        this.updateClients();
     }
 
     public boolean placeItem(int slot, ItemStack stack) {
         if (!getItem(slot).isEmpty()) return false;
         if (!validate(stack)) return false;
-        playSound(ElixirumSounds.ITEM_BOTTLE_PUT, 1f);
-        playSound(ElixirumSounds.ITEM_BOTTLE_SHAKE, 0.5f);
-        setItem(slot, stack.copyWithCount(1));
+        this.playSound(ElixirumSounds.ITEM_BOTTLE_PUT, 1f);
+        this.playSound(ElixirumSounds.ITEM_BOTTLE_SHAKE, 0.5f);
+        this.setItem(slot, stack.copyWithCount(1));
         stack.shrink(1);
-        setChanged();
-        updateClients();
+        this.setChanged();
+        this.updateClients();
         return true;
     }
 
     public ItemStack takeItem(int slot) {
         var stack = getItem(slot);
         if (stack.isEmpty()) return stack;
-        playSound(ElixirumSounds.ITEM_BOTTLE_SLOSH, 0.5f);
-        setItem(slot, ItemStack.EMPTY);
-        setChanged();
-        updateClients();
+        this.playSound(ElixirumSounds.ITEM_BOTTLE_SLOSH, 0.5f);
+        this.setItem(slot, ItemStack.EMPTY);
+        this.setChanged();
+        this.updateClients();
         return stack;
     }
 
     public List<ItemStack> removeAllItems() {
         var items = container.removeAllItems();
-        setChanged();
-        updateClients();
+        this.setChanged();
+        this.updateClients();
         return items;
     }
 
@@ -81,20 +81,20 @@ public class PotionShelfEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.put(TAG_SLOT_1, getItem(0).save(new CompoundTag()));
-        tag.put(TAG_SLOT_2, getItem(1).save(new CompoundTag()));
-        tag.put(TAG_SLOT_3, getItem(2).save(new CompoundTag()));
+        tag.put(TAG_SLOT_1, container.getItem(0).save(new CompoundTag()));
+        tag.put(TAG_SLOT_2, container.getItem(1).save(new CompoundTag()));
+        tag.put(TAG_SLOT_3, container.getItem(2).save(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains(TAG_SLOT_1, Tag.TAG_COMPOUND))
-            this.setItem(0, ItemStack.of(tag.getCompound(TAG_SLOT_1)));
+            this.container.setItem(0, ItemStack.of(tag.getCompound(TAG_SLOT_1)));
         if (tag.contains(TAG_SLOT_2, Tag.TAG_COMPOUND))
-            this.setItem(1, ItemStack.of(tag.getCompound(TAG_SLOT_2)));
+            this.container.setItem(1, ItemStack.of(tag.getCompound(TAG_SLOT_2)));
         if (tag.contains(TAG_SLOT_3, Tag.TAG_COMPOUND))
-            this.setItem(2, ItemStack.of(tag.getCompound(TAG_SLOT_3)));
+            this.container.setItem(2, ItemStack.of(tag.getCompound(TAG_SLOT_3)));
     }
 
     private boolean validate(ItemStack stack) {

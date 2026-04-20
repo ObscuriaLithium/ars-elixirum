@@ -16,26 +16,35 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 @SuppressWarnings("deprecation")
-public class PotionShelfBlock extends BaseEntityBlock {
+public class PotionShelfBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final ImmutableMap<Direction, VoxelShape[]> SHAPES;
 
     public PotionShelfBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -55,7 +64,10 @@ public class PotionShelfBlock extends BaseEntityBlock {
         for (var direction : context.getNearestLookingDirections()) {
             if (direction.getAxis().isHorizontal()) {
                 var opposite = direction.getOpposite();
-                var state = this.defaultBlockState().setValue(FACING, opposite);
+                var fluidState = context.getLevel().getFluidState(context.getClickedPos());
+                var state = this.defaultBlockState()
+                        .setValue(WATERLOGGED, fluidState.is(Fluids.WATER))
+                        .setValue(FACING, opposite);
                 if (!state.canSurvive(context.getLevel(), context.getClickedPos())) continue;
                 return state;
             }
@@ -70,12 +82,13 @@ public class PotionShelfBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return computeShape(level.getBlockEntity(pos), SHAPES.get(state.getValue(FACING)));
+        var shape = Objects.requireNonNull(SHAPES.get(state.getValue(FACING)));
+        return computeShape(level.getBlockEntity(pos), shape);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override
@@ -118,6 +131,13 @@ public class PotionShelfBlock extends BaseEntityBlock {
         }
 
         super.onRemove(state, level, pos, newState, isMoving);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED)
+                ? Fluids.WATER.getSource(false)
+                : super.getFluidState(state);
     }
 
     private InteractionResult useOnSlot(

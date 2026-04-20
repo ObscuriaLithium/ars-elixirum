@@ -11,8 +11,8 @@ import dev.obscuria.elixirum.common.alchemy.AlchemyIngredientsData;
 import dev.obscuria.elixirum.common.alchemy.profiles.AlchemyProfileData;
 import dev.obscuria.elixirum.common.alchemy.profiles.AlchemyProfileView;
 import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +25,10 @@ public final class ClientAlchemy implements Alchemy {
 
     private final ClientAlchemyEssences essences = new ClientAlchemyEssences();
     private final ClientAlchemyIngredients ingredients = new ClientAlchemyIngredients();
-    private final ClientAlchemyProfile profile = new ClientAlchemyProfile();
+    private final ClientAlchemyProfile localProfile = new ClientAlchemyProfile();
 
     public AlchemyProfileView localProfile() {
-        return profile;
+        return localProfile;
     }
 
     public void justBrewed(AlchemyRecipe recipe) {
@@ -47,7 +47,7 @@ public final class ClientAlchemy implements Alchemy {
     }
 
     public void updateProfile(AlchemyProfileData data) {
-        this.profile.update(data);
+        this.localProfile.update(data);
     }
 
     @Override
@@ -62,6 +62,8 @@ public final class ClientAlchemy implements Alchemy {
 
     @Override
     public AlchemyProfileView profileOf(Player player) {
-        return profile;
+        return Minecraft.getInstance().player != player
+                ? new ClientAlchemyProfile()
+                : localProfile;
     }
 }

@@ -20,8 +20,7 @@ public class AlchemistEyeItem extends ArmorItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
-        components.addAll(Tooltips.process(
-                Component.translatable("tooltip.elixirum.alchemist_eye"),
-                TooltipOptions.DEFAULT));
+        var tooltip = Component.translatable("tooltip.elixirum.alchemist_eye");
+        components.addAll(Tooltips.process(tooltip, this, TooltipOptions.DESCRIPTION));
     }
 }

@@ -55,6 +55,14 @@ public class EssenceHolderMap implements EssenceProvider {
         return holderToWeight.containsKey(essence);
     }
 
+    public boolean contains(Essence essence) {
+        for (var essenceHolder : holderToWeight.keySet()) {
+            if (!essenceHolder.is(essence)) continue;
+            return true;
+        }
+        return false;
+    }
+
     public void forEach(BiConsumer<EssenceHolder, Integer> consumer) {
         this.holderToWeight.forEach(consumer);
     }

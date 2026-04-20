@@ -4,6 +4,8 @@ import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Map;
+
 public interface AlchemyIngredientsView {
 
     int totalIngredients();
@@ -13,4 +15,6 @@ public interface AlchemyIngredientsView {
     AlchemyProperties propertiesOf(Item item);
 
     AlchemyProperties propertiesOf(ItemStack stack);
+
+    Map<Item, AlchemyProperties> asMapView();
 }

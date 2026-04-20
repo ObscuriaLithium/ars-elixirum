@@ -6,7 +6,9 @@ import dev.obscuria.elixirum.common.alchemy.basics.*;
 import dev.obscuria.elixirum.common.alchemy.ingredient.properties.CatalystProperties;
 import dev.obscuria.elixirum.common.alchemy.ingredient.properties.FoundationProperties;
 import dev.obscuria.elixirum.common.alchemy.ingredient.properties.StabilizerProperties;
+import dev.obscuria.elixirum.common.alchemy.profiles.AlchemyProfileView;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.world.item.Item;
 
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
@@ -24,6 +26,14 @@ public record AlchemyProperties(
 
     public boolean isEmpty() {
         return essences.isEmpty();
+    }
+
+    public boolean isAnyDiscovered(Item item, AlchemyProfileView profile) {
+        for (var entry : essences.sorted()) {
+            if (!profile.knowledge().isEssenceKnown(item, entry.getKey())) continue;
+            return true;
+        }
+        return false;
     }
 
     @Override

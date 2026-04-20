@@ -2,6 +2,7 @@ package dev.obscuria.elixirum.common.world;
 
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.basics.Essence;
+import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
 import dev.obscuria.elixirum.common.alchemy.basics.ExtractContents;
 import dev.obscuria.elixirum.common.alchemy.style.Chroma;
 import dev.obscuria.elixirum.common.alchemy.style.StyleVariant;
@@ -34,7 +35,7 @@ public record ItemStackCache(
         ((Provider) (Object) stack).elixirum$markDirty();
     }
 
-    public static List<Essence> suppressedEssences(ItemStack stack) {
+    public static List<EssenceHolder> suppressedEssences(ItemStack stack) {
         return ((Provider) (Object) stack).elixirum$suppressedEssences();
     }
 
@@ -50,7 +51,7 @@ public record ItemStackCache(
 
         ItemStackCache elixirum$getCache();
 
-        List<Essence> elixirum$suppressedEssences();
+        List<EssenceHolder> elixirum$suppressedEssences();
 
         void elixirum$markDirty();
 

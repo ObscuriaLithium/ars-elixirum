@@ -21,7 +21,7 @@ dependencies {
     compileOnly project(":common")
     // Environment
     modRuntimeOnly("curse.maven:emi-580555:6420945")
-    //modRuntimeOnly("curse.maven:aquamirae-536254:7911313")
+    modRuntimeOnly("curse.maven:aquamirae-536254:7911313")
     modRuntimeOnly("curse.maven:obscure-api-638417:7171906")
 }
 

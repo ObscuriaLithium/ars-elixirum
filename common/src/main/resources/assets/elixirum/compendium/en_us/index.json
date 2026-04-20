@@ -1,0 +1,22 @@
+{
+  "title": "Compendium",
+  "homepage": "homepage.json",
+  "sections": [
+    {
+      "title": "Getting Started",
+      "pages": [
+        "getting_started/introduction.json",
+        "getting_started/essences_and_ingredients.json",
+        "getting_started/creating_elixir.json"
+      ]
+    },
+    {
+      "title": "Essences",
+      "pages": []
+    },
+    {
+      "title": "Extras",
+      "pages": []
+    }
+  ]
+}

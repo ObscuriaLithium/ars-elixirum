@@ -19,12 +19,17 @@ public record Essence(
 ) {
 
     public static final Codec<Essence> CODEC;
+    public static final Essence EMPTY;
 
     public Essence(Holder<MobEffect> effect, int maxAmplifier, int maxDuration, int minQuality) {
         this(Aspect.select(effect), effect, maxAmplifier, maxDuration, minQuality);
     }
 
     private static final double MAX_WEIGHT = 100.0;
+
+    public boolean isEmpty() {
+        return effect == null;
+    }
 
     public Component displayName() {
         return effect.value().getDisplayName();
@@ -90,5 +95,6 @@ public record Essence(
                 Codec.INT.fieldOf("max_duration").forGetter(Essence::maxDuration),
                 Codec.INT.fieldOf("min_quality").forGetter(Essence::minQuality)
         ).apply(codec, Essence::new));
+        EMPTY = new Essence(Aspect.NONE, null, 0, 0, 0);
     }
 }

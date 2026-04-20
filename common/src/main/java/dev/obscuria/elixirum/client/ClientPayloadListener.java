@@ -12,10 +12,7 @@ import dev.obscuria.elixirum.common.alchemy.profiles.AlchemyProfileData;
 import dev.obscuria.elixirum.common.alchemy.style.Cap;
 import dev.obscuria.elixirum.common.alchemy.style.Chroma;
 import dev.obscuria.elixirum.common.alchemy.style.Shape;
-import dev.obscuria.elixirum.common.network.ClientboundAlchemyPayload;
-import dev.obscuria.elixirum.common.network.ClientboundElixirBrewedPayload;
-import dev.obscuria.elixirum.common.network.ClientboundMasteryLevelUpPayload;
-import dev.obscuria.elixirum.common.network.ClientboundMasterySyncPayload;
+import dev.obscuria.elixirum.common.network.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.player.Player;
@@ -61,5 +58,9 @@ public final class ClientPayloadListener {
             if (chroma.mastery != payload.masteryLevel()) continue;
             Minecraft.getInstance().getToasts().addToast(new NewChromaToast(chroma));
         }
+    }
+
+    public static void handle(Player player, ClientboundDiscoverEssencePayload payload) {
+        ClientAlchemy.INSTANCE.localProfile().knowledge().discoverEssence(payload.item(), payload.essence());
     }
 }

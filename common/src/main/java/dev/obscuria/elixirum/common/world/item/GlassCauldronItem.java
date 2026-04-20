@@ -20,8 +20,7 @@ public class GlassCauldronItem extends BlockItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        components.addAll(Tooltips.process(
-                Component.translatable("tooltip.elixirum.glass_cauldron"),
-                TooltipOptions.DEFAULT));
+        var tooltip = Component.translatable("tooltip.elixirum.glass_cauldron");
+        components.addAll(Tooltips.process(tooltip, this, TooltipOptions.DESCRIPTION));
     }
 }

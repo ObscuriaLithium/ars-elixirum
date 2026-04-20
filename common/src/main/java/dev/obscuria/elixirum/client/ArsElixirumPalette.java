@@ -5,6 +5,7 @@ import dev.obscuria.fragmentum.util.color.Colors;
 
 public interface ArsElixirumPalette {
 
+    ARGB BLACK = Colors.argbOf(0xFF000000);
     ARGB WHITE = Colors.argbOf(0xFFFFFFFF);
     ARGB LIGHT = Colors.argbOf(0xFFB3AEB9);
     ARGB MODERATE = Colors.argbOf(0xFF80788A);

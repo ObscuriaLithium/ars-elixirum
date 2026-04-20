@@ -2,6 +2,7 @@ package dev.obscuria.elixirum.client.screen.widgets.pages;
 
 import dev.obscuria.elixirum.ArsElixirum;
 import dev.obscuria.elixirum.client.screen.widgets.pages.collection.CollectionPage;
+import dev.obscuria.elixirum.client.screen.widgets.pages.discoveries.DiscoveriesPage;
 import dev.obscuria.elixirum.client.screen.widgets.pages.recent.RecentPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +14,8 @@ import java.util.function.Supplier;
 public enum PageKind implements StringRepresentable {
     RECENT(GLFW.GLFW_KEY_1, RecentPage::new),
     COLLECTION(GLFW.GLFW_KEY_2, CollectionPage::new),
-    BOOKS(GLFW.GLFW_KEY_3, BooksPage::new),
+    DISCOVERIES(GLFW.GLFW_KEY_3, DiscoveriesPage::new),
+    //BOOKS(GLFW.GLFW_KEY_3, BooksPage::new),
     COMPENDIUM(GLFW.GLFW_KEY_4, CompendiumPage::new);
 
     private final int hotkey;

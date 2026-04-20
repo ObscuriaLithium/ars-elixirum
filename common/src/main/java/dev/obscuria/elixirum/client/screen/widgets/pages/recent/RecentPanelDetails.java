@@ -15,7 +15,7 @@ import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-class RecentPanelDetails extends AbstractDetailsPanel {
+class RecentPanelDetails extends AbstractDetailsPanel<CachedElixir> {
 
     protected RecentPanelDetails(SelectionState<CachedElixir> selection, int x, int y, int width, int height) {
         super(selection, x, y, width, height);
@@ -24,6 +24,16 @@ class RecentPanelDetails extends AbstractDetailsPanel {
     @Override
     protected Component getPlaceholder() {
         return CommonComponents.EMPTY;
+    }
+
+    @Override
+    protected Component getDisplayName(CachedElixir target) {
+        return target.displayName();
+    }
+
+    @Override
+    protected boolean isEmpty(CachedElixir target) {
+        return target.isEmpty();
     }
 
     @Override

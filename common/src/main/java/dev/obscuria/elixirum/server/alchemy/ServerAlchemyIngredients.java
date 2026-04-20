@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 
 public final class ServerAlchemyIngredients implements AlchemyIngredientsView {
 
@@ -56,5 +57,10 @@ public final class ServerAlchemyIngredients implements AlchemyIngredientsView {
     @Override
     public AlchemyProperties propertiesOf(ItemStack stack) {
         return data.propertiesOf(stack);
+    }
+
+    @Override
+    public Map<Item, AlchemyProperties> asMapView() {
+        return data.asMapView();
     }
 }

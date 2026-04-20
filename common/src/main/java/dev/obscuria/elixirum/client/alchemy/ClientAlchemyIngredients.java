@@ -6,6 +6,8 @@ import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Map;
+
 public final class ClientAlchemyIngredients implements AlchemyIngredientsView {
 
     private AlchemyIngredientsData data = AlchemyIngredientsData.empty();
@@ -34,5 +36,10 @@ public final class ClientAlchemyIngredients implements AlchemyIngredientsView {
     @Override
     public AlchemyProperties propertiesOf(ItemStack stack) {
         return data.propertiesOf(stack);
+    }
+
+    @Override
+    public Map<Item, AlchemyProperties> asMapView() {
+        return data.asMapView();
     }
 }
