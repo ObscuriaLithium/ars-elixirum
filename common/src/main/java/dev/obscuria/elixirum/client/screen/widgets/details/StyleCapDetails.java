@@ -1,14 +1,15 @@
 package dev.obscuria.elixirum.client.screen.widgets.details;
 
 import dev.obscuria.elixirum.client.alchemy.cache.CachedElixir;
-import dev.obscuria.elixirum.client.screen.widgets.StylePicker;
+import dev.obscuria.elixirum.client.screen.ElixirumUI;
+import dev.obscuria.elixirum.client.screen.widgets.style.CapStyleAdapter;
+import dev.obscuria.elixirum.client.screen.widgets.style.StylePicker;
 import dev.obscuria.fragmentum.util.signal.Signal0;
-import net.minecraft.network.chat.Component;
 
 public class StyleCapDetails extends AbstractDetails {
 
-    public StyleCapDetails(Signal0 updated, CachedElixir elixir) {
-        super(Component.literal("Cap"));
-        this.addChild(new StylePicker.OfCap(updated, elixir));
+    public StyleCapDetails(CachedElixir elixir, Signal0 changed) {
+        super(ElixirumUI.STYLE_CAP);
+        this.addChild(new StylePicker<>(CapStyleAdapter.SHARED, elixir, changed));
     }
 }

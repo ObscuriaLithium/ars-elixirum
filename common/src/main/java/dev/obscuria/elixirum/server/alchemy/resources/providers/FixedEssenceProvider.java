@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 public record FixedEssenceProvider(
         Aspect aspect,
-        EssenceHolderMap essences
+        EssenceHolderMap values
 ) implements IEssenceProvider {
 
     public static final Codec<FixedEssenceProvider> CODEC;
@@ -21,7 +21,7 @@ public record FixedEssenceProvider(
 
     @Override
     public EssenceHolderMap resolve(Item item, RandomSource random) {
-        return essences;
+        return values;
     }
 
     @Override
@@ -32,7 +32,7 @@ public record FixedEssenceProvider(
     static {
         CODEC = RecordCodecBuilder.create(codec -> codec.group(
                 Aspect.CODEC.fieldOf("aspect").forGetter(FixedEssenceProvider::aspect),
-                EssenceHolderMap.CODEC.fieldOf("essences").forGetter(FixedEssenceProvider::essences)
+                EssenceHolderMap.CODEC.fieldOf("values").forGetter(FixedEssenceProvider::values)
         ).apply(codec, FixedEssenceProvider::new));
     }
 }

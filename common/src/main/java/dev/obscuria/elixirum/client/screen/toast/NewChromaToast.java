@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
-import dev.obscuria.elixirum.common.alchemy.style.Chroma;
+import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;

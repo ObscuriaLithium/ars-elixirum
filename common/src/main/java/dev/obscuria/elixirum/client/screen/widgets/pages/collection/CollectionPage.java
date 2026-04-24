@@ -18,10 +18,10 @@ public class CollectionPage extends AbstractPage {
     protected void init() {
         super.init();
         var selection = new SelectionState<>(CachedElixir.empty());
-        var styleUpdated = new Signal0();
+        var styleChanged = new Signal0();
         this.addChild(new MasteryProgress(center(), 0));
-        this.addChild(new ElixirOverview(selection, styleUpdated, center(), height));
+        this.addChild(new ElixirOverview(selection, styleChanged, center(), height));
         this.addChild(new CollectionPanelRecipes(selection, left(10), top(10), 126, height - 20));
-        this.addChild(new CollectionPanelDetails(selection, styleUpdated, right(-134), top(10), 126, height - 20));
+        this.addChild(new CollectionPanelDetails(selection, styleChanged, right(-134), top(10), 126, height - 20));
     }
 }

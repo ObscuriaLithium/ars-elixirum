@@ -45,7 +45,6 @@ public class TextControl extends HierarchicalControl {
         return node;
     }
 
-
     public static TextControl panelFooter(Component content) {
         TextControl node = new TextControl();
         node.setContent(content.copy().withStyle(style -> style.withColor(ArsElixirumPalette.LIGHT.decimal())));

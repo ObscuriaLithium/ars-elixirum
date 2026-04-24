@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "elixirum:item/witch_totem_of_undying",
+    "layer1": "elixirum:item/witch_totem_of_undying_overlay"
+  }
+}

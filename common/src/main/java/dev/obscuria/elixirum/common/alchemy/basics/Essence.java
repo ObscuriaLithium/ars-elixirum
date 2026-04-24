@@ -2,7 +2,6 @@ package dev.obscuria.elixirum.common.alchemy.basics;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.api.Alchemy;
 import dev.obscuria.fragmentum.util.color.Colors;
 import dev.obscuria.fragmentum.util.color.RGB;
 import net.minecraft.core.Holder;
@@ -53,11 +52,6 @@ public record Essence(
 
     public double packDuration(int duration) {
         return linearWeightByValue(duration, maxDuration);
-    }
-
-    //TODO
-    public EssenceHolder asHolder() {
-        return Alchemy.guess().essences().asHolder(this);
     }
 
     public static int quadValueByWeight(double weight, int maxValue) {

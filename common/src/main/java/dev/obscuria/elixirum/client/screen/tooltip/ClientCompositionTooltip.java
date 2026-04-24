@@ -6,6 +6,7 @@ import dev.obscuria.elixirum.client.screen.ChartRenderer;
 import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
 import dev.obscuria.elixirum.common.alchemy.basics.EssenceProvider;
 import dev.obscuria.elixirum.common.alchemy.basics.Aspect;
+import dev.obscuria.elixirum.common.alchemy.systems.DiscoverySystem;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import dev.obscuria.elixirum.common.world.tooltip.CompositionTooltip;
 import dev.obscuria.fragmentum.util.color.Colors;
@@ -80,7 +81,7 @@ public record ClientCompositionTooltip(
 
     private static boolean isKnown(ItemStack stack, EssenceHolder holder) {
         return stack.is(ElixirumItems.EXTRACT.asItem())
-                || ClientAlchemy.INSTANCE.localProfile().knowledge().isEssenceKnown(stack.getItem(), holder);
+                || DiscoverySystem.isEssenceKnown(ClientAlchemy.INSTANCE.localProfile(), stack.getItem(), holder);
     }
 
     public record LineInfo(RGB color, Component component) {

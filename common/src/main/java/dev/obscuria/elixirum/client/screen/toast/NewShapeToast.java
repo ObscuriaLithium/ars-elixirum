@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.client.screen.toast;
 
 import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.common.alchemy.style.Shape;
+import dev.obscuria.elixirum.common.alchemy.styles.Shape;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;

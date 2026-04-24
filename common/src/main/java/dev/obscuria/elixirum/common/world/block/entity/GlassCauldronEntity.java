@@ -2,12 +2,12 @@ package dev.obscuria.elixirum.common.world.block.entity;
 
 import com.google.common.collect.ImmutableList;
 import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.ArsElixirumHelper;
-import dev.obscuria.elixirum.common.CodecHelper;
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
 import dev.obscuria.elixirum.common.registry.ElixirumBlockEntities;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
+import dev.obscuria.elixirum.common.world.NBTComponents;
 import dev.obscuria.elixirum.common.world.block.GlassCauldronBehavior;
 import dev.obscuria.elixirum.common.world.block.GlassCauldronInteraction;
 import dev.obscuria.elixirum.common.world.particle.BubbleParticleOptions;
@@ -15,7 +15,9 @@ import dev.obscuria.elixirum.common.world.particle.SplashParticleOptions;
 import dev.obscuria.elixirum.server.alchemy.brewing.IngredientMixer;
 import dev.obscuria.fragmentum.util.color.Colors;
 import dev.obscuria.fragmentum.util.color.RGB;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -46,7 +48,7 @@ public class GlassCauldronEntity extends BlockEntity {
     public double temperature;
     public int availablePortions;
 
-    private IngredientMixer mixer;
+    @Setter(AccessLevel.PRIVATE) private IngredientMixer mixer;
     private float yRot;
     private float yRotO;
 
@@ -108,7 +110,7 @@ public class GlassCauldronEntity extends BlockEntity {
     public ItemStack scoopUp() {
         if (!isFilled || !mixer.isComplete() || getLevel() == null) return ItemStack.EMPTY;
         final var stack = ElixirumItems.ELIXIR.instantiate();
-        ArsElixirumHelper.setElixirContents(stack, mixer.getContents());
+        ContentsHelper.setElixir(stack, mixer.getContents());
         this.availablePortions--;
         if (availablePortions <= 0) this.maybeFlush();
         return stack;
@@ -195,7 +197,7 @@ public class GlassCauldronEntity extends BlockEntity {
         tag.putBoolean(TAG_IS_FILLED, isFilled);
         tag.putDouble(TAG_TEMPERATURE, temperature);
         tag.putInt(TAG_AVAILABLE_PORTIONS, availablePortions);
-        CodecHelper.save(tag, TAG_MIXER, IngredientMixer.CODEC, mixer);
+        NBTComponents.MIXER.write(tag, mixer);
     }
 
     @Override
@@ -204,7 +206,7 @@ public class GlassCauldronEntity extends BlockEntity {
         this.isFilled = tag.getBoolean(TAG_IS_FILLED);
         this.temperature = tag.getDouble(TAG_TEMPERATURE);
         this.availablePortions = tag.getInt(TAG_AVAILABLE_PORTIONS);
-        this.mixer = CodecHelper.load(tag, TAG_MIXER, IngredientMixer.CODEC, mixer);
+        NBTComponents.MIXER.read(tag).ifPresent(this::setMixer);
     }
 
     private void updateClients() {

@@ -1,5 +1,8 @@
 package dev.obscuria.elixirum;
 
+import dev.obscuria.elixirum.api.events.AlchemyEvents;
+import dev.obscuria.elixirum.api.events.MasteryListener;
+import dev.obscuria.elixirum.common.events._CommonMasteryListener;
 import dev.obscuria.elixirum.common.network.*;
 import dev.obscuria.elixirum.server.alchemy.AlchemyCodex;
 import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
@@ -13,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -30,6 +34,7 @@ public final class ArsElixirum {
     public static final TagKey<Item> IGNORED_ITEMS;
     public static final TagKey<Item> POTION_SHELF_PLACEABLE_ITEMS;
     public static final TagKey<Block> HEAT_SOURCE_BLOCKS;
+    public static final RandomSource SHARED_RANDOM = RandomSource.create();
 
     public static ResourceLocation identifier(String name) {
         return new ResourceLocation(MODID, name);
@@ -50,6 +55,7 @@ public final class ArsElixirum {
                 .register(MODID);
 
         registerPayloads();
+        registerEvents();
     }
 
     private static void registerPayloads() {
@@ -101,6 +107,10 @@ public final class ArsElixirum {
                 ServerboundSetChromaRequest::encode,
                 ServerboundSetChromaRequest::decode,
                 ServerboundSetChromaRequest::handle);
+    }
+
+    private static void registerEvents() {
+        AlchemyEvents.register(MasteryListener.class, new _CommonMasteryListener());
     }
 
     private static void onServerStart(MinecraftServer server) {

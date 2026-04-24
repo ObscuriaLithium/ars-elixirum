@@ -59,7 +59,7 @@ public record ClientEffectsTooltip(
         var result = new ArrayList<ChartElement>();
         var sideEffectWeight = 0f;
 
-        for (var provider : effects.providers()) {
+        for (var provider : effects.effects()) {
             if (provider.isVoided()) {
                 sideEffectWeight += provider.quality();
             } else {
@@ -79,7 +79,7 @@ public record ClientEffectsTooltip(
         var sideEffectCount = 0;
         var sideEffectWeight = 0f;
 
-        for (var provider : effects.providers()) {
+        for (var provider : effects.effects()) {
             if (provider.isVoided()) {
                 sideEffectCount += 1;
                 sideEffectWeight += provider.quality();

@@ -1,9 +1,9 @@
 package dev.obscuria.elixirum.common.alchemy;
 
-import dev.obscuria.elixirum.ArsElixirumHelper;
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
+import lombok.Getter;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -22,27 +22,16 @@ public enum ElixirQuality implements StringRepresentable {
     SUPREME(Rarity.RARE, false),
     LEGENDARY(Rarity.EPIC, true);
 
-    public final Rarity rarity;
-    public final boolean isFoil;
+    @Getter private final Rarity rarity;
+    @Getter private final boolean isFoil;
+    @Getter private final Component displayName;
+    @Getter private final Component assessment;
 
     ElixirQuality(Rarity rarity, boolean isFoil) {
         this.rarity = rarity;
         this.isFoil = isFoil;
-    }
-
-    public static Component makeElixirName(ItemStack stack, Component stackName) {
-        var contents = ArsElixirumHelper.getElixirContents(stack);
-        var quality = ElixirQuality.of(contents);
-        if (quality == MIXTURE) return Component.literal("Suspicious Mixture");
-        return Component.translatable(
-                "elixirum.elixir_name_format",
-                quality.displayName(),
-                stackName,
-                contents.displayName());
-    }
-
-    public Component displayName() {
-        return Component.translatable("elixirum.quality.%s".formatted(getSerializedName()));
+        this.displayName = Component.translatable("quality.elixirum." + getSerializedName());
+        this.assessment = Component.translatable("assessment.elixirum." + getSerializedName());
     }
 
     @Override
@@ -50,12 +39,23 @@ public enum ElixirQuality implements StringRepresentable {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    public static ElixirQuality of(ItemStack stack) {
-        return of(ArsElixirumHelper.getElixirContents(stack));
+    public static ElixirQuality fromStack(ItemStack stack) {
+        return fromContents(ContentsHelper.elixir(stack));
     }
 
-    public static ElixirQuality of(ElixirContents effects) {
+    public static ElixirQuality fromContents(ElixirContents effects) {
         if (effects.isVoided()) return MIXTURE;
-        return values()[Mth.clamp((int) Math.round(effects.quality()) / 10, 1, 9)];
+        var index = (int) (Math.round(effects.quality()) / 10) - 1;
+        return switch (index) {
+            case 0 -> PALE;
+            case 1 -> CLOUDY;
+            case 2 -> WEAK;
+            case 3 -> MINOR;
+            case 4 -> MODERATE;
+            case 5 -> GRAND;
+            case 6 -> INTENSE;
+            case 7 -> SUPREME;
+            default -> LEGENDARY;
+        };
     }
 }

@@ -59,7 +59,7 @@ public class BubbleParticleOptions extends DustParticleOptionsBase {
 
     static {
         CODEC = RecordCodecBuilder.create(codec -> codec.group(
-                ExtraCodecs.VECTOR3F.fieldOf("color").forGetter(BubbleParticleOptions::getColor),
+                ExtraCodecs.VECTOR3F.fieldOf("iconColor").forGetter(BubbleParticleOptions::getColor),
                 Codec.FLOAT.fieldOf("scale").forGetter(BubbleParticleOptions::getScale)
         ).apply(codec, BubbleParticleOptions::new));
     }

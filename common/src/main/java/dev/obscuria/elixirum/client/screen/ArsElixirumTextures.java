@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 public interface ArsElixirumTextures {
 
     ResourceLocation PANEL_SHEET = ArsElixirum.identifier("textures/gui/panel_sheet.png");
+    ResourceLocation ATLAS_DECORATIONS = ArsElixirum.identifier("textures/gui/atlas/decorations.png");
 
     Texture PANEL = Texture.nineSliced(PANEL_SHEET, 128, 128, 32, 0, 0);
 
@@ -25,6 +26,9 @@ public interface ArsElixirumTextures {
     Texture OUTLINE_DARK = Texture.nineSliced(PANEL_SHEET, 62, 62, 6, 193, 129);
     Texture OUTLINE_PURPLE = Texture.nineSliced(PANEL_SHEET, 62, 62, 6, 129, 193);
     Texture OUTLINE_WHITE = Texture.nineSliced(PANEL_SHEET, 62, 62, 6, 193, 193);
+
+    Texture DECORATION_PANEL_OUTLINE = Texture.nineSliced(ATLAS_DECORATIONS, 32, 32, 6, 0, 0);
+    Texture DECORATION_PANEL_SOLID = Texture.nineSliced(ATLAS_DECORATIONS, 32, 32, 6, 32, 0);
 
     Texture BUTTON_GRAY = Texture.nineSliced(PANEL_SHEET, 30, 30, 6, 1, 129);
     Texture BUTTON_GREEN = Texture.nineSliced(PANEL_SHEET, 30, 30, 6, 33, 129);

@@ -1,16 +1,20 @@
 package dev.obscuria.elixirum.common.registry;
 
 import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.ArsElixirumHelper;
-import dev.obscuria.elixirum.api.Alchemy;
+import dev.obscuria.elixirum.api.codex.Alchemy;
+import dev.obscuria.elixirum.common.alchemy.traits.Form;
 import dev.obscuria.elixirum.common.alchemy.basics.*;
-import dev.obscuria.elixirum.common.alchemy.style.Cap;
-import dev.obscuria.elixirum.common.alchemy.style.Chroma;
-import dev.obscuria.elixirum.common.alchemy.style.Shape;
-import dev.obscuria.elixirum.common.alchemy.style.StyleVariant;
+import dev.obscuria.elixirum.common.alchemy.traits.Focus;
+import dev.obscuria.elixirum.common.alchemy.traits.Risk;
+import dev.obscuria.elixirum.common.alchemy.styles.Cap;
+import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
+import dev.obscuria.elixirum.common.alchemy.styles.Shape;
+import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.helpers.StyleHelper;
+import dev.obscuria.fragmentum.registry.DeferredItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.*;
 import net.minecraft.world.item.ItemStack;
@@ -21,12 +25,29 @@ import java.util.function.Supplier;
 public enum ElixirumCreativeTabs {
 
     GENERAL("general", Icons::general, Contents::general),
-    ELIXIRS("elixirs", Icons::elixirs, Contents::elixirs);
-    //SPLASH_ELIXIRS("splash_elixirs", Icons::elixirs, Contents::elixirs),
-    //LINGERING_ELIXIRS("lingering_elixirs", Icons::elixirs, Contents::elixirs),
-    //ETERNAL_RECIPES("eternal_recipes", Icons::elixirs, Contents::elixirs),
-    //FORBIDDEN_RECIPES("forbidden_recipes", Icons::elixirs, Contents::elixirs),
-    //CUSTOM("custom", Icons::elixirs, Contents::elixirs);
+    ELIXIRS("elixirs", Icons::elixir,
+            (parameters, output) -> Contents.generate(output,
+                    ElixirumItems.ELIXIR,
+                    Form.POTABLE,
+                    StyleVariant.ELIXIR)),
+    SPLASH_ELIXIRS("splash_elixirs", Icons::splashElixir,
+            (parameters, output) -> Contents.generate(output,
+                    ElixirumItems.ELIXIR,
+                    Form.EXPLOSIVE,
+                    StyleVariant.SPLASH_ELIXIR)),
+    LINGERING_ELIXIRS("lingering_elixirs", Icons::lingeringElixir,
+            (parameters, output) -> Contents.generate(output,
+                    ElixirumItems.ELIXIR,
+                    Form.LINGERING,
+                    StyleVariant.LINGERING_ELIXIR)),
+    TOTEMS("totems", Icons::totem,
+            (parameters, output) -> Contents.generate(output,
+                    ElixirumItems.WITCH_TOTEM_OF_UNDYING,
+                    Form.POTABLE,
+                    StyleVariant.DEFAULT));
+
+    private static final double[] WEIGHTS = {50.0, 75.0, 100.0};
+    private static final Focus[] FOCUSES = {Focus.MAX_DURATION, Focus.BALANCED, Focus.MAX_POTENCY};
 
     ElixirumCreativeTabs(String key, Supplier<ItemStack> icon, DisplayItemsGenerator contents) {
         ElixirumRegistries.REGISTRAR.register(Registries.CREATIVE_MODE_TAB, ArsElixirum.identifier(key), () -> CreativeModeTab
@@ -39,15 +60,33 @@ public enum ElixirumCreativeTabs {
 
     interface Icons {
 
-        static ItemStack elixirs() {
+        static ItemStack general() {
+            return ElixirumItems.ALCHEMIST_EYE.get().getDefaultInstance();
+        }
+
+        static ItemStack elixir() {
+            return styledElixir(new StyleVariant(Cap.FORGED, Shape.FLASK_2));
+        }
+
+        static ItemStack splashElixir() {
+            return styledElixir(new StyleVariant(Cap.LID, Shape.FLASK_2));
+        }
+
+        static ItemStack lingeringElixir() {
+            return styledElixir(new StyleVariant(Cap.CROWN, Shape.FLASK_2));
+        }
+
+        static ItemStack styledElixir(StyleVariant style) {
             var stack = ElixirumItems.ELIXIR.get().getDefaultInstance();
-            ArsElixirumHelper.setStyle(stack, new StyleVariant(Cap.FORGED, Shape.FLASK_2));
-            ArsElixirumHelper.setChroma(stack, Chroma.AURORA);
+            StyleHelper.setStyle(stack, style);
+            StyleHelper.setChroma(stack, Chroma.AURORA);
             return stack;
         }
 
-        static ItemStack general() {
-            return ElixirumItems.ALCHEMIST_EYE.get().getDefaultInstance();
+        static ItemStack totem() {
+            var stack = ElixirumItems.WITCH_TOTEM_OF_UNDYING.get().getDefaultInstance();
+            StyleHelper.setChroma(stack, Chroma.AURORA);
+            return stack;
         }
     }
 
@@ -61,25 +100,32 @@ public enum ElixirumCreativeTabs {
             output.accept(ElixirumItems.MUSIC_DISC_WUNSCHPUNSCH);
         }
 
-        static void elixirs(ItemDisplayParameters params, Output output) {
-            for (var key : Alchemy.guess().essences().asMapView().keySet()) {
-                output.accept(createElixir(key, 50.0, Temper.MAX_AMPLIFIER));
-                output.accept(createElixir(key, 75.0, Temper.MAX_AMPLIFIER));
-                output.accept(createElixir(key, 100.0, Temper.MAX_AMPLIFIER));
-                output.accept(createElixir(key, 50.0, Temper.BALANCED));
-                output.accept(createElixir(key, 75.0, Temper.BALANCED));
-                output.accept(createElixir(key, 100.0, Temper.BALANCED));
-                output.accept(createElixir(key, 50.0, Temper.MAX_DURATION));
-                output.accept(createElixir(key, 75.0, Temper.MAX_DURATION));
-                output.accept(createElixir(key, 100.0, Temper.MAX_DURATION));
-            }
+        static void generate(
+                Output output,
+                DeferredItem<?> item,
+                Form application,
+                StyleVariant style
+        ) {
+            Alchemy.guess().essences().forEachHolder(essence -> {
+                for (var focus : FOCUSES)
+                    for (var weight : WEIGHTS)
+                        output.accept(create(item, essence, weight, focus, application, style));
+            });
         }
 
-        private static ItemStack createElixir(ResourceLocation key, double weight, Temper temper) {
-            final var stack = ElixirumItems.ELIXIR.get().getDefaultInstance();
-            final var effect = new EffectProvider.Packed(EssenceHolder.getOrCreate(key), weight, temper.value);
-            ArsElixirumHelper.setElixirContents(stack, ElixirContents.sorted(List.of(effect)));
-            ArsElixirumHelper.setStyle(stack, new StyleVariant(Cap.DEFAULT, Shape.FLASK_2));
+        private static ItemStack create(
+                DeferredItem<?> item,
+                EssenceHolder essence,
+                double weight,
+                Focus focus,
+                Form application,
+                StyleVariant style
+        ) {
+            var stack = item.instantiate();
+            var effect = new EffectProvider.Packed(essence, weight, focus.value);
+            var contents = ElixirContents.create(List.of(effect), application, Risk.BALANCED, focus);
+            ContentsHelper.setElixir(stack, contents);
+            StyleHelper.setStyle(stack, style);
             return stack;
         }
     }

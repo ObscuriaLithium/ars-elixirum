@@ -36,7 +36,7 @@ public abstract class AbstractPage extends Screen {
     public static final ARGB COLOR_GRADIENT_BOTTOM = Colors.argbOf(0xff2e2029);
     public static final Music BACKGROUND_MUSIC;
 
-    public static PageKind lastKind = PageKind.RECENT;
+    public static PageKind lastKind = PageKind.RECENTLY_BREWED;
     public static @Nullable Supplier<List<FormattedCharSequence>> tooltipProvider;
     public static @Nullable ItemStack tooltipStack;
     public static @Nullable Tooltip tooltip;

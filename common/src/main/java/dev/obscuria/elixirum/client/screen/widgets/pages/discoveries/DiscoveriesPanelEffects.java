@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.obscuria.elixirum.client.ArsElixirumPalette;
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
+import dev.obscuria.elixirum.client.screen.ElixirumUI;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
 import dev.obscuria.elixirum.client.screen.toolkit.ClickAction;
 import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
@@ -15,6 +16,7 @@ import dev.obscuria.elixirum.client.screen.toolkit.controls.HeaderControl;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.ParagraphControl;
 import dev.obscuria.elixirum.common.alchemy.basics.Essence;
+import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,23 +29,18 @@ import java.util.Comparator;
 
 class DiscoveriesPanelEffects extends PanelContainer {
 
-    private static final Component TITLE;
-
-    private final HeaderControl header;
-    private final ScrollContainer scroll;
-
     protected DiscoveriesPanelEffects(SelectionState<Essence> selection, int x, int y, int width, int height) {
         super(x, y, width, height);
-
-        this.header = setHeader(new HeaderControl(TITLE));
-        this.scroll = setBody(Util.make(new ScrollContainer(CommonComponents.EMPTY), scroll -> {
+        this.setHeader(new HeaderControl(ElixirumUI.DISCOVERIES_HEADER));
+        this.setBody(Util.make(new ScrollContainer(CommonComponents.EMPTY), scroll -> {
             var list = new ListContainer(0, 1, 0);
-            ClientAlchemy.INSTANCE.essences().asMapView().values().stream()
-                    .map(it -> new Entry(selection, it))
+            ClientAlchemy.INSTANCE.essences().streamHolders()
+                    .filter(EssenceHolder::isBound)
+                    .map(it -> new Entry(selection, it.get().orElseThrow()))
                     .sorted().forEach(list::addChild);
             scroll.addChild(list);
         }));
-        this.setFooter(ParagraphControl.panelFooter(Component.literal("Discovered potion effects and their essence sources.")));
+        this.setFooter(ParagraphControl.panelFooter(ElixirumUI.DISCOVERIES_FOOTER));
     }
 
     private static class Entry extends HierarchicalControl implements Comparable<Entry> {
@@ -55,11 +52,11 @@ class DiscoveriesPanelEffects extends PanelContainer {
         private Component summary = Component.empty();
 
         public Entry(SelectionState<Essence> selection, Essence essence) {
-            super(0, 0, 0, 0, essence.displayName());
+            super(0, 0, 0, 0, CommonComponents.EMPTY);
             this.selection = selection;
             this.essence = essence;
-            this.discovered = ClientAlchemy.INSTANCE.localProfile().knowledge().isExperienced(essence.effect().value());
             this.clickAction = ClickAction.leftClick(it -> selection.set(essence));
+            this.discovered = ClientAlchemy.localProfile().knownEffects().isKnown(essence.effect().value());
             this.setUpdateFlags(UPDATE_BY_WIDTH);
         }
 
@@ -100,12 +97,8 @@ class DiscoveriesPanelEffects extends PanelContainer {
         @Override
         public void reorganize() {
             var font = Minecraft.getInstance().font;
-            this.title = MultiLineLabel.create(font, !discovered
-                    ? Component.literal("Unknown Effect")
-                    : essence.displayName(), rect.width() - 10);
-            this.summary = essence.effect().value().getCategory() == MobEffectCategory.BENEFICIAL
-                    ? Component.literal("Beneficial")
-                    : Component.literal("Harmful");
+            this.title = MultiLineLabel.create(font, getDisplayName(), rect.width() - 10);
+            this.summary = getCategoryName(essence.effect().value().getCategory());
             this.rect.setHeight(Math.max(20, 2 + (int) Math.ceil(7.5f * title.getLineCount() - 1) + 8));
         }
 
@@ -137,9 +130,17 @@ class DiscoveriesPanelEffects extends PanelContainer {
         private String sortKey() {
             return essence.displayName().getString();
         }
-    }
 
-    static {
-        TITLE = Component.translatable("elixirum.screen.discoveries.recipes.title");
+        private Component getDisplayName() {
+            return discovered ? essence.displayName() : ElixirumUI.EFFECT_UNKNOWN;
+        }
+
+        private Component getCategoryName(MobEffectCategory category) {
+            return switch (category) {
+                case HARMFUL -> ElixirumUI.EFFECT_HARMFUL;
+                case BENEFICIAL -> ElixirumUI.EFFECT_BENEFICIAL;
+                default -> ElixirumUI.EFFECT_NEUTRAL;
+            };
+        }
     }
 }

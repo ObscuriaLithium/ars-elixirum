@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.common.network;
 
 import dev.obscuria.elixirum.client.ClientPayloadListener;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 

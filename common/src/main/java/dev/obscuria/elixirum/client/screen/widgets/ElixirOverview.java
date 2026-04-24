@@ -31,12 +31,12 @@ public class ElixirOverview extends AbstractWidget {
 
     public ElixirOverview(
             SelectionState<CachedElixir> selection,
-            Signal0 styleUpdated, int x, int y) {
-
+            Signal0 styleChanged, int x, int y
+    ) {
         super(x, y, 0, 0, CommonComponents.EMPTY);
         this.selection = selection;
         this.selection.listen(this, it -> onUpdate());
-        styleUpdated.connect(this, this::onUpdate);
+        styleChanged.connect(this, this::onUpdate);
     }
 
     @Override

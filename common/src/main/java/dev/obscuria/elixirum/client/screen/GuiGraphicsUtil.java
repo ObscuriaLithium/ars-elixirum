@@ -4,12 +4,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.obscuria.elixirum.client.screen.toolkit.Texture;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
 import dev.obscuria.fragmentum.util.color.ARGB;
+import dev.obscuria.fragmentum.util.color.RGB;
 import net.minecraft.client.gui.GuiGraphics;
 
 public interface GuiGraphicsUtil {
 
     static void setShaderColor(ARGB argb) {
         RenderSystem.setShaderColor(argb.red(), argb.green(), argb.blue(), argb.alpha());
+    }
+
+    static void setShaderColor(RGB rgb) {
+        RenderSystem.setShaderColor(rgb.red(), rgb.green(), rgb.blue(), 1f);
     }
 
     static void resetShaderColor() {

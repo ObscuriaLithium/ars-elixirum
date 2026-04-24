@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.server.alchemy.generation;
 
 import com.google.common.math.IntMath;
 import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.common.alchemy.AlchemyIngredientsData;
+import dev.obscuria.elixirum.server.alchemy.ServerAlchemyIngredients;
 import dev.obscuria.elixirum.server.alchemy.resources.PredefinedIngredient;
 import dev.obscuria.fragmentum.FragmentumProxy;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,32 +24,32 @@ public enum IngredientReconciler {
         this.action = action;
     }
 
-    public static void reconcile(AlchemyIngredientsData ingredients, Item item) {
+    public static void reconcile(ServerAlchemyIngredients ingredients, Item item) {
         for (var chain : values()) {
             if (chain.action.reconcile(ingredients, item)) return;
         }
     }
 
-    private static boolean skipIfExists(AlchemyIngredientsData ingredients, Item item) {
+    private static boolean skipIfExists(ServerAlchemyIngredients ingredients, Item item) {
         return ingredients.contains(item);
     }
 
-    private static boolean skipIfIgnored(AlchemyIngredientsData ingredients, Item item) {
+    private static boolean skipIfIgnored(ServerAlchemyIngredients ingredients, Item item) {
         return item.builtInRegistryHolder().is(ArsElixirum.IGNORED_ITEMS)
                 || item instanceof TieredItem
                 || item instanceof BlockItem
                 || item == Items.AIR;
     }
 
-    private static boolean generatePredefined(AlchemyIngredientsData ingredients, Item item) {
+    private static boolean generatePredefined(ServerAlchemyIngredients ingredients, Item item) {
         return PredefinedIngredient.findFor(item, FragmentumProxy.registryAccess()).map(it -> {
-            ingredients.put(item, it.resolve(item, randomFor(item)));
+            ingredients.register(item, it.resolve(item, randomFor(item)));
             return true;
         }).orElse(false);
     }
 
-    private static boolean generateRandom(AlchemyIngredientsData ingredients, Item item) {
-        ingredients.put(item, PredefinedIngredient.EMPTY.resolve(item, randomFor(item)));
+    private static boolean generateRandom(ServerAlchemyIngredients ingredients, Item item) {
+        ingredients.register(item, PredefinedIngredient.EMPTY.resolve(item, randomFor(item)));
         return true;
     }
 
@@ -62,6 +62,6 @@ public enum IngredientReconciler {
     @FunctionalInterface
     public interface Action {
 
-        boolean reconcile(AlchemyIngredientsData ingredients, Item item);
+        boolean reconcile(ServerAlchemyIngredients ingredients, Item item);
     }
 }

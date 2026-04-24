@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.alchemy.ingredient;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import dev.obscuria.elixirum.api.Alchemy;
+import dev.obscuria.elixirum.api.codex.Alchemy;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

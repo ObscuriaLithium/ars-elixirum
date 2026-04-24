@@ -1,8 +1,9 @@
 package dev.obscuria.elixirum.common.world.block;
 
 import com.google.common.collect.ImmutableList;
-import dev.obscuria.elixirum.ArsElixirumHelper;
-import dev.obscuria.elixirum.api.Alchemy;
+import dev.obscuria.elixirum.api.codex.Alchemy;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.helpers.StyleHelper;
 import dev.obscuria.elixirum.common.network.ClientboundElixirBrewedPayload;
 import dev.obscuria.elixirum.server.alchemy.ServerAlchemy;
 import dev.obscuria.elixirum.common.world.block.entity.GlassCauldronEntity;
@@ -91,16 +92,20 @@ public interface GlassCauldronInteraction {
             player.playSound(SoundEvents.BOTTLE_FILL, 1f, 1f);
             if (level instanceof ServerLevel serverLevel && !result.isEmpty()) {
                 stack.shrink(1);
+
                 var profile = ServerAlchemy.get(serverLevel.getServer()).profileOf(player);
-                profile.mastery().grandXp(recipe.uuid(), 1);
-                profile.statistics().brewed(recipe);
-                profile.collection().findConfig(recipe.uuid()).ifPresent(config -> {
-                    ArsElixirumHelper.setStyle(result, config.getStyle());
-                    ArsElixirumHelper.setChroma(result, config.getChroma());
+                profile.knownRecipes().update(recipe.getUuid(), ContentsHelper.elixir(result));
+                profile.knownIngredients().discoverAll(recipe);
+                profile.mastery().grantXp(profile, recipe.getUuid(), 1);
+                profile.recipeCollection().findConfig(recipe.getUuid()).ifPresent(config -> {
+                    StyleHelper.setStyleIfNotDefault(result, config.getStyle());
+                    StyleHelper.setChromaIfNotDefault(result, config.getChroma());
                 });
+
                 if (!player.addItem(result)) {
                     player.drop(result, false);
                 }
+
                 if (player instanceof ServerPlayer serverPlayer) {
                     FragmentumNetworking.sendTo(serverPlayer, new ClientboundElixirBrewedPayload(recipe));
                 }

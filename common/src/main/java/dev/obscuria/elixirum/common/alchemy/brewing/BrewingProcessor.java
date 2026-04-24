@@ -1,10 +1,12 @@
 package dev.obscuria.elixirum.common.alchemy.brewing;
 
-import dev.obscuria.elixirum.api.Alchemy;
+import dev.obscuria.elixirum.api.codex.Alchemy;
+import dev.obscuria.elixirum.common.alchemy.traits.Form;
 import dev.obscuria.elixirum.common.alchemy.basics.*;
 import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyIngredient;
-import dev.obscuria.elixirum.common.alchemy.ingredient.properties.CatalystProperties;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.traits.Focus;
+import dev.obscuria.elixirum.common.alchemy.traits.Risk;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,25 +33,20 @@ public final class BrewingProcessor {
         var weights = new HashMap<EssenceHolder, Double>(8);
         var contributors = new HashMap<EssenceHolder, Integer>(8);
 
-        appendEssences(weights, contributors, recipe.foundation());
-        appendEssences(weights, contributors, recipe.catalyst());
-        appendEssences(weights, contributors, recipe.stabilizer());
+        appendEssences(weights, contributors, recipe.getBase());
+        appendEssences(weights, contributors, recipe.getCatalyst());
+        appendEssences(weights, contributors, recipe.getInhibitor());
 
         if (weights.isEmpty()) {
             return ElixirContents.EMPTY;
         }
 
-        if (recipe.catalyst().isPresent()) {
-            CatalystProperties catalyst = recipe.catalyst().get().properties(alchemy).catalyst();
-            applyShifts(weights, catalyst);
-        }
-
-        if (recipe.stabilizer().isPresent()) {
-            Aspect stabilizerQ = recipe.stabilizer().get().properties(alchemy).aspect();
+        if (recipe.getInhibitor().isPresent()) {
+            Aspect stabilizerQ = recipe.getInhibitor().get().properties(alchemy).aspect();
             applyConcordance(weights, stabilizerQ);
         }
 
-        var temper = resolveTemper(recipe.foundation().orElse(null));
+        var temper = resolveTemper(recipe.getBase().orElse(null));
         var effects = new ArrayList<EffectProvider>(weights.size());
 
         for (var entry : weights.entrySet()) {
@@ -59,13 +56,21 @@ public final class BrewingProcessor {
 
             var count = contributors.getOrDefault(essence, 1);
             var effect = resolve(essence, weight, count, temper);
-
-            if (effect != null) {
-                effects.add(effect);
-            }
+            effects.add(effect);
         }
 
-        return ElixirContents.sorted(effects);
+        return ElixirContents.create(effects,
+                recipe.getCatalyst().map(this::resolveApplicationMethod).orElse(Form.POTABLE),
+                recipe.getInhibitor().map(this::resolveStability).orElse(Risk.BALANCED),
+                temper);
+    }
+
+    private Form resolveApplicationMethod(AlchemyIngredient ingredient) {
+        return ingredient.properties(alchemy).application();
+    }
+
+    private Risk resolveStability(AlchemyIngredient ingredient) {
+        return ingredient.properties(alchemy).risk();
     }
 
     private void appendEssences(
@@ -93,26 +98,9 @@ public final class BrewingProcessor {
         }
     }
 
-    private Temper resolveTemper(@Nullable AlchemyIngredient ingredient) {
-        if (ingredient == null) return Temper.BALANCED;
-        return ingredient.properties(alchemy).foundation().temper();
-    }
-
-    private void applyShifts(Map<EssenceHolder, Double> weights, CatalystProperties catalyst) {
-        var shifts = catalyst.aspectShifts();
-        if (shifts.isEmpty()) return;
-
-        for (AspectShift shift : shifts) {
-            Aspect q = shift.aspect();
-
-            for (var entry : weights.entrySet()) {
-                var essence = entry.getKey();
-
-                if (essence.aspect() == q) {
-                    entry.setValue(shift.apply(essence, entry.getValue()));
-                }
-            }
-        }
+    private Focus resolveTemper(@Nullable AlchemyIngredient ingredient) {
+        if (ingredient == null) return Focus.BALANCED;
+        return ingredient.properties(alchemy).focus();
     }
 
     private void applyConcordance(Map<EssenceHolder, Double> weights, Aspect stabilizer) {
@@ -123,16 +111,10 @@ public final class BrewingProcessor {
         }
     }
 
-    private EffectProvider resolve(EssenceHolder essence, double weight, int contributors, Temper temper) {
-        ManifestationTier tier = getManifestationTier(contributors);
-        double finalWeight = Math.round(tier.apply(weight) * 100.0) / 100.0;
-
-        if (!tier.isGuaranteed() && finalWeight < 0.1) {
-            //TODO
-            return null;
-        }
-
-        return new EffectProvider.Packed(essence, finalWeight, temper.value);
+    private EffectProvider resolve(EssenceHolder essence, double weight, int contributors, Focus focus) {
+        var tier = getManifestationTier(contributors);
+        var finalWeight = Math.round(tier.apply(weight) * 100.0) / 100.0;
+        return new EffectProvider.Packed(essence, finalWeight, focus.value);
     }
 
     private ManifestationTier getManifestationTier(int contributors) {

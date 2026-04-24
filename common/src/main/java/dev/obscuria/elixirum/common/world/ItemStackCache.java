@@ -1,11 +1,10 @@
 package dev.obscuria.elixirum.common.world;
 
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
-import dev.obscuria.elixirum.common.alchemy.basics.Essence;
 import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
 import dev.obscuria.elixirum.common.alchemy.basics.ExtractContents;
-import dev.obscuria.elixirum.common.alchemy.style.Chroma;
-import dev.obscuria.elixirum.common.alchemy.style.StyleVariant;
+import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
+import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;

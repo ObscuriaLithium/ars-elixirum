@@ -59,7 +59,7 @@ public class SplashParticleOptions extends DustParticleOptionsBase {
 
     static {
         CODEC = RecordCodecBuilder.create(codec -> codec.group(
-                ExtraCodecs.VECTOR3F.fieldOf("color").forGetter(SplashParticleOptions::getColor),
+                ExtraCodecs.VECTOR3F.fieldOf("iconColor").forGetter(SplashParticleOptions::getColor),
                 Codec.FLOAT.fieldOf("scale").forGetter(SplashParticleOptions::getScale)
         ).apply(codec, SplashParticleOptions::new));
     }

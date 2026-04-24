@@ -2,11 +2,11 @@ package dev.obscuria.elixirum.server.alchemy.brewing;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.api.Alchemy;
+import dev.obscuria.elixirum.api.codex.Alchemy;
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.brewing.BrewingProcessor;
 import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyIngredient;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import dev.obscuria.elixirum.common.world.block.entity.GlassCauldronEntity;
 import dev.obscuria.fragmentum.util.color.RGB;
 import lombok.Getter;

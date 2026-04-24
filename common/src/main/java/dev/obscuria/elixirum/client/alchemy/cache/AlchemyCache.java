@@ -1,42 +1,59 @@
 package dev.obscuria.elixirum.client.alchemy.cache;
 
-import dev.obscuria.elixirum.ArsElixirumHelper;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
 import dev.obscuria.elixirum.common.alchemy.brewing.BrewingProcessor;
-import dev.obscuria.elixirum.common.alchemy.profiles.ConfiguredRecipe;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.ConfiguredRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.helpers.StyleHelper;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.time.Duration;
 
 public final class AlchemyCache {
 
-    private static final Map<UUID, ConfiguredRecipe> configuredRecipes = new HashMap<>();
-    private static final Map<UUID, CachedElixir> cachedElixirs = new HashMap<>();
+    private static final LoadingCache<AlchemyRecipe, ConfiguredRecipe> CONFIGURED_RECIPES;
+    private static final LoadingCache<AlchemyRecipe, CachedElixir> CACHED_ELIXIRS;
 
     public static ConfiguredRecipe configuredRecipeOf(AlchemyRecipe recipe) {
-        return configuredRecipes.computeIfAbsent(recipe.uuid(), key ->
-                ClientAlchemy.INSTANCE.localProfile()
-                        .collection().findConfig(recipe.uuid())
-                        .orElseGet(recipe::save));
+        return CONFIGURED_RECIPES.getUnchecked(recipe);
     }
 
     public static CachedElixir cachedElixirOf(AlchemyRecipe recipe) {
-        return cachedElixirs.computeIfAbsent(recipe.uuid(), key -> {
-            var configured = configuredRecipeOf(recipe);
-            var stack = ElixirumItems.ELIXIR.instantiate();
-            var processor = new BrewingProcessor(ClientAlchemy.INSTANCE, recipe);
-            ArsElixirumHelper.setElixirContents(stack, processor.brew());
-            ArsElixirumHelper.setStyle(stack, configured.getStyle());
-            ArsElixirumHelper.setChroma(stack, configured.getChroma());
-            return new CachedElixir(stack, configured);
-        });
+        return CACHED_ELIXIRS.getUnchecked(recipe);
     }
 
-    public static void clear() {
-        configuredRecipes.clear();
-        cachedElixirs.clear();
+    static {
+        CONFIGURED_RECIPES = CacheBuilder.newBuilder()
+                .concurrencyLevel(1)
+                .expireAfterAccess(Duration.ofMinutes(20))
+                .build(new CacheLoader<>() {
+
+                    @Override
+                    public ConfiguredRecipe load(AlchemyRecipe recipe) {
+                        return ClientAlchemy.localProfile().recipeCollection()
+                                .findConfig(recipe.getUuid())
+                                .orElseGet(recipe::configure);
+                    }
+                });
+        CACHED_ELIXIRS = CacheBuilder.newBuilder()
+                .concurrencyLevel(1)
+                .expireAfterAccess(Duration.ofMinutes(20))
+                .build(new CacheLoader<>() {
+
+                    @Override
+                    public CachedElixir load(AlchemyRecipe recipe) {
+                        var configured = configuredRecipeOf(recipe);
+                        var stack = ElixirumItems.ELIXIR.instantiate();
+                        var processor = new BrewingProcessor(ClientAlchemy.INSTANCE, recipe);
+                        ContentsHelper.setElixir(stack, processor.brew());
+                        StyleHelper.setStyle(stack, configured.getStyle());
+                        StyleHelper.setChroma(stack, configured.getChroma());
+                        return new CachedElixir(stack, configured);
+                    }
+                });
     }
 }

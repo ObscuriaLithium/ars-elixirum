@@ -6,9 +6,8 @@ import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
 import dev.obscuria.elixirum.client.screen.widgets.pages.AbstractPage;
+import dev.obscuria.elixirum.helpers.MasteryHelper;
 import dev.obscuria.fragmentum.util.color.Colors;
-import dev.obscuria.fragmentum.world.tooltip.TooltipOptions;
-import dev.obscuria.fragmentum.world.tooltip.Tooltips;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -20,9 +19,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MasteryProgress extends AbstractWidget {
 
@@ -42,9 +38,9 @@ public class MasteryProgress extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        int level = ClientAlchemy.INSTANCE.localProfile().mastery().masteryLevel().get();
-        int total = ClientAlchemy.INSTANCE.localProfile().mastery().xpForNextLevel();
-        int current = ClientAlchemy.INSTANCE.localProfile().mastery().masteryXp().get();
+        int level = ClientAlchemy.localProfile().mastery().getLevel();
+        int current = ClientAlchemy.localProfile().mastery().getXp();
+        int total = MasteryHelper.calculateXpForLevel(level + 1);
         double ratio = (double) current / total;
 
         GuiGraphicsUtil.setShaderColor(Colors.argbOf(0x40384A));
@@ -71,20 +67,6 @@ public class MasteryProgress extends AbstractWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput output) {}
-
-    private List<Component> getCustomTooltip() {
-        List<Component> tooltip = new ArrayList<>();
-        tooltip.add(Component.translatable("gui.elixirum.progress.title"));
-
-        Component description = Component.translatable(
-                "gui.elixirum.progress",
-                0, //ClientAlchemy.localProfile().knowledge.totalKnownEssences,
-                0, //ClientAlchemy.ingredients().totalEssences,
-                0);//ClientAlchemy.ingredients().totalIngredients);
-
-        tooltip.addAll(Tooltips.process(description, TooltipOptions.DESCRIPTION));
-        return tooltip;
-    }
 
     private static final ResourceLocation MASTERY = ArsElixirum.identifier("textures/gui/mastery.png");
     private static final ResourceLocation PROGRESS_BAR = ArsElixirum.identifier("textures/gui/progress_bar.png");

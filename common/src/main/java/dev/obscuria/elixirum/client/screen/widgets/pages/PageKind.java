@@ -3,7 +3,7 @@ package dev.obscuria.elixirum.client.screen.widgets.pages;
 import dev.obscuria.elixirum.ArsElixirum;
 import dev.obscuria.elixirum.client.screen.widgets.pages.collection.CollectionPage;
 import dev.obscuria.elixirum.client.screen.widgets.pages.discoveries.DiscoveriesPage;
-import dev.obscuria.elixirum.client.screen.widgets.pages.recent.RecentPage;
+import dev.obscuria.elixirum.client.screen.widgets.pages.recent.RecentlyBrewedPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.function.Supplier;
 
 public enum PageKind implements StringRepresentable {
-    RECENT(GLFW.GLFW_KEY_1, RecentPage::new),
+    RECENTLY_BREWED(GLFW.GLFW_KEY_1, RecentlyBrewedPage::new),
     COLLECTION(GLFW.GLFW_KEY_2, CollectionPage::new),
     DISCOVERIES(GLFW.GLFW_KEY_3, DiscoveriesPage::new),
     //BOOKS(GLFW.GLFW_KEY_3, BooksPage::new),

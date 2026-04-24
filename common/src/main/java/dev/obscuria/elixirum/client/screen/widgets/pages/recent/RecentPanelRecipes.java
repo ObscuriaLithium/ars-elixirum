@@ -15,34 +15,32 @@ import net.minecraft.network.chat.Component;
 
 class RecentPanelRecipes extends PanelContainer {
 
-    private static final Component TITLE;
-    private static final Component PLACEHOLDER;
-
-    private final HeaderControl header;
-    private final ScrollContainer scroll;
+    private static final Component HEADER_TEXT;
+    private static final Component BODY_TEXT;
+    private static final Component FOOTER_TEXT;
 
     protected RecentPanelRecipes(SelectionState<CachedElixir> selection, int x, int y, int width, int height) {
         super(x, y, width, height);
-
-        this.header = setHeader(new HeaderControl(TITLE));
-        this.scroll = setBody(Util.make(new ScrollContainer(PLACEHOLDER), scroll -> {
-            final var list = new ListContainer(0, 1, 0);
-            final var container = new GridContainer(1);
+        this.setHeader(new HeaderControl(HEADER_TEXT));
+        this.setBody(Util.make(new ScrollContainer(BODY_TEXT), scroll -> {
+            var list = new ListContainer(0, 1, 0);
+            var container = new GridContainer(1);
             for (var recent : ClientAlchemy.INSTANCE.recentlyBrewed) {
-                final var widget = new RecentElixirWidget(selection, recent);
+                var widget = new RecentElixirWidget(selection, recent);
                 widget.makeStackClickAction(selection::set);
                 container.addChild(widget);
             }
             list.addChild(container);
             scroll.addChild(list);
         }));
-        this.setFooter(ParagraphControl.panelFooter(Component.literal("All unsaved recipes will be lost upon leaving the world!")));
+        this.setFooter(ParagraphControl.panelFooter(FOOTER_TEXT));
     }
 
     static {
-        TITLE = Component.translatable("elixirum.screen.recent.recipes.title");
-        PLACEHOLDER = Component.translatable("elixirum.screen.recent.recipes.placeholder",
+        HEADER_TEXT = Component.translatable("ui.elixirum.recently_brewed.header");
+        BODY_TEXT = Component.translatable("ui.elixirum.recently_brewed.body",
                 Component.translatable("block.elixirum.glass_cauldron").withStyle(ChatFormatting.GOLD),
-                Component.translatable("elixirum.screen.compendium.title").withStyle(ChatFormatting.GOLD));
+                Component.translatable("ui.elixirum.compendium.header").withStyle(ChatFormatting.GOLD));
+        FOOTER_TEXT = Component.translatable("ui.elixirum.recently_brewed.footer");
     }
 }

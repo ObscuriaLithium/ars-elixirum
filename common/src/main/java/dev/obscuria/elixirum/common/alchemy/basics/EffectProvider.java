@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.alchemy.basics;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.ArsElixirumHelper;
+import dev.obscuria.elixirum.helpers.EffectHelper;
 import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
 import dev.obscuria.fragmentum.registry.BootstrapContext;
 import dev.obscuria.fragmentum.util.color.Colors;
@@ -33,13 +33,17 @@ public interface EffectProvider extends Comparable<EffectProvider> {
 
     EffectProvider splitBy(int amount);
 
+    EffectProvider scale(double factor);
+
+    EffectProvider withWeight(double weight);
+
     MobEffectInstance instantiate(double mastery, double immunity);
 
     default MobEffect mobEffect() {
         return holder().map(Essence::effect).map(Holder::value).orElse(MobEffects.UNLUCK);
     }
 
-    default boolean isInstantaneous() {
+    default boolean isInstant() {
         return mobEffect().isInstantenous();
     }
 
@@ -85,7 +89,7 @@ public interface EffectProvider extends Comparable<EffectProvider> {
     record Packed(
             EssenceHolder holder,
             double weight,
-            double temper
+            double focus
     ) implements EffectProvider {
 
         public static final Codec<Packed> CODEC;
@@ -102,17 +106,27 @@ public interface EffectProvider extends Comparable<EffectProvider> {
 
         @Override
         public int amplifier() {
-            return holder.map(it -> it.unpackAmplifier(weight * ArsElixirumHelper.amplifierFactor(temper))).orElse(0);
+            return holder.map(it -> it.unpackAmplifier(weight * EffectHelper.amplifierFactor(focus))).orElse(0);
         }
 
         @Override
         public int duration() {
-            return holder.map(it -> it.unpackDuration(weight * ArsElixirumHelper.durationFactor(temper))).orElse(0);
+            return holder.map(it -> it.unpackDuration(weight * EffectHelper.durationFactor(focus))).orElse(0);
         }
 
         @Override
         public EffectProvider splitBy(int amount) {
-            return new Packed(holder, weight * (1.0 / amount), temper);
+            return new Packed(holder, weight * (1.0 / amount), focus);
+        }
+
+        @Override
+        public EffectProvider scale(double factor) {
+            return new Packed(holder, weight * factor, focus);
+        }
+
+        @Override
+        public EffectProvider withWeight(double weight) {
+            return new Packed(holder, weight, focus);
         }
 
         @Override
@@ -129,7 +143,7 @@ public interface EffectProvider extends Comparable<EffectProvider> {
             CODEC = RecordCodecBuilder.create(codec -> codec.group(
                     EssenceHolder.CODEC.fieldOf("essence").forGetter(Packed::holder),
                     Codec.DOUBLE.fieldOf("weight").forGetter(Packed::weight),
-                    Codec.DOUBLE.fieldOf("temper").forGetter(Packed::temper)
+                    Codec.DOUBLE.fieldOf("focus").forGetter(Packed::focus)
             ).apply(codec, Packed::new));
         }
     }
@@ -159,6 +173,16 @@ public interface EffectProvider extends Comparable<EffectProvider> {
             final var newAmplifier = amplifier * (1.0 / amount);
             final var newDuration = duration * (1.0 / amount);
             return new Direct(holder, (int) newAmplifier, (int) newDuration);
+        }
+
+        @Override
+        public EffectProvider scale(double factor) {
+            return new Direct(holder, amplifier, (int) Math.ceil(duration * factor));
+        }
+
+        @Override
+        public EffectProvider withWeight(double weight) {
+            return new Direct(holder, amplifier, holder.map(it -> it.unpackDuration(weight)).orElse(0));
         }
 
         @Override

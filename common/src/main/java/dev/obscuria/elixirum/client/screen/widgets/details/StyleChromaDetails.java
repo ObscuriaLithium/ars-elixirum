@@ -1,14 +1,15 @@
 package dev.obscuria.elixirum.client.screen.widgets.details;
 
 import dev.obscuria.elixirum.client.alchemy.cache.CachedElixir;
-import dev.obscuria.elixirum.client.screen.widgets.StylePicker;
+import dev.obscuria.elixirum.client.screen.ElixirumUI;
+import dev.obscuria.elixirum.client.screen.widgets.style.ChromaStyleAdapter;
+import dev.obscuria.elixirum.client.screen.widgets.style.StylePicker;
 import dev.obscuria.fragmentum.util.signal.Signal0;
-import net.minecraft.network.chat.Component;
 
 public class StyleChromaDetails extends AbstractDetails {
 
-    public StyleChromaDetails(Signal0 updated, CachedElixir elixir) {
-        super(Component.literal("Chroma"));
-        this.addChild(new StylePicker.OfChroma(updated, elixir));
+    public StyleChromaDetails(CachedElixir elixir, Signal0 changed) {
+        super(ElixirumUI.STYLE_CHROMA);
+        this.addChild(new StylePicker<>(ChromaStyleAdapter.SHARED, elixir, changed));
     }
 }

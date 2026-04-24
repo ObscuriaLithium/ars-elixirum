@@ -11,27 +11,25 @@ public final class ServerPayloadListener {
 
     public static void handle(ServerPlayer player, ServerboundRecipeSaveRequest request) {
         if (player.getServer() == null) return;
-        ServerAlchemy.get(player.getServer())
-                .profileOf(player).collection().saveRecipe(request.recipe());
+        var profile = ServerAlchemy.get(player.getServer()).profileOf(player);
+        profile.recipeCollection().save(request.configuredRecipe());
     }
 
     public static void handle(ServerPlayer player, ServerboundRecipeRemoveRequest request) {
         if (player.getServer() == null) return;
-        ServerAlchemy.get(player.getServer())
-                .profileOf(player).collection().removeRecipe(request.recipe());
+        var profile = ServerAlchemy.get(player.getServer()).profileOf(player);
+        profile.recipeCollection().remove(request.recipeUid());
     }
 
     public static void handle(ServerPlayer player, ServerboundSetStyleRequest request) {
         if (player.getServer() == null) return;
-        ServerAlchemy.get(player.getServer())
-                .profileOf(player).collection().findConfig(request.recipe())
-                .ifPresent(config -> config.setStyle(request.style()));
+        var profile = ServerAlchemy.get(player.getServer()).profileOf(player);
+        profile.recipeCollection().setStyle(request.recipeUid(), request.style());
     }
 
     public static void handle(ServerPlayer player, ServerboundSetChromaRequest request) {
         if (player.getServer() == null) return;
-        ServerAlchemy.get(player.getServer())
-                .profileOf(player).collection().findConfig(request.recipe())
-                .ifPresent(config -> config.chroma().set(request.chroma()));
+        var profile = ServerAlchemy.get(player.getServer()).profileOf(player);
+        profile.recipeCollection().setChroma(request.recipeUid(), request.chroma());
     }
 }

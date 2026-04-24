@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 public enum Aspect implements StringRepresentable {
@@ -28,6 +29,7 @@ public enum Aspect implements StringRepresentable {
     FORTUNA(ElixirumAttributes.FORTUNA_MASTERY, ElixirumAttributes.FORTUNA_RESISTANCE),    // (🍀Fateful) – luck, chance
     TENEBRAE(ElixirumAttributes.TENEBRAE_MASTERY, ElixirumAttributes.TENEBRAE_RESISTANCE); // (🕸Dark) – hidden, otherworldly forces
 
+    public static final Aspect[] VALID_VALUES;
     public static final Codec<Aspect> CODEC = StringRepresentable.fromEnum(Aspect::values);
     public final TagKey<Item> itemTag = createTag(Registries.ITEM);
     public final TagKey<MobEffect> effectTag = createTag(Registries.MOB_EFFECT);
@@ -48,6 +50,14 @@ public enum Aspect implements StringRepresentable {
         return Aspect.TENEBRAE;
     }
 
+    public boolean isNone() {
+        return this == NONE;
+    }
+
+    public boolean isValid() {
+        return this != NONE;
+    }
+
     @Override
     public String getSerializedName() {
         return this.name().toLowerCase(Locale.ROOT);
@@ -60,5 +70,9 @@ public enum Aspect implements StringRepresentable {
 
     private ResourceLocation resolveTexture() {
         return ArsElixirum.identifier("textures/gui/aspect/%s.png".formatted(getSerializedName()));
+    }
+
+    static {
+        VALID_VALUES = Arrays.stream(values()).filter(Aspect::isValid).toArray(Aspect[]::new);
     }
 }

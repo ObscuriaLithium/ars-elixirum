@@ -1,40 +1,61 @@
 package dev.obscuria.elixirum.client.screen.widgets.details;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.obscuria.elixirum.ArsElixirumHelper;
 import dev.obscuria.elixirum.client.ArsElixirumPalette;
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
 import dev.obscuria.elixirum.client.alchemy.cache.CachedElixir;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
+import dev.obscuria.elixirum.client.screen.ElixirumUI;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
 import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
-import dev.obscuria.fragmentum.util.color.ARGB;
-import dev.obscuria.fragmentum.util.color.Colors;
+import dev.obscuria.elixirum.common.alchemy.codex.components.KnownRecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-import static net.minecraft.network.chat.Component.literal;
+import java.util.Optional;
 
 public class ScoreDetails extends AbstractDetails {
 
     private boolean backgroundFlag = true;
 
     public ScoreDetails(CachedElixir elixir) {
-        super(literal("Score"));
-        this.addChild(new Entry(literal("Best Quality"), literal("" + (int) ArsElixirumHelper.getElixirContents(elixir.get()).quality())));
-        this.addChild(new Entry(literal("Times Brewed"), literal("" + ClientAlchemy.INSTANCE.localProfile().statistics().getTimesBrewed(elixir.recipe()))));
-        this.addChild(new Entry(literal("Fabled Instances"), literal("0")));
-        //this.addChild(new Entry(literal("Arcane Instances"), literal("0")));
-        //this.addChild(new Entry(literal("Timeless Instances"), literal("0")));
-        //this.addChild(new Entry(literal("Fierce Instances"), literal("0")));
+        super(ElixirumUI.DETAILS_SCORE);
+        var entry = findEntry(elixir);
+        this.addChild(new Entry(ElixirumUI.SCORE_BEST_QUALITY,
+                entry.map(this::bestQuality).orElseGet(this::zero)));
+        this.addChild(new Entry(ElixirumUI.SCORE_TIMES_BREWED,
+                entry.map(this::timesBrewed).orElseGet(this::zero)));
+        this.addChild(new Entry(ElixirumUI.SCORE_FABLED_INSTANCES,
+                entry.map(this::fabledInstances).orElseGet(this::zero)));
+    }
+
+    private Component bestQuality(KnownRecipes.Entry entry) {
+        ;
+        return Component.literal(String.valueOf(entry.getBestQuality()));
+    }
+
+    private Component timesBrewed(KnownRecipes.Entry entry) {
+        return Component.literal(String.valueOf(entry.getBrewCount()));
+    }
+
+    private Component fabledInstances(KnownRecipes.Entry entry) {
+        return Component.literal(String.valueOf(entry.getFabledInstances()));
+    }
+
+    private Optional<KnownRecipes.Entry> findEntry(CachedElixir elixir) {
+        var component = ClientAlchemy.localProfile().knownRecipes();
+        return Optional.ofNullable(component.entries.get(elixir.recipe().getUuid()));
+    }
+
+    private Component zero() {
+        return Component.literal("0");
     }
 
     private class Entry extends HierarchicalControl {
 
-        private static final ARGB BACKGROUND_COLOR = Colors.argbOf(0xFF40384A);
         private final Component name;
         private final Component value;
         private final boolean drawBackground;
@@ -50,9 +71,9 @@ public class ScoreDetails extends AbstractDetails {
         @Override
         public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
 
-            final var font = Minecraft.getInstance().font;
+            var font = Minecraft.getInstance().font;
             if (drawBackground) {
-                GuiGraphicsUtil.setShaderColor(BACKGROUND_COLOR);
+                GuiGraphicsUtil.setShaderColor(ArsElixirumPalette.DARKEST);
                 RenderSystem.enableBlend();
                 GuiGraphicsUtil.drawShifted(graphics, ArsElixirumTextures.SOLID_WHITE, this);
                 RenderSystem.disableBlend();
@@ -66,7 +87,7 @@ public class ScoreDetails extends AbstractDetails {
             graphics.pose().popPose();
 
             graphics.pose().pushPose();
-            final var x = rect.right() - 4 - font.width(value) * 0.75f;
+            var x = rect.right() - 4 - font.width(value) * 0.75f;
             graphics.pose().translate(x, rect.y() + 4, 0f);
             graphics.pose().scale(0.75f, 0.75f, 0.75f);
             graphics.drawString(font, value, 0, 0, ArsElixirumPalette.MODERATE.decimal());

@@ -3,14 +3,15 @@ package dev.obscuria.elixirum.client.screen.widgets.details;
 import dev.obscuria.elixirum.client.ArsElixirumPalette;
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
+import dev.obscuria.elixirum.client.screen.ElixirumUI;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
 import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.toolkit.containers.GridContainer;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
 import dev.obscuria.elixirum.client.screen.widgets.pages.AbstractPage;
 import dev.obscuria.elixirum.common.alchemy.basics.Essence;
+import dev.obscuria.elixirum.common.alchemy.systems.DiscoverySystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -19,18 +20,16 @@ import java.util.Comparator;
 public class IngredientGridDetails extends AbstractDetails {
 
     public IngredientGridDetails(Essence essence) {
-        super(Component.literal("Ingredients"));
+        super(ElixirumUI.DETAILS_INGREDIENTS);
         var grid = new GridContainer(1, 6, 0, 0, 0);
         var entries = new ArrayList<Entry>();
-        for (var entry : ClientAlchemy.INSTANCE.ingredients().asMapView().entrySet()) {
-            if (!entry.getValue().essences().contains(essence)) continue;
-            var item = entry.getKey();
+        ClientAlchemy.INSTANCE.ingredients().forEach((item, properties) -> {
+            if (!properties.essences().contains(essence)) return;
             var profile = ClientAlchemy.INSTANCE.localProfile();
-            var properties = ClientAlchemy.INSTANCE.ingredients().propertiesOf(item);
             entries.add(new Entry(
-                    entry.getKey().getDefaultInstance(),
-                    properties.isAnyDiscovered(item, profile)));
-        }
+                    item.getDefaultInstance(),
+                    DiscoverySystem.isAnyEssenceKnown(ClientAlchemy.INSTANCE, profile, item)));
+        });
         entries.stream().sorted().forEach(grid::addChild);
         this.addChild(grid);
     }
@@ -55,9 +54,9 @@ public class IngredientGridDetails extends AbstractDetails {
             graphics.renderItem(stack, rect.x(), rect.y());
             if (!discovered) GuiGraphicsUtil.resetShaderColor();
 
-            if (transform.isMouseOver(mouseX, mouseY)) {
+            if (discovered && transform.isMouseOver(mouseX, mouseY)) {
                 GuiGraphicsUtil.drawShifted(graphics, ArsElixirumTextures.OUTLINE_PURPLE, this, -1, -1, 2, 2);
-                if (discovered) AbstractPage.tooltipStack = stack;
+                AbstractPage.tooltipStack = stack;
             }
         }
 

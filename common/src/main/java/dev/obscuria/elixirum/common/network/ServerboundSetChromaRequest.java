@@ -1,16 +1,16 @@
 package dev.obscuria.elixirum.common.network;
 
-import dev.obscuria.elixirum.common.alchemy.style.Chroma;
+import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
 import dev.obscuria.elixirum.server.ServerPayloadListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
 
-public record ServerboundSetChromaRequest(UUID recipe, Chroma chroma) {
+public record ServerboundSetChromaRequest(UUID recipeUid, Chroma chroma) {
 
     public static void encode(ServerboundSetChromaRequest request, FriendlyByteBuf byteBuf) {
-        byteBuf.writeUUID(request.recipe());
+        byteBuf.writeUUID(request.recipeUid());
         byteBuf.writeInt(request.chroma().id);
     }
 

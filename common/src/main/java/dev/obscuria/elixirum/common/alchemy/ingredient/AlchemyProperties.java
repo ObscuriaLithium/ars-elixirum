@@ -2,13 +2,11 @@ package dev.obscuria.elixirum.common.alchemy.ingredient;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.obscuria.elixirum.common.alchemy.traits.Form;
 import dev.obscuria.elixirum.common.alchemy.basics.*;
-import dev.obscuria.elixirum.common.alchemy.ingredient.properties.CatalystProperties;
-import dev.obscuria.elixirum.common.alchemy.ingredient.properties.FoundationProperties;
-import dev.obscuria.elixirum.common.alchemy.ingredient.properties.StabilizerProperties;
-import dev.obscuria.elixirum.common.alchemy.profiles.AlchemyProfileView;
+import dev.obscuria.elixirum.common.alchemy.traits.Focus;
+import dev.obscuria.elixirum.common.alchemy.traits.Risk;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.world.item.Item;
 
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
@@ -16,9 +14,9 @@ import java.util.stream.Stream;
 public record AlchemyProperties(
         Aspect aspect,
         EssenceHolderMap essences,
-        FoundationProperties foundation,
-        CatalystProperties catalyst,
-        StabilizerProperties stabilizer
+        Form application,
+        Risk risk,
+        Focus focus
 ) implements EssenceProvider {
 
     public static final Codec<AlchemyProperties> CODEC;
@@ -26,14 +24,6 @@ public record AlchemyProperties(
 
     public boolean isEmpty() {
         return essences.isEmpty();
-    }
-
-    public boolean isAnyDiscovered(Item item, AlchemyProfileView profile) {
-        for (var entry : essences.sorted()) {
-            if (!profile.knowledge().isEssenceKnown(item, entry.getKey())) continue;
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -50,15 +40,15 @@ public record AlchemyProperties(
         CODEC = RecordCodecBuilder.create(codec -> codec.group(
                 Aspect.CODEC.fieldOf("aspect").forGetter(AlchemyProperties::aspect),
                 EssenceHolderMap.CODEC.fieldOf("essences").forGetter(AlchemyProperties::essences),
-                FoundationProperties.CODEC.fieldOf("foundation").forGetter(AlchemyProperties::foundation),
-                CatalystProperties.CODEC.fieldOf("catalyst").forGetter(AlchemyProperties::catalyst),
-                StabilizerProperties.CODEC.fieldOf("stabilizer").forGetter(AlchemyProperties::stabilizer)
+                Form.CODEC.fieldOf("form").forGetter(AlchemyProperties::application),
+                Risk.CODEC.fieldOf("risk").forGetter(AlchemyProperties::risk),
+                Focus.CODEC.fieldOf("focus").forGetter(AlchemyProperties::focus)
         ).apply(codec, AlchemyProperties::new));
         EMPTY = new AlchemyProperties(
                 Aspect.NONE,
                 EssenceHolderMap.EMPTY,
-                FoundationProperties.BALANCED,
-                CatalystProperties.EMPTY,
-                StabilizerProperties.EMPTY);
+                Form.POTABLE,
+                Risk.BALANCED,
+                Focus.BALANCED);
     }
 }

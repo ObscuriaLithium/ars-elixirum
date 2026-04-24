@@ -3,17 +3,23 @@ package dev.obscuria.elixirum.common.world;
 import dev.obscuria.archivist.api.v1.nbt.NBTComponent;
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.basics.ExtractContents;
-import dev.obscuria.elixirum.common.alchemy.style.Chroma;
-import dev.obscuria.elixirum.common.alchemy.style.StyleVariant;
+import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
+import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
+import dev.obscuria.elixirum.server.alchemy.brewing.IngredientMixer;
 
 public final class NBTComponents {
 
+    public static final NBTComponent<IngredientMixer> MIXER;
     public static final NBTComponent<ElixirContents> ELIXIR_CONTENTS;
     public static final NBTComponent<ExtractContents> EXTRACT_CONTENTS;
     public static final NBTComponent<StyleVariant> STYLE;
     public static final NBTComponent<Chroma> CHROMA;
 
     static {
+        MIXER = NBTComponent.<IngredientMixer>createBuilder()
+                .path("ArsElixirum.Mixer")
+                .codec(IngredientMixer.CODEC)
+                .build();
         ELIXIR_CONTENTS = NBTComponent.<ElixirContents>createBuilder()
                 .path("ArsElixirum.Contents")
                 .codec(ElixirContents.CODEC)

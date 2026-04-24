@@ -1,12 +1,8 @@
 package dev.obscuria.elixirum.server.alchemy;
 
-import dev.obscuria.elixirum.api.Alchemy;
-import dev.obscuria.elixirum.api.AlchemyEssencesView;
-import dev.obscuria.elixirum.api.AlchemyIngredientsView;
-import dev.obscuria.elixirum.common.alchemy.profiles.AlchemyProfileView;
+import dev.obscuria.elixirum.api.codex.Alchemy;
 import dev.obscuria.elixirum.common.network.ClientboundAlchemyPayload;
 import dev.obscuria.elixirum.server.ServerExtensions;
-import dev.obscuria.elixirum.server.alchemy.profiles.ServerAlchemyProfile;
 import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public final class ServerAlchemy implements Alchemy {
@@ -32,17 +29,17 @@ public final class ServerAlchemy implements Alchemy {
     }
 
     @Override
-    public AlchemyEssencesView essences() {
+    public ServerAlchemyEssences essences() {
         return essences;
     }
 
     @Override
-    public AlchemyIngredientsView ingredients() {
+    public ServerAlchemyIngredients ingredients() {
         return ingredients;
     }
 
     @Override
-    public AlchemyProfileView profileOf(Player player) {
+    public ServerAlchemyProfile profileOf(Player player) {
         return getOrCreateProfile(player);
     }
 
@@ -68,9 +65,9 @@ public final class ServerAlchemy implements Alchemy {
         profile.load();
         FragmentumNetworking.sendTo(player,
                 new ClientboundAlchemyPayload(
-                        essences.pack(),
-                        ingredients.pack(),
-                        profile.pack()));
+                        Optional.of(essences.pack()),
+                        Optional.of(ingredients.pack()),
+                        Optional.of(profile.pack())));
     }
 
     public void onPlayerLeave(ServerPlayer player) {

@@ -1,9 +1,9 @@
 package dev.obscuria.elixirum.mixin;
 
-import dev.obscuria.elixirum.ArsElixirumHelper;
-import dev.obscuria.elixirum.api.Alchemy;
+import dev.obscuria.elixirum.api.codex.Alchemy;
 import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolderMap;
 import dev.obscuria.elixirum.common.alchemy.basics.ExtractContents;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import dev.obscuria.elixirum.common.world.ItemStackCache;
 import net.minecraft.world.item.ItemStack;
@@ -51,10 +51,10 @@ public abstract class MixinPotionBrewing {
             Collections.shuffle(essences);
             var extracted = essences.get(RandomUtils.nextInt(0, essences.size()));
             var map = EssenceHolderMap.single(extracted.getKey(), extracted.getIntValue());
-            ArsElixirumHelper.setExtractContents(result, new ExtractContents(reagent.getItem(), map));
+            ContentsHelper.setExtract(result, new ExtractContents(reagent.getItem(), map));
             ItemStackCache.suppressedEssences(reagent).add(extracted.getKey());
         } else {
-            ArsElixirumHelper.setExtractContents(result, new ExtractContents(reagent.getItem(), properties.essences()));
+            ContentsHelper.setExtract(result, new ExtractContents(reagent.getItem(), properties.essences()));
         }
 
         cir.setReturnValue(result);

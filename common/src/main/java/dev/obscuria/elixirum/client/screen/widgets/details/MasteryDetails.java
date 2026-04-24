@@ -4,22 +4,22 @@ import dev.obscuria.elixirum.client.ArsElixirumPalette;
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
 import dev.obscuria.elixirum.client.alchemy.cache.CachedElixir;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
+import dev.obscuria.elixirum.client.screen.ElixirumUI;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
 import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.ParagraphControl;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.SpacingControl;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import dev.obscuria.fragmentum.util.color.Colors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
 
 public class MasteryDetails extends AbstractDetails {
 
     public MasteryDetails(CachedElixir elixir) {
-        super(Component.literal("Mastery"));
-        this.addChild(new ParagraphControl(Component.literal("Brew elixirs using this recipe to increase its mastery and contribute to your overall alchemy mastery level.")));
+        super(ElixirumUI.DETAILS_MASTERY);
+        this.addChild(new ParagraphControl(ElixirumUI.MASTERY_HINT));
         this.addChild(new SpacingControl(6));
         this.addChild(new Progress(elixir.recipe()));
     }
@@ -30,7 +30,7 @@ public class MasteryDetails extends AbstractDetails {
 
         public Progress(AlchemyRecipe recipe) {
             super(0, 0, 10, 4, CommonComponents.EMPTY);
-            this.progress = ClientAlchemy.INSTANCE.localProfile().mastery().ofRecipe(recipe.uuid()) / 100f;
+            this.progress = ClientAlchemy.localProfile().mastery().getRecipeXp(recipe.getUuid()) / 100f;
         }
 
         @Override

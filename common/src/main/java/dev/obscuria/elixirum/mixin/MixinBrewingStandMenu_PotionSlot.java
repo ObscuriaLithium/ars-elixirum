@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.mixin;
 
-import dev.obscuria.elixirum.ArsElixirumHelper;
+import dev.obscuria.elixirum.common.alchemy.systems.DiscoverySystem;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
 import dev.obscuria.elixirum.common.network.ClientboundDiscoverEssencePayload;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import dev.obscuria.elixirum.server.alchemy.ServerAlchemy;
@@ -26,7 +27,7 @@ public class MixinBrewingStandMenu_PotionSlot {
 
     @Inject(method = "onTake", at = @At("HEAD"))
     private void takeExtract(Player player, ItemStack stack, CallbackInfo ci) {
-        var contents = ArsElixirumHelper.getExtractContents(stack);
+        var contents = ContentsHelper.extract(stack);
         if (contents.isEmpty()) return;
         if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.getServer() == null) return;
@@ -34,7 +35,7 @@ public class MixinBrewingStandMenu_PotionSlot {
             for (var essenceHolder : contents.essences().sorted()) {
                 var item = contents.source();
                 var essence = essenceHolder.getKey();
-                profile.knowledge().discoverEssence(item, essence);
+                if (!DiscoverySystem.discoverEssence(profile, item, essence)) return;
                 FragmentumNetworking.sendTo(serverPlayer, new ClientboundDiscoverEssencePayload(item, essence));
             }
         }

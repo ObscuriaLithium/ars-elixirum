@@ -1,14 +1,16 @@
 package dev.obscuria.elixirum.client.alchemy.cache;
 
-import dev.obscuria.elixirum.ArsElixirumHelper;
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
-import dev.obscuria.elixirum.common.alchemy.profiles.ConfiguredRecipe;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
-import dev.obscuria.elixirum.common.alchemy.style.Chroma;
-import dev.obscuria.elixirum.common.alchemy.style.StyleVariant;
+import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
+import dev.obscuria.elixirum.common.alchemy.recipes.ConfiguredRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
+import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
 import dev.obscuria.elixirum.common.network.ServerboundSetChromaRequest;
 import dev.obscuria.elixirum.common.network.ServerboundSetStyleRequest;
 import dev.obscuria.elixirum.common.world.ItemStackCache;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.helpers.StyleHelper;
 import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -44,16 +46,20 @@ public record CachedElixir(
 
     public void mapStyleSynced(Function<StyleVariant, StyleVariant> mapper) {
         this.configured.mapStyle(mapper);
-        ArsElixirumHelper.setStyle(get(), configured.getStyle());
+        StyleHelper.setStyle(get(), configured.getStyle());
         ItemStackCache.markDirty(get());
         FragmentumNetworking.sendToServer(new ServerboundSetStyleRequest(uuid(), configured.getStyle()));
     }
 
     public void setChromaSynced(Chroma chroma) {
         this.configured.chroma().set(chroma);
-        ArsElixirumHelper.setChroma(get(), chroma);
+        StyleHelper.setChroma(get(), chroma);
         ItemStackCache.markDirty(get());
         FragmentumNetworking.sendToServer(new ServerboundSetChromaRequest(uuid(), chroma));
+    }
+
+    public ElixirContents contents() {
+        return ContentsHelper.elixir(stack.get());
     }
 
     public ItemStack get() {
@@ -65,14 +71,14 @@ public record CachedElixir(
     }
 
     public UUID uuid() {
-        return configured.recipe().uuid();
+        return configured.recipe().getUuid();
     }
 
     public boolean isInCollection() {
-        return ClientAlchemy.INSTANCE.localProfile().collection().hasRecipe(recipe());
+        return ClientAlchemy.localProfile().recipeCollection().isSaved(recipe().getUuid());
     }
 
     public boolean isSame(CachedElixir other) {
-        return recipe().isSame(other.recipe());
+        return recipe().equals(other.recipe());
     }
 }

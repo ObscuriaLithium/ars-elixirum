@@ -1,9 +1,6 @@
 package dev.obscuria.elixirum.client.screen.widgets.details;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.ArsElixirumHelper;
-import dev.obscuria.elixirum.client.ArsElixirumClient;
 import dev.obscuria.elixirum.client.ArsElixirumPalette;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
@@ -11,6 +8,7 @@ import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.toolkit.containers.ListContainer;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.SpacingControl;
+import dev.obscuria.elixirum.client.screen.tooltip.components.TraitTableComponent;
 import dev.obscuria.elixirum.common.alchemy.basics.EffectProvider;
 import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
 import dev.obscuria.fragmentum.util.color.Colors;
@@ -23,7 +21,6 @@ import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -45,9 +42,9 @@ public class ContentDetails extends ListContainer {
         this.entries = compileEntries(contents);
 
         this.addChild(new Graph());
-        this.addChild(new SpacingControl(6));
-        this.addChild(new TemperDisplay(contents.temper()));
-        this.addChild(new SpacingControl(6));
+        this.addChild(new SpacingControl(3));
+        this.addChild(new TraitsDisplay(contents));
+        this.addChild(new SpacingControl(3));
 
         for (Entry e : entries) {
             this.addChild(new Effect(e));
@@ -55,21 +52,21 @@ public class ContentDetails extends ListContainer {
     }
 
     private List<Entry> compileEntries(ElixirContents contents) {
-        List<EffectProvider> normal = new ArrayList<>();
-        List<EffectProvider> weak = new ArrayList<>();
+        var effects = new ArrayList<EffectProvider>();
+        var sideEffects = new ArrayList<EffectProvider>();
 
-        for (EffectProvider e : contents.providers()) {
-            if (!e.isVoided()) normal.add(e);
-            else weak.add(e);
+        for (var provider : contents.effects()) {
+            if (!provider.isVoided()) effects.add(provider);
+            else sideEffects.add(provider);
         }
 
-        List<Entry> result = new ArrayList<>();
-        for (EffectProvider e : normal) {
-            result.add(new Entry.Single(e));
+        var result = new ArrayList<Entry>();
+        for (var provider : effects) {
+            result.add(new Entry.Single(provider));
         }
 
-        if (!weak.isEmpty()) {
-            result.add(new Entry.Grouped(weak));
+        if (!sideEffects.isEmpty() && contents.sideEffectProbability() > 0) {
+            result.add(new Entry.Grouped(contents, sideEffects));
         }
 
         return result;
@@ -96,9 +93,9 @@ public class ContentDetails extends ListContainer {
         public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
             if (!transform.isWithinScissor()) return;
 
-            RenderSystem.setShaderColor(0x40 / 255f, 0x38 / 255f, 0x4A / 255f, 1f);
+            GuiGraphicsUtil.setShaderColor(ArsElixirumPalette.DARKEST);
             GuiGraphicsUtil.drawShifted(graphics, ArsElixirumTextures.OUTLINE_WHITE, this);
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            GuiGraphicsUtil.resetShaderColor();
 
             for (int i = 0; i < entries.size(); i++) {
                 double x = rect.left() + (i + 1) * anchorSeparation();
@@ -341,23 +338,26 @@ public class ContentDetails extends ListContainer {
         public static class Grouped extends Entry {
 
             private final List<EffectProvider> effects;
+            private final double probability;
 
-            public Grouped(List<EffectProvider> effects) {
-                super(
-                        Math.min(100f, (float) effects.stream().mapToDouble(EffectProvider::quality).sum()),
-                        ArsElixirumPalette.MODERATE.toRGB()
-                );
+            public Grouped(ElixirContents contents, List<EffectProvider> effects) {
+                super(weightOf(effects), ArsElixirumPalette.MODERATE.toRGB());
                 this.effects = effects;
+                this.probability = contents.sideEffectProbability();
             }
 
             @Override
             public Component getPrimaryText() {
-                return Component.literal(effects.size() + " Side Effects");
+                return effects.size() == 1
+                        ? Component.translatable("ui.elixirum.side_effects.one", effects.size())
+                        : Component.translatable("ui.elixirum.side_effects.many", effects.size());
             }
 
             @Override
             public Component getSecondaryText() {
-                return Component.literal("10% Chance");
+                return Component.translatable(
+                        "ui.elixirum.side_effects.chance",
+                        "%.0f%%".formatted(probability * 100f));
             }
 
             @Override
@@ -380,49 +380,38 @@ public class ContentDetails extends ListContainer {
                     graphics.blit(x + 5, y - 4, 0, 9, 9, textures.get(effects.get(0).mobEffect()));
                 }
             }
+
+            private static float weightOf(List<EffectProvider> effects) {
+                var weight = 0.0;
+                for (var effect : effects)
+                    weight += effect.quality();
+                return Math.min(100f, (float) weight);
+            }
         }
     }
 
-    private static class TemperDisplay extends HierarchicalControl {
+    private static class TraitsDisplay extends HierarchicalControl {
 
-        private static final ResourceLocation TEMPER_TEXTURE = ArsElixirum.identifier("textures/gui/temper.png");
-        private final double durationFactor;
-        private final double amplifierFactor;
-        private final float startTime;
+        private final ElixirContents contents;
+        private TraitTableComponent table;
 
-        public TemperDisplay(double temper) {
-            super(0, 0, 0, 5, CommonComponents.EMPTY);
-            this.durationFactor = ArsElixirumHelper.durationFactor(temper);
-            this.amplifierFactor = ArsElixirumHelper.amplifierFactor(temper);
-            this.startTime = ArsElixirumClient.timer();
+        public TraitsDisplay(ElixirContents contents) {
+            super(0, 0, 0, TraitTableComponent.Entry.HEIGHT, CommonComponents.EMPTY);
+            this.contents = contents;
+            this.table = new TraitTableComponent(10, contents);
+            this.setUpdateFlags(UPDATE_BY_WIDTH);
         }
 
         @Override
         public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
-
-            RenderSystem.setShaderColor(0x40 / 255f, 0x38 / 255f, 0x4A / 255f, 1f);
-            GuiGraphicsUtil.draw(graphics, ArsElixirumTextures.SOLID_WHITE, rect.x(), rect.y(), rect.width(), rect.height());
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-            graphics.pose().pushPose();
-            graphics.pose().translate(rect.centerX() + 0.5f, rect.y(), 0);
-            var fadeInTime = (ArsElixirumClient.timer() - startTime) * 2f;
-            var fadeInScale = Easing.EASE_OUT_CUBIC.compute(Math.min(fadeInTime, 1f));
-
-            graphics.pose().pushPose();
-            graphics.pose().scale(fadeInScale, 1f, 1f);
-            var offset = ArsElixirumClient.timer() * 4f;
-            var durationWidth = (int) Math.round(rect.width() * 0.5 * durationFactor);
-            graphics.blit(TEMPER_TEXTURE, -durationWidth, 0, offset, 5, durationWidth, 5, 60, 30);
-            var amplifierWidth = (int) Math.round(rect.width() * 0.5 * amplifierFactor);
-            graphics.blit(TEMPER_TEXTURE, 0, 0, -offset + 3, 10, amplifierWidth, 5, 60, 30);
-            graphics.pose().popPose();
-
-            graphics.blit(TEMPER_TEXTURE, -2, 0, 0, 15, 5, 5, 60, 30);
-            graphics.pose().popPose();
+            table.render(
+                    graphics, Minecraft.getInstance().font, rect.x(), rect.y(),
+                    mouseX, mouseY, transform.isMouseOver(mouseX, mouseY));
         }
 
         @Override
-        public void reorganize() {}
+        public void reorganize() {
+            this.table = new TraitTableComponent(rect.width(), contents);
+        }
     }
 }

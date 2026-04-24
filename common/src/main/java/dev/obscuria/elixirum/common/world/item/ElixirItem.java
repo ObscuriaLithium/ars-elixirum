@@ -1,12 +1,9 @@
 package dev.obscuria.elixirum.common.world.item;
 
-import dev.obscuria.elixirum.ArsElixirumHelper;
 import dev.obscuria.elixirum.common.alchemy.ElixirQuality;
-import dev.obscuria.elixirum.common.world.tooltip.EffectsTooltip;
-import net.minecraft.advancements.CriteriaTriggers;
+import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.common.world.tooltip.ElixirContentsTooltip;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.Optional;
 
@@ -25,33 +21,23 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
-        return 32;
-    }
-
-    @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.DRINK;
-    }
-
-    @Override
     public boolean isFoil(ItemStack stack) {
-        return ElixirQuality.of(stack).isFoil;
+        return ElixirQuality.fromStack(stack).isFoil();
     }
 
     @Override
     public Rarity getRarity(ItemStack stack) {
-        return ElixirQuality.of(stack).rarity;
+        return ElixirQuality.fromStack(stack).getRarity();
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        return ElixirQuality.makeElixirName(stack, super.getName(stack));
+        return ContentsHelper.elixir(stack).form().makeElixirName(stack);
     }
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return Optional.of(new EffectsTooltip(stack, ArsElixirumHelper.getElixirContents(stack)));
+        return Optional.of(new ElixirContentsTooltip(stack, ContentsHelper.elixir(stack)));
     }
 
     @Override
@@ -60,25 +46,22 @@ public class ElixirItem extends Item {
     }
 
     @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return ContentsHelper.elixir(stack).form().getUseAnim(stack);
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return ContentsHelper.elixir(stack).form().getUseDuration(stack);
+    }
+
+    @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
-        if (!(entity instanceof Player player)) return stack;
+        return ContentsHelper.elixir(stack).form().finishUsing(stack, level, entity);
+    }
 
-        if (entity instanceof ServerPlayer serverPlayer) {
-            CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
-            ArsElixirumHelper.getElixirContents(stack).apply(entity, entity, entity);
-        }
-
-        player.awardStat(Stats.ITEM_USED.get(this));
-        player.gameEvent(GameEvent.DRINK);
-
-        if (!player.getAbilities().instabuild) {
-            stack.shrink(1);
-            var result = Items.GLASS_BOTTLE.getDefaultInstance();
-            if (stack.isEmpty()) return result;
-            if (player.addItem(result)) return stack;
-            player.drop(result, false);
-        }
-
-        return stack;
+    @Override
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
+        ContentsHelper.elixir(stack).form().releaseUsing(stack, level, entity, timeLeft);
     }
 }

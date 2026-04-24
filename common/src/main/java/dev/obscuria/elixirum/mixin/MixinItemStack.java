@@ -1,8 +1,8 @@
 package dev.obscuria.elixirum.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.obscuria.elixirum.common.Hooks;
 import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
+import dev.obscuria.elixirum.common.hooks._ItemStackHooks;
 import dev.obscuria.elixirum.common.world.ItemStackCache;
 import dev.obscuria.fragmentum.world.tooltip.GroupTooltip;
 import net.minecraft.nbt.CompoundTag;
@@ -66,7 +66,7 @@ public abstract class MixinItemStack implements ItemStackCache.Provider {
     @ModifyReturnValue(method = "getTooltipImage", at = @At("RETURN"))
     private Optional<TooltipComponent> injectTooltipImages(Optional<TooltipComponent> original) {
         final var self = (ItemStack) (Object) this;
-        final @Nullable var image = Hooks.injectTooltipImage(self);
+        final @Nullable var image = _ItemStackHooks.injectTooltipImage(self);
         if (image == null) return original;
         return Optional.of(GroupTooltip.maybeGroup(original.orElse(null), image));
     }

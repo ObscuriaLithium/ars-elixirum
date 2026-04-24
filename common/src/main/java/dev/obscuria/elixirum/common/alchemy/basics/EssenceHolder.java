@@ -24,9 +24,8 @@ public final class EssenceHolder {
     }
 
     public static void unbindAll() {
-        for (var value : HOLDERS.values()) {
+        for (var value : HOLDERS.values())
             value.bind(null);
-        }
     }
 
     private EssenceHolder(ResourceLocation key) {

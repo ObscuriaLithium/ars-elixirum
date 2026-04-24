@@ -1,13 +1,13 @@
 package dev.obscuria.elixirum.common.network;
 
-import dev.obscuria.elixirum.common.alchemy.profiles.ConfiguredRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.ConfiguredRecipe;
 import dev.obscuria.elixirum.server.ServerPayloadListener;
 import dev.obscuria.fragmentum.FragmentumProxy;
 import dev.obscuria.fragmentum.network.PayloadCodec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
-public record ServerboundRecipeSaveRequest(ConfiguredRecipe recipe) {
+public record ServerboundRecipeSaveRequest(ConfiguredRecipe configuredRecipe) {
 
     public static final PayloadCodec<ServerboundRecipeSaveRequest> CODEC;
 
@@ -27,7 +27,7 @@ public record ServerboundRecipeSaveRequest(ConfiguredRecipe recipe) {
         CODEC = PayloadCodec.registryFriendly(
                 ConfiguredRecipe.CODEC.xmap(
                         ServerboundRecipeSaveRequest::new,
-                        ServerboundRecipeSaveRequest::recipe),
+                        ServerboundRecipeSaveRequest::configuredRecipe),
                 FragmentumProxy::registryAccess);
     }
 }

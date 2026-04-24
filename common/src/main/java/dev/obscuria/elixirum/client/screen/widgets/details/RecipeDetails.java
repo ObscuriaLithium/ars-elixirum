@@ -1,24 +1,23 @@
 package dev.obscuria.elixirum.client.screen.widgets.details;
 
 import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.client.alchemy.cache.CachedElixir;
 import dev.obscuria.elixirum.client.screen.ArsElixirumTextures;
+import dev.obscuria.elixirum.client.screen.ElixirumUI;
 import dev.obscuria.elixirum.client.screen.GuiGraphicsUtil;
 import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
 import dev.obscuria.elixirum.client.screen.widgets.pages.AbstractPage;
-import dev.obscuria.elixirum.common.alchemy.recipe.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import dev.obscuria.fragmentum.util.color.Colors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class RecipeDetails extends AbstractDetails {
 
     public RecipeDetails(AlchemyRecipe recipe) {
-        super(Component.literal("Recipe"));
+        super(ElixirumUI.DETAILS_RECIPE);
         this.addChild(new Sequence(recipe));
     }
 
@@ -26,12 +25,12 @@ public class RecipeDetails extends AbstractDetails {
 
         public Sequence(AlchemyRecipe recipe) {
             super(0, 0, 0, 18, CommonComponents.EMPTY);
-            recipe.foundation().ifPresent(it -> this.addChild(new Ingredient(it.asStack())));
-            recipe.catalyst().ifPresent(it -> {
+            recipe.getBase().ifPresent(it -> this.addChild(new Ingredient(it.asStack())));
+            recipe.getCatalyst().ifPresent(it -> {
                 this.addChild(new Reaction());
                 this.addChild(new Ingredient(it.asStack()));
             });
-            recipe.stabilizer().ifPresent(it -> {
+            recipe.getInhibitor().ifPresent(it -> {
                 this.addChild(new Reaction());
                 this.addChild(new Ingredient(it.asStack()));
             });

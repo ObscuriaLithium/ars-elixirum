@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.server.alchemy.generation;
 
 import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.common.alchemy.AlchemyEssencesData;
+import dev.obscuria.elixirum.server.alchemy.ServerAlchemyEssences;
 import dev.obscuria.elixirum.server.alchemy.resources.PredefinedEssence;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
@@ -18,31 +18,51 @@ public enum EssenceReconciler {
         this.action = action;
     }
 
-    public static void reconcile(EssenceGenerator generator, AlchemyEssencesData essences, Holder.Reference<MobEffect> mobEffect) {
-        for (var chain : values()) {
-            if (chain.action.reconcile(generator, essences, mobEffect)) return;
-        }
+    public static void reconcile(
+            EssenceGenerator generator,
+            ServerAlchemyEssences essences,
+            Holder.Reference<MobEffect> mobEffect
+    ) {
+        for (var chain : values())
+            if (chain.action.reconcile(generator, essences, mobEffect))
+                return;
     }
 
-    private static boolean skipIfExists(EssenceGenerator generator, AlchemyEssencesData essences, Holder.Reference<MobEffect> mobEffect) {
+    private static boolean skipIfExists(
+            EssenceGenerator generator,
+            ServerAlchemyEssences essences,
+            Holder.Reference<MobEffect> mobEffect
+    ) {
         return essences.containsEffect(mobEffect);
     }
 
-    private static boolean skipIfIgnored(EssenceGenerator generator, AlchemyEssencesData essences, Holder.Reference<MobEffect> mobEffect) {
+    private static boolean skipIfIgnored(
+            EssenceGenerator generator,
+            ServerAlchemyEssences essences,
+            Holder.Reference<MobEffect> mobEffect
+    ) {
         return mobEffect.is(ArsElixirum.IGNORED_EFFECTS);
     }
 
-    private static boolean generatePredefined(EssenceGenerator generator, AlchemyEssencesData essences, Holder.Reference<MobEffect> mobEffect) {
+    private static boolean generatePredefined(
+            EssenceGenerator generator,
+            ServerAlchemyEssences essences,
+            Holder.Reference<MobEffect> mobEffect
+    ) {
         return PredefinedEssence.findFor(mobEffect).map(predefined -> {
             var key = predefined.value().essence().effect().unwrapKey().orElseThrow().location();
-            essences.put(key, predefined.value().essence());
+            essences.register(key, predefined.value().essence());
             return true;
         }).orElse(false);
     }
 
-    private static boolean generateRandom(EssenceGenerator generator, AlchemyEssencesData essences, Holder.Reference<MobEffect> mobEffect) {
+    private static boolean generateRandom(
+            EssenceGenerator generator,
+            ServerAlchemyEssences essences,
+            Holder.Reference<MobEffect> mobEffect
+    ) {
         return generator.generateEssence(mobEffect).map(essence -> {
-            essences.put(mobEffect.key().location(), essence);
+            essences.register(mobEffect.key().location(), essence);
             return true;
         }).orElse(false);
     }
@@ -50,6 +70,9 @@ public enum EssenceReconciler {
     @FunctionalInterface
     public interface Action {
 
-        boolean reconcile(EssenceGenerator generator, AlchemyEssencesData essences, Holder.Reference<MobEffect> mobEffect);
+        boolean reconcile(
+                EssenceGenerator generator,
+                ServerAlchemyEssences essences,
+                Holder.Reference<MobEffect> mobEffect);
     }
 }

@@ -18,10 +18,10 @@ import java.util.Optional;
 
 public record PredefinedIngredient(
         HolderSet<Item> items,
-        Optional<IEssenceProvider> propertyProvider,
-        Optional<IFoundationPropertyProvider> foundationProvider,
-        Optional<ICatalystPropertyProvider> catalystProvider,
-        Optional<IStabilizerPropertyProvider> stabilizerProvider
+        Optional<IEssenceProvider> essenceProvider,
+        Optional<IApplicationMethodProvider> applicationProvider,
+        Optional<IStabilityProvider> stabilityProvider,
+        Optional<ITemperProvider> temperProvider
 ) {
 
     public static final PredefinedIngredient EMPTY;
@@ -34,18 +34,18 @@ public record PredefinedIngredient(
     }
 
     public AlchemyProperties resolve(Item item, RandomSource random) {
-        var propertyProvider = this.propertyProvider.orElse(GeneratedEssenceProvider.SHARED);
+        var propertyProvider = this.essenceProvider.orElse(GeneratedEssenceProvider.SHARED);
         var essences = propertyProvider.resolve(item, random.fork());
         var aspect = propertyProvider.resolveAspect(essences);
         return new AlchemyProperties(aspect, essences,
-                foundationProvider
-                        .orElse(GeneratedFoundationPropertyProvider.SHARED)
+                applicationProvider
+                        .orElse(GeneratedApplicationMethodProvider.SHARED)
                         .resolve(item, random.fork()),
-                catalystProvider
-                        .orElse(GeneratedCatalystPropertyProvider.SHARED)
+                stabilityProvider
+                        .orElse(GeneratedStabilityProvider.SHARED)
                         .resolve(item, random.fork()),
-                stabilizerProvider
-                        .orElse(GeneratedStabilizerPropertyProvider.SHARED)
+                temperProvider
+                        .orElse(GeneratedTemperProvider.SHARED)
                         .resolve(item, random.fork()));
     }
 
@@ -59,16 +59,16 @@ public record PredefinedIngredient(
         CODEC = RegistryFixedCodec.create(ElixirumRegistries.Keys.PREDEFINED_INGREDIENT);
         DIRECT_CODEC = RecordCodecBuilder.create(codec -> codec.group(
                 RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(PredefinedIngredient::items),
-                IEssenceProvider.CODEC.optionalFieldOf("properties").forGetter(PredefinedIngredient::propertyProvider),
-                IFoundationPropertyProvider.CODEC.optionalFieldOf("foundation").forGetter(PredefinedIngredient::foundationProvider),
-                ICatalystPropertyProvider.CODEC.optionalFieldOf("catalyst").forGetter(PredefinedIngredient::catalystProvider),
-                IStabilizerPropertyProvider.CODEC.optionalFieldOf("stabilizer").forGetter(PredefinedIngredient::stabilizerProvider)
+                IEssenceProvider.CODEC.optionalFieldOf("essences").forGetter(PredefinedIngredient::essenceProvider),
+                IApplicationMethodProvider.CODEC.optionalFieldOf("form").forGetter(PredefinedIngredient::applicationProvider),
+                IStabilityProvider.CODEC.optionalFieldOf("risk").forGetter(PredefinedIngredient::stabilityProvider),
+                ITemperProvider.CODEC.optionalFieldOf("focus").forGetter(PredefinedIngredient::temperProvider)
         ).apply(codec, PredefinedIngredient::new));
         EMPTY = new PredefinedIngredient(
                 HolderSet.direct(),
                 Optional.of(GeneratedEssenceProvider.SHARED),
-                Optional.of(GeneratedFoundationPropertyProvider.SHARED),
-                Optional.of(GeneratedCatalystPropertyProvider.SHARED),
-                Optional.of(GeneratedStabilizerPropertyProvider.SHARED));
+                Optional.of(GeneratedApplicationMethodProvider.SHARED),
+                Optional.of(GeneratedStabilityProvider.SHARED),
+                Optional.of(GeneratedTemperProvider.SHARED));
     }
 }

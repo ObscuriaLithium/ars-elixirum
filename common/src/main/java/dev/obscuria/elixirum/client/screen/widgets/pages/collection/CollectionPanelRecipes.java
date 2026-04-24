@@ -15,33 +15,31 @@ import net.minecraft.network.chat.Component;
 
 class CollectionPanelRecipes extends PanelContainer {
 
-    private static final Component TITLE;
-    private static final Component PLACEHOLDER;
-
-    private final HeaderControl header;
-    private final ScrollContainer scroll;
+    private static final Component HEADER_TEXT;
+    private static final Component BODY_TEXT;
+    private static final Component FOOTER_TEXT;
 
     protected CollectionPanelRecipes(SelectionState<CachedElixir> selection, int x, int y, int width, int height) {
         super(x, y, width, height);
-
-        this.header = setHeader(new HeaderControl(TITLE));
-        this.scroll = setBody(Util.make(new ScrollContainer(PLACEHOLDER), scroll -> {
-            final var list = new ListContainer(0, 1, 0);
-            final var container = new GridContainer(1);
-            for (var configured : ClientAlchemy.INSTANCE.localProfile().collection().recipes()) {
+        this.setHeader(new HeaderControl(HEADER_TEXT));
+        this.setBody(Util.make(new ScrollContainer(BODY_TEXT), scroll -> {
+            var list = new ListContainer(0, 1, 0);
+            var container = new GridContainer(1);
+            ClientAlchemy.localProfile().recipeCollection().streamOrdered().forEach(configured -> {
                 var elixir = AlchemyCache.cachedElixirOf(configured.recipe());
                 var widget = new CollectionElixirWidget(selection, elixir);
                 widget.makeStackClickAction(selection::set);
                 container.addChild(widget);
-            }
+            });
             list.addChild(container);
             scroll.addChild(list);
         }));
-        this.setFooter(ParagraphControl.panelFooter(Component.literal("Collection of saved recipes with customization options.")));
+        this.setFooter(ParagraphControl.panelFooter(FOOTER_TEXT));
     }
 
     static {
-        TITLE = Component.translatable("elixirum.screen.collection.recipes.title");
-        PLACEHOLDER = Component.translatable("elixirum.screen.collection.recipes.placeholder");
+        HEADER_TEXT = Component.translatable("ui.elixirum.collection.header");
+        BODY_TEXT = Component.translatable("ui.elixirum.collection.body");
+        FOOTER_TEXT = Component.translatable("ui.elixirum.collection.footer");
     }
 }
