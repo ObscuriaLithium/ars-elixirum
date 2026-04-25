@@ -2,7 +2,6 @@ package dev.obscuria.elixirum.common.registry;
 
 import dev.obscuria.elixirum.ArsElixirum;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 
 public interface ElixirumAttributes {
@@ -38,28 +37,6 @@ public interface ElixirumAttributes {
         var attribute = new RangedAttribute("attribute.elixirum.%s".formatted(name), defaultValue, minValue, maxValue);
         ElixirumRegistries.REGISTRAR.registerAttribute(ArsElixirum.identifier(name), () -> attribute);
         return attribute;
-    }
-
-    static void injectLivingAttributes(AttributeSupplier.Builder builder) {
-        builder
-                .add(POTION_MASTERY)
-                .add(POTION_RESISTANCE)
-                .add(CORPUS_MASTERY)
-                .add(CORPUS_RESISTANCE)
-                .add(ANIMA_MASTERY)
-                .add(ANIMA_RESISTANCE)
-                .add(VENENUM_MASTERY)
-                .add(VENENUM_RESISTANCE)
-                .add(MEDELA_MASTERY)
-                .add(MEDELA_RESISTANCE)
-                .add(CRESCERE_MASTERY)
-                .add(CRESCERE_RESISTANCE)
-                .add(MUTATIO_MASTERY)
-                .add(MUTATIO_RESISTANCE)
-                .add(FORTUNA_MASTERY)
-                .add(FORTUNA_RESISTANCE)
-                .add(TENEBRAE_MASTERY)
-                .add(TENEBRAE_RESISTANCE);
     }
 
     static void init() {}
