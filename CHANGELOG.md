@@ -1,1 +1,1 @@
-* Fixed issues in large modpacks causing startup crashes or “Invalid Player Data” on world join
+* Fixed server errors when using throwable elixirs caused by incorrect Thrown Elixir entity registration

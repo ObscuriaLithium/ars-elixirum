@@ -56,8 +56,9 @@ public final class ElixirumRegistries {
         ElixirumAttributes.init();
         ElixirumItems.init();
         ElixirumBlocks.init();
-        ElixirumBlockEntities.init();
         ElixirumCreativeTabs.init();
+        ElixirumEntities.init();
+        ElixirumBlockEntities.init();
         ElixirumParticles.init();
         ElixirumRecipeSerializers.init();
 
