@@ -1,1 +1,1 @@
-* Fixed incorrect mixin mappings causing a startup crash
+* Fixed a server crash on startup caused by duplicate mob effect entries from certain mod combinations
