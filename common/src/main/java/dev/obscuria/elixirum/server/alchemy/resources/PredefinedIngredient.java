@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.server.alchemy.resources;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyProperties;
+import dev.obscuria.elixirum.api.alchemy.AlchemyProperties;
 import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
 import dev.obscuria.elixirum.server.alchemy.resources.providers.*;
 import net.minecraft.core.Holder;
@@ -19,9 +19,9 @@ import java.util.Optional;
 public record PredefinedIngredient(
         HolderSet<Item> items,
         Optional<IEssenceProvider> essenceProvider,
-        Optional<IApplicationMethodProvider> applicationProvider,
-        Optional<IStabilityProvider> stabilityProvider,
-        Optional<ITemperProvider> temperProvider
+        Optional<IFocusProvider> focusProvider,
+        Optional<IFormMethodProvider> formProvider,
+        Optional<IRiskProvider> riskProvider
 ) {
 
     public static final PredefinedIngredient EMPTY;
@@ -37,15 +37,15 @@ public record PredefinedIngredient(
         var propertyProvider = this.essenceProvider.orElse(GeneratedEssenceProvider.SHARED);
         var essences = propertyProvider.resolve(item, random.fork());
         var aspect = propertyProvider.resolveAspect(essences);
-        return new AlchemyProperties(aspect, essences,
-                applicationProvider
-                        .orElse(GeneratedApplicationMethodProvider.SHARED)
+        return AlchemyProperties.create(aspect, essences,
+                focusProvider
+                        .orElse(GeneratedFocusProvider.SHARED)
                         .resolve(item, random.fork()),
-                stabilityProvider
-                        .orElse(GeneratedStabilityProvider.SHARED)
+                formProvider
+                        .orElse(GeneratedFormMethodProvider.SHARED)
                         .resolve(item, random.fork()),
-                temperProvider
-                        .orElse(GeneratedTemperProvider.SHARED)
+                riskProvider
+                        .orElse(GeneratedRiskProvider.SHARED)
                         .resolve(item, random.fork()));
     }
 
@@ -60,15 +60,15 @@ public record PredefinedIngredient(
         DIRECT_CODEC = RecordCodecBuilder.create(codec -> codec.group(
                 RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(PredefinedIngredient::items),
                 IEssenceProvider.CODEC.optionalFieldOf("essences").forGetter(PredefinedIngredient::essenceProvider),
-                IApplicationMethodProvider.CODEC.optionalFieldOf("form").forGetter(PredefinedIngredient::applicationProvider),
-                IStabilityProvider.CODEC.optionalFieldOf("risk").forGetter(PredefinedIngredient::stabilityProvider),
-                ITemperProvider.CODEC.optionalFieldOf("focus").forGetter(PredefinedIngredient::temperProvider)
+                IFocusProvider.CODEC.optionalFieldOf("focus").forGetter(PredefinedIngredient::focusProvider),
+                IFormMethodProvider.CODEC.optionalFieldOf("form").forGetter(PredefinedIngredient::formProvider),
+                IRiskProvider.CODEC.optionalFieldOf("risk").forGetter(PredefinedIngredient::riskProvider)
         ).apply(codec, PredefinedIngredient::new));
         EMPTY = new PredefinedIngredient(
                 HolderSet.direct(),
                 Optional.of(GeneratedEssenceProvider.SHARED),
-                Optional.of(GeneratedApplicationMethodProvider.SHARED),
-                Optional.of(GeneratedStabilityProvider.SHARED),
-                Optional.of(GeneratedTemperProvider.SHARED));
+                Optional.of(GeneratedFocusProvider.SHARED),
+                Optional.of(GeneratedFormMethodProvider.SHARED),
+                Optional.of(GeneratedRiskProvider.SHARED));
     }
 }

@@ -10,6 +10,7 @@ public interface ElixirumSounds {
     SoundEvent UI_BELL = register("ui.bell");
     SoundEvent UI_CLICK_1 = register("ui.click_1");
     SoundEvent UI_CLICK_2 = register("ui.click_2");
+    SoundEvent UI_HOVER = register("ui.hover");
     SoundEvent UI_SCROLL = register("ui.scroll");
     SoundEvent UI_BOTTLE_CLINK = register("ui.bottle_clink");
     SoundEvent UI_BOTTLE_OPEN = register("ui.bottle_open");

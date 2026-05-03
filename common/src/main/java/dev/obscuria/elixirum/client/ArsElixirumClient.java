@@ -1,10 +1,11 @@
 package dev.obscuria.elixirum.client;
 
 import dev.obscuria.elixirum.ArsElixirum;
+import dev.obscuria.elixirum.client.registry.ElixirumClientRegistries;
 import dev.obscuria.elixirum.client.renderer.PotionShelfRenderer;
 import dev.obscuria.elixirum.client.renderer.ThrownElixirRenderer;
-import dev.obscuria.elixirum.client.screen.tooltip.ClientAlchemyPropertiesTooltip;
-import dev.obscuria.elixirum.client.screen.tooltip.ClientElixirContentsTooltip;
+import dev.obscuria.elixirum.client.screen.tooltips.ClientAlchemyPropertiesTooltip;
+import dev.obscuria.elixirum.client.screen.tooltips.ClientElixirContentsTooltip;
 import dev.obscuria.elixirum.common.registry.ElixirumEntities;
 import dev.obscuria.elixirum.common.registry.ElixirumParticles;
 import dev.obscuria.elixirum.common.world.tooltip.AlchemyPropertiesTooltip;
@@ -14,13 +15,13 @@ import dev.obscuria.elixirum.client.models.ModelGlassCauldron;
 import dev.obscuria.elixirum.client.particles.BubbleParticle;
 import dev.obscuria.elixirum.client.particles.SplashParticle;
 import dev.obscuria.elixirum.client.renderer.GlassCauldronRenderer;
-import dev.obscuria.elixirum.client.screen.tooltip.ClientCompositionTooltip;
+import dev.obscuria.elixirum.client.screen.tooltips.ClientCompositionTooltip;
 import dev.obscuria.elixirum.common.registry.ElixirumBlockEntities;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import dev.obscuria.elixirum.common.world.tooltip.CompositionTooltip;
-import dev.obscuria.elixirum.client.screen.tooltip.ClientEffectsTooltip;
+import dev.obscuria.elixirum.client.screen.tooltips.ClientEffectsTooltip;
 import dev.obscuria.elixirum.common.world.tooltip.ElixirContentsTooltip;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.helpers.StyleHelper;
 import dev.obscuria.fragmentum.client.FragmentumClientRegistry;
 import dev.obscuria.fragmentum.util.color.RGB;
@@ -38,6 +39,9 @@ public final class ArsElixirumClient {
     }
 
     public static void init() {
+
+        ElixirumClientRegistries.init();
+
         FragmentumClientRegistry.registerTooltipComponent(AlchemyPropertiesTooltip.class, ClientAlchemyPropertiesTooltip::new);
         FragmentumClientRegistry.registerTooltipComponent(ElixirContentsTooltip.class, ClientElixirContentsTooltip::new);
         FragmentumClientRegistry.registerTooltipComponent(CompositionTooltip.class, ClientCompositionTooltip::of);
@@ -78,10 +82,10 @@ public final class ArsElixirumClient {
     }
 
     private static RGB elixirColorOf(ItemStack stack) {
-        return StyleHelper.chroma(stack).computeColor(ContentsHelper.elixir(stack));
+        return StyleHelper.chroma(stack).computeColor(ArsElixirumAPI.getElixirContents(stack));
     }
 
     private static RGB extractColorOf(ItemStack stack) {
-        return ContentsHelper.extract(stack).essences().dominantColor();
+        return ArsElixirumAPI.getExtractContents(stack).essences().dominantColor();
     }
 }

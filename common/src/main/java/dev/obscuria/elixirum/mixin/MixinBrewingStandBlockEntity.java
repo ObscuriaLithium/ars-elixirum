@@ -16,15 +16,15 @@ public abstract class MixinBrewingStandBlockEntity {
 
     @Inject(method = "doBrew", at = @At("HEAD"))
     private static void beforeBrew(Level level, BlockPos pos, NonNullList<ItemStack> items, CallbackInfo ci) {
-        var ingredient = items.get(3);
-        ItemStackCache.suppressedEssences(ingredient).clear();
-        ItemStackCache.setBrewFlag(ingredient, true);
+        var reagent = items.get(3);
+        ItemStackCache.suppressedEssences(reagent).clear();
+        ItemStackCache.setBrewFlag(reagent, true);
     }
 
     @Inject(method = "doBrew", at = @At("RETURN"))
     private static void afterBrew(Level level, BlockPos pos, NonNullList<ItemStack> items, CallbackInfo ci) {
-        var ingredient = items.get(3);
-        ItemStackCache.suppressedEssences(ingredient).clear();
-        ItemStackCache.setBrewFlag(ingredient, false);
+        var reagent = items.get(3);
+        ItemStackCache.suppressedEssences(reagent).clear();
+        ItemStackCache.setBrewFlag(reagent, false);
     }
 }

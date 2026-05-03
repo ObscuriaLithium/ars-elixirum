@@ -1,10 +1,10 @@
 package dev.obscuria.elixirum.client;
 
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
-import dev.obscuria.elixirum.client.screen.toast.MasteryLevelUpToast;
-import dev.obscuria.elixirum.client.screen.toast.NewCapToast;
-import dev.obscuria.elixirum.client.screen.toast.NewChromaToast;
-import dev.obscuria.elixirum.client.screen.toast.NewShapeToast;
+import dev.obscuria.elixirum.client.screen.toasts.MasteryLevelUpToast;
+import dev.obscuria.elixirum.client.screen.toasts.NewCapToast;
+import dev.obscuria.elixirum.client.screen.toasts.NewChromaToast;
+import dev.obscuria.elixirum.client.screen.toasts.NewShapeToast;
 import dev.obscuria.elixirum.common.alchemy.styles.Cap;
 import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
 import dev.obscuria.elixirum.common.alchemy.styles.Shape;
@@ -14,6 +14,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 
 public final class ClientPayloadListener {
+
+    public static void handle(Player player, ClientboundDiffPayload payload) {
+        payload.essenceGenerationResult().ifPresent(ClientAlchemy.INSTANCE.essences()::update);
+        payload.ingredientGenerationResult().ifPresent(ClientAlchemy.INSTANCE.ingredients()::update);
+    }
 
     public static void handle(Player player, ClientboundElixirBrewedPayload payload) {
         ClientAlchemy.INSTANCE.justBrewed(payload.recipe());
@@ -31,8 +36,7 @@ public final class ClientPayloadListener {
     }
 
     public static void handle(Player player, ClientboundDiscoverEssencePayload payload) {
-        var profile = ClientAlchemy.INSTANCE.localProfile();
-        DiscoverySystem.discoverEssence(profile, payload.item(), payload.essence());
+        DiscoverySystem.discoverEssence(ClientAlchemy.localProfile(), payload.item(), payload.essence());
     }
 
     public static void handle(Player player, ClientboundMasteryLevelUpPayload payload) {

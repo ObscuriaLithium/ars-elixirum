@@ -54,6 +54,13 @@
       { "name": "elixirum:ui_click_2", "pitch": 1.1 }
     ]
   },
+  "ui.hover": {
+    "sounds": [
+      { "name": "elixirum:ui_hover", "pitch": 1.2 },
+      { "name": "elixirum:ui_hover", "pitch": 1.3 },
+      { "name": "elixirum:ui_hover", "pitch": 1.4 }
+    ]
+  },
   "ui.bell": {
     "sounds": [
       { "name": "elixirum:ui_bell", "pitch": 0.9 },

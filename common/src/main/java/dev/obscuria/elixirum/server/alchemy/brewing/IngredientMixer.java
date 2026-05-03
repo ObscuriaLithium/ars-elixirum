@@ -2,11 +2,11 @@ package dev.obscuria.elixirum.server.alchemy.brewing;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.obscuria.elixirum.api.alchemy.AlchemyIngredient;
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
 import dev.obscuria.elixirum.api.codex.Alchemy;
-import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.brewing.BrewingProcessor;
-import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyIngredient;
-import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import dev.obscuria.elixirum.common.world.block.entity.GlassCauldronEntity;
 import dev.obscuria.fragmentum.util.color.RGB;
 import lombok.Getter;
@@ -20,8 +20,8 @@ public class IngredientMixer {
     @Getter private ElixirContents contents;
 
     public IngredientMixer() {
-        this.recipe = AlchemyRecipe.EMPTY;
-        this.contents = ElixirContents.WATER;
+        this.recipe = AlchemyRecipe.empty();
+        this.contents = ElixirContents.water();
     }
 
     private IngredientMixer(AlchemyRecipe recipe, ElixirContents contents) {
@@ -32,14 +32,14 @@ public class IngredientMixer {
     public boolean append(GlassCauldronEntity entity, ItemStack stack) {
         if (recipe.isComplete()) return false;
         if (entity.getLevel() == null) return false;
-        this.recipe = recipe.append(AlchemyIngredient.dynamic(stack));
+        this.recipe = recipe.append(AlchemyIngredient.of(stack));
         this.contents = new BrewingProcessor(Alchemy.get(entity.getLevel()), recipe).brew();
         return true;
     }
 
     public void clear() {
-        this.recipe = AlchemyRecipe.EMPTY;
-        this.contents = ElixirContents.WATER;
+        this.recipe = AlchemyRecipe.empty();
+        this.contents = ElixirContents.water();
     }
 
     public boolean isEmpty() {
@@ -60,8 +60,8 @@ public class IngredientMixer {
 
     static {
         CODEC = RecordCodecBuilder.create(codec -> codec.group(
-                AlchemyRecipe.CODEC.fieldOf("recipe").forGetter(IngredientMixer::recipe),
-                ElixirContents.CODEC.fieldOf("contents").forGetter(IngredientMixer::getContents)
+                AlchemyRecipe.codec().fieldOf("recipe").forGetter(IngredientMixer::recipe),
+                ElixirContents.codec().fieldOf("contents").forGetter(IngredientMixer::getContents)
         ).apply(codec, IngredientMixer::new));
     }
 }

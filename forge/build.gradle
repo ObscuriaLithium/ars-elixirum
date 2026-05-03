@@ -41,6 +41,7 @@ legacyForge {
     runs {
         client {
             client()
+            jvmArgument('-Dmixin.debug.export=true')
         }
         data {
             data()

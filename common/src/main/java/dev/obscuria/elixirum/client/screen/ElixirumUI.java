@@ -6,6 +6,7 @@ public interface ElixirumUI {
 
     Component DISCOVERIES_HEADER = Component.translatable("ui.elixirum.discoveries.header");
     Component DISCOVERIES_FOOTER = Component.translatable("ui.elixirum.discoveries.footer");
+    Component COMPENDIUM_HEADER = Component.translatable("ui.elixirum.compendium.header");
 
     Component DETAILS_RECIPE = Component.translatable("ui.elixirum.details.recipe");
     Component DETAILS_ASSESSMENT = Component.translatable("ui.elixirum.details.assessment");

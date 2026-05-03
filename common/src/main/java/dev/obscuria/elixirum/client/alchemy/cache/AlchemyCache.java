@@ -3,12 +3,12 @@ package dev.obscuria.elixirum.client.alchemy.cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
 import dev.obscuria.elixirum.client.alchemy.ClientAlchemy;
 import dev.obscuria.elixirum.common.alchemy.brewing.BrewingProcessor;
 import dev.obscuria.elixirum.common.alchemy.recipes.ConfiguredRecipe;
-import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.helpers.StyleHelper;
 
 import java.time.Duration;
@@ -35,7 +35,7 @@ public final class AlchemyCache {
                     @Override
                     public ConfiguredRecipe load(AlchemyRecipe recipe) {
                         return ClientAlchemy.localProfile().recipeCollection()
-                                .findConfig(recipe.getUuid())
+                                .findConfig(recipe.uuid())
                                 .orElseGet(recipe::configure);
                     }
                 });
@@ -49,7 +49,7 @@ public final class AlchemyCache {
                         var configured = configuredRecipeOf(recipe);
                         var stack = ElixirumItems.ELIXIR.instantiate();
                         var processor = new BrewingProcessor(ClientAlchemy.INSTANCE, recipe);
-                        ContentsHelper.setElixir(stack, processor.brew());
+                        ArsElixirumAPI.setElixirContents(stack, processor.brew());
                         StyleHelper.setStyle(stack, configured.getStyle());
                         StyleHelper.setChroma(stack, configured.getChroma());
                         return new CachedElixir(stack, configured);

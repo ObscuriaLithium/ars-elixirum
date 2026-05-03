@@ -1,59 +1,50 @@
 package dev.obscuria.elixirum.common.alchemy.codex;
 
 import dev.obscuria.elixirum.api.codex.AlchemyEssences;
+import dev.obscuria.elixirum.common.alchemy.Diff;
 import dev.obscuria.elixirum.common.alchemy.basics.Essence;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceRegistry;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public abstract class AbstractAlchemyEssences implements AlchemyEssences {
 
-    protected final Map<ResourceLocation, Essence> essenceMap = new HashMap<>();
-    protected final Set<EssenceHolder> holderSet = new HashSet<>();
+    protected final EssenceRegistry registry = new EssenceRegistry();
+    protected Diff generationResult = Diff.empty();
 
     public void unpack(PackedAlchemyEssences packed) {
-        EssenceHolder.unbindAll();
-        this.essenceMap.clear();
-        this.holderSet.clear();
-        packed.essences().forEach(this::register);
+        this.registry.fill(packed.essences());
     }
 
     public PackedAlchemyEssences pack() {
-        return new PackedAlchemyEssences(essenceMap);
+        return new PackedAlchemyEssences(registry.essenceView);
     }
 
-    public void register(ResourceLocation key, Essence essence) {
-        this.essenceMap.put(key, essence);
-        this.registerHolder(key, essence);
-    }
-
-    public void registerHolder(ResourceLocation key, Essence essence) {
-        var holder = EssenceHolder.getOrCreate(key);
-        holder.bind(essence);
-        this.holderSet.add(holder);
+    public Diff generationResult() {
+        return generationResult;
     }
 
     @Override
     public EssenceHolder getHolder(ResourceLocation key) {
-        return EssenceHolder.getOrCreate(key);
+        return registry.getHolder(key);
     }
 
     @Override
     public Stream<EssenceHolder> streamHolders() {
-        return holderSet.stream();
+        return registry.boundHolderView.stream();
     }
 
     @Override
     public void forEachHolder(Consumer<EssenceHolder> consumer) {
-        this.holderSet.forEach(consumer);
+        this.registry.boundHolderView.forEach(consumer);
     }
 
     @Override
     public void forEach(BiConsumer<ResourceLocation, Essence> consumer) {
-        this.essenceMap.forEach(consumer);
+        this.registry.essenceView.forEach(consumer);
     }
 }

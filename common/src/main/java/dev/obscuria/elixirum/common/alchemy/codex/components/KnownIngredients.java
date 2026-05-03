@@ -2,10 +2,10 @@ package dev.obscuria.elixirum.common.alchemy.codex.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyIngredient;
-import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
+import dev.obscuria.elixirum.api.alchemy.AlchemyIngredient;
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
 import dev.obscuria.elixirum.helpers.CodecHelper;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import lombok.Getter;
 import net.minecraft.world.item.Item;
 
@@ -26,9 +26,9 @@ public final class KnownIngredients {
     }
 
     public void discoverAll(AlchemyRecipe recipe) {
-        recipe.getBase().map(AlchemyIngredient::asItem).ifPresent(this::discoverAsBase);
-        recipe.getCatalyst().map(AlchemyIngredient::asItem).ifPresent(this::discoverAsCatalyst);
-        recipe.getInhibitor().map(AlchemyIngredient::asItem).ifPresent(this::discoverAsInhibitor);
+        recipe.base().map(AlchemyIngredient::asItem).ifPresent(this::discoverAsBase);
+        recipe.catalyst().map(AlchemyIngredient::asItem).ifPresent(this::discoverAsCatalyst);
+        recipe.inhibitor().map(AlchemyIngredient::asItem).ifPresent(this::discoverAsInhibitor);
     }
 
     public void discoverAsBase(Item item) {

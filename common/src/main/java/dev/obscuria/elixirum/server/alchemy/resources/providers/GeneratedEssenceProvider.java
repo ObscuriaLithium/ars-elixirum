@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.server.alchemy.resources.providers;
 
 import com.mojang.serialization.Codec;
 import dev.obscuria.elixirum.common.alchemy.basics.Essence;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolderMap;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolderMap;
 import dev.obscuria.elixirum.common.alchemy.basics.Aspect;
 import dev.obscuria.elixirum.common.alchemy.ingredient.provider.CountProvider;
 import dev.obscuria.elixirum.common.alchemy.ingredient.provider.EssenceProvider;

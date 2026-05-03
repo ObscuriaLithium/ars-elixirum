@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.common.alchemy;
 
-import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
 import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
@@ -40,21 +40,25 @@ public enum ElixirQuality implements StringRepresentable {
     }
 
     public static ElixirQuality fromStack(ItemStack stack) {
-        return fromContents(ContentsHelper.elixir(stack));
+        return fromContents(ArsElixirumAPI.getElixirContents(stack));
     }
 
     public static ElixirQuality fromContents(ElixirContents effects) {
         if (effects.isVoided()) return MIXTURE;
-        var index = (int) (Math.round(effects.quality()) / 10) - 1;
+        return fromQuality(effects.quality());
+    }
+
+    public static ElixirQuality fromQuality(double quality) {
+        var index = (int) (quality / 10);
         return switch (index) {
-            case 0 -> PALE;
-            case 1 -> CLOUDY;
-            case 2 -> WEAK;
-            case 3 -> MINOR;
-            case 4 -> MODERATE;
-            case 5 -> GRAND;
-            case 6 -> INTENSE;
-            case 7 -> SUPREME;
+            case 0, 1, 2 -> PALE;
+            case 3 -> CLOUDY;
+            case 4 -> WEAK;
+            case 5 -> MINOR;
+            case 6 -> MODERATE;
+            case 7 -> GRAND;
+            case 8 -> INTENSE;
+            case 9 -> SUPREME;
             default -> LEGENDARY;
         };
     }

@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.helpers;
 
+import dev.obscuria.elixirum.api.alchemy.components.StyleVariant;
 import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
-import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
 import dev.obscuria.elixirum.common.world.ItemStackCache;
 import dev.obscuria.elixirum.common.world.NBTComponents;
 import net.minecraft.world.item.ItemStack;

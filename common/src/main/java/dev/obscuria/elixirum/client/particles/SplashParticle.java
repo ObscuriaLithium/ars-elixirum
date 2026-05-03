@@ -5,7 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LightTexture;
 
-public class SplashParticle extends WaterDropParticle {
+public final class SplashParticle extends WaterDropParticle {
 
     private SplashParticle(ClientLevel level,
                              SplashParticleOptions options,

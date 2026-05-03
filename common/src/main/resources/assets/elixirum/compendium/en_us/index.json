@@ -1,22 +1,19 @@
 {
   "title": "Compendium",
+  "subtitle": "Your guide to alchemical mastery",
   "homepage": "homepage.json",
   "sections": [
     {
-      "title": "Getting Started",
+      "title": "THE FUNDAMENTALS",
       "pages": [
-        "getting_started/introduction.json",
-        "getting_started/essences_and_ingredients.json",
-        "getting_started/creating_elixir.json"
+        "the_fundamentals/part_1.json",
+        "the_fundamentals/part_2.json",
+        "the_fundamentals/part_3.json",
+        "the_fundamentals/part_4.json",
+        "the_fundamentals/part_5.json",
+        "the_fundamentals/part_6.json",
+        "the_fundamentals/part_7.json"
       ]
-    },
-    {
-      "title": "Essences",
-      "pages": []
-    },
-    {
-      "title": "Extras",
-      "pages": []
     }
   ]
 }

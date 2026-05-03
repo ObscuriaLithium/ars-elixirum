@@ -1,6 +1,6 @@
 package dev.obscuria.elixirum.common.alchemy.traits.application;
 
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -30,7 +30,7 @@ public class PotableBehavior implements ApplicationBehavior {
 
         if (entity instanceof ServerPlayer serverPlayer) {
             CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
-            ContentsHelper.elixir(stack).apply(entity, entity, entity);
+            ArsElixirumAPI.getElixirContents(stack).apply(entity, entity, entity);
         }
 
         player.awardStat(Stats.ITEM_USED.get(stack.getItem()));

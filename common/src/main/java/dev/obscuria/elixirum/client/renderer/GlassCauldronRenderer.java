@@ -20,7 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class GlassCauldronRenderer implements BlockEntityRenderer<GlassCauldronEntity> {
+public final class GlassCauldronRenderer implements BlockEntityRenderer<GlassCauldronEntity> {
 
     private static final ResourceLocation CAULDRON_TEXTURE = ArsElixirum.identifier("textures/entity/cauldron.png");
     private static final ResourceLocation CAULDRON_GLASS_TEXTURE = ArsElixirum.identifier("textures/entity/cauldron_glass.png");

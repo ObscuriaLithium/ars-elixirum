@@ -1,0 +1,34 @@
+{
+  "icon": "minecraft:blaze_powder",
+  "title": "Part III: The Three Forces That Shape Every Elixir",
+  "contents": [
+    {
+      "type": "paragraph",
+      "text": "Every elixir is defined by three fundamental properties - [color=#EC8FFF]Focus, Form, and Risk[/color]. Each is determined directly by one of the three ingredient slots, making the outcome of a brew a predictable result of its composition rather than chance."
+    },
+    {
+      "type": "subheader",
+      "text": "Focus (Set by the Base)"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Focus[/color] determines how an elixir distributes its power - between potency and duration. The [color=#8fe1ff]Base[/color] ingredient defines this through its Focus trait: some Bases amplify strength, others extend duration, while balanced ones sit between. The spectrum ranges from [color=#EC8FFF]Absolute Duration[/color] - long-lasting but weaker effects - to [color=#EC8FFF]Absolute Potency[/color] - strong but short-lived ones."
+    },
+    {
+      "type": "subheader",
+      "text": "Form (Set by the Catalyst)"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Form[/color] defines how an elixir is applied. The [color=#8fe1ff]Catalyst[/color] determines whether it is Potable (consumed directly), Explosive (thrown on impact), or Lingering (forming a cloud that applies effects over time). The same mixture can behave very differently depending on this choice."
+    },
+    {
+      "type": "subheader",
+      "text": "Risk (Set by the Inhibitor)"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Risk[/color] governs the likelihood and intensity of side effects. The [color=#8fe1ff]Inhibitor[/color] defines this trait, ranging from [color=#EC8FFF]Perfect[/color] - eliminating side effects - through Balanced, to [color=#EC8FFF]Chaotic[/color], where instability greatly increases unpredictable outcomes. Managing Risk becomes one of the most reliable ways to refine your brews."
+    }
+  ]
+}

@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.alchemy.codex.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
 import lombok.Getter;
 import net.minecraft.core.UUIDUtil;
 

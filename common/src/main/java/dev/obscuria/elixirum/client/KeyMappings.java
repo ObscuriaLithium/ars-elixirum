@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.obscuria.elixirum.client.screen.widgets.pages.AbstractPage;
+import dev.obscuria.elixirum.client.screen.alchemy.AlchemyScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
@@ -14,6 +14,6 @@ public interface KeyMappings {
 
     static void collectionPressed() {
         if (Minecraft.getInstance().screen != null) return;
-        AbstractPage.lastKind.open();
+        AlchemyScreen.lastPage.open();
     }
 }

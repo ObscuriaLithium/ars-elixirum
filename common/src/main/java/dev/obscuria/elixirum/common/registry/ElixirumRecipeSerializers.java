@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.common.registry;
 
 import dev.obscuria.elixirum.ArsElixirum;
+import dev.obscuria.elixirum.common.world.recipe.ElixirNameTagRecipe;
 import dev.obscuria.elixirum.common.world.recipe.WitchTotemOfUndyingRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 public interface ElixirumRecipeSerializers {
 
     RecipeSerializer<WitchTotemOfUndyingRecipe> WITCH_TOTEM_OF_UNDYING = simple("witch_totem_of_undying", WitchTotemOfUndyingRecipe::new);
+    RecipeSerializer<ElixirNameTagRecipe> ELIXIR_NAME_TAG = simple("elixir_name_tag", ElixirNameTagRecipe::new);
 
     private static <T extends CraftingRecipe> RecipeSerializer<T> simple(
             String name,

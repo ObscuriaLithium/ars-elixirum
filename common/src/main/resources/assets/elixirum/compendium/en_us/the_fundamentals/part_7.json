@@ -1,0 +1,58 @@
+{
+  "icon": "minecraft:writable_book",
+  "title": "Part VII: Practical Advice for Deliberate Experimentation",
+  "contents": [
+    {
+      "type": "paragraph",
+      "text": "These principles separate deliberate alchemy from blind experimentation. Every strong elixir is the result of controlled decisions, not chance."
+    },
+    {
+      "type": "subheader",
+      "text": "Principle 1: Analyze Before You Brew"
+    },
+    {
+      "type": "paragraph",
+      "text": "Before committing an ingredient to an important recipe, use [color=#EC8FFF]Solvents[/color] to uncover its [color=#EC8FFF]Essences[/color]. An ingredient is only valuable in context - something unsuitable as a [color=#8fe1ff]Base[/color] may still be ideal as an [color=#8fe1ff]Inhibitor[/color] or [color=#8fe1ff]Catalyst[/color]. Knowledge determines placement."
+    },
+    {
+      "type": "subheader",
+      "text": "Principle 2: Build Around a Shared Essence"
+    },
+    {
+      "type": "paragraph",
+      "text": "Strong elixirs begin with a target essence. Your goal is to find [color=#EC8FFF]three different ingredients[/color] that all provide it, ensuring [color=#EC8FFF]Dominant Manifestation[/color]. Repeating the same ingredient weakens the result due to [color=#EC8FFF]low Diversity[/color], reducing the final strength regardless of composition. Variety is not optional - it is the mechanism."
+    },
+    {
+      "type": "subheader",
+      "text": "Principle 3: The Inhibitor is a Core Component"
+    },
+    {
+      "type": "paragraph",
+      "text": "The [color=#8fe1ff]Inhibitor[/color] defines [color=#EC8FFF]Risk[/color], applies [color=#EC8FFF]Concordance[/color], and contributes its own essences. Treating it as a leftover slot results in unstable or inefficient brews. A well-chosen Inhibitor can stabilize a mixture and significantly increase its final output."
+    },
+    {
+      "type": "subheader",
+      "text": "Principle 4: Match Form to Purpose"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Form[/color] determines how an elixir is applied. The same mixture can behave entirely differently depending on its [color=#8fe1ff]Catalyst[/color]. Potable forms are reliable defaults, while Explosive and Lingering variants are situational tools. Always decide how the elixir will be used before selecting a Catalyst."
+    },
+    {
+      "type": "subheader",
+      "text": "Principle 5: Use Focus Intentionally"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Focus[/color] defines the tradeoff between potency and duration. High-potency Bases create strong but short-lived effects, while high-duration Bases produce weaker but sustained ones. Neither is universally better - the correct choice depends on the intended use of the elixir."
+    },
+    {
+      "type": "subheader",
+      "text": "Principle 6: Improve Through Iteration"
+    },
+    {
+      "type": "paragraph",
+      "text": "When a recipe works, refine it. Replace ingredients with higher-tier equivalents that preserve the same essence, align your [color=#8fe1ff]Inhibitor[/color] for better [color=#EC8FFF]Concordance[/color], reduce [color=#EC8FFF]Risk[/color], and ensure your target essence reaches [color=#EC8FFF]Dominant Manifestation[/color]. Progression comes from controlled adjustments, not complete reinvention."
+    }
+  ]
+}

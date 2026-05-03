@@ -2,9 +2,9 @@ package dev.obscuria.elixirum.common.world.block.entity;
 
 import com.google.common.collect.ImmutableList;
 import dev.obscuria.elixirum.ArsElixirum;
-import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
-import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.common.registry.ElixirumBlockEntities;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import dev.obscuria.elixirum.common.world.NBTComponents;
@@ -110,7 +110,7 @@ public class GlassCauldronEntity extends BlockEntity {
     public ItemStack scoopUp() {
         if (!isFilled || !mixer.isComplete() || getLevel() == null) return ItemStack.EMPTY;
         final var stack = ElixirumItems.ELIXIR.instantiate();
-        ContentsHelper.setElixir(stack, mixer.getContents());
+        ArsElixirumAPI.setElixirContents(stack, mixer.getContents());
         this.availablePortions--;
         if (availablePortions <= 0) this.maybeFlush();
         return stack;
@@ -261,7 +261,7 @@ public class GlassCauldronEntity extends BlockEntity {
         private static RGB elixirColor(GlassCauldronEntity entity) {
             return entity.getLevel() != null
                     ? entity.mixer.getContents().color()
-                    : ElixirContents.WATER.color();
+                    : ElixirContents.water().color();
         }
 
         private static RGB wunschpunschColor(GlassCauldronEntity entity) {

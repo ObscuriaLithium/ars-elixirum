@@ -2,8 +2,8 @@ package dev.obscuria.elixirum.server.alchemy.resources;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.obscuria.elixirum.common.alchemy.basics.EffectProvider;
-import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
+import dev.obscuria.elixirum.api.alchemy.EffectProvider;
 import dev.obscuria.elixirum.common.alchemy.recipes.RecipeKind;
 import dev.obscuria.fragmentum.util.color.RGB;
 import net.minecraft.network.chat.Component;
@@ -29,10 +29,10 @@ public record PredefinedRecipe(
     static {
         DIRECT_CODEC = RecordCodecBuilder.create(codec -> codec.group(
                 RecipeKind.CODEC.fieldOf("kind").forGetter(PredefinedRecipe::kind),
-                AlchemyRecipe.CODEC.fieldOf("recipeUid").forGetter(PredefinedRecipe::recipe),
-                EffectProvider.CODEC.listOf().fieldOf("elixirContents").forGetter(PredefinedRecipe::effects),
+                AlchemyRecipe.codec().fieldOf("recipe").forGetter(PredefinedRecipe::recipe),
+                EffectProvider.CODEC.listOf().fieldOf("effects").forGetter(PredefinedRecipe::effects),
                 ExtraCodecs.FLAT_COMPONENT.optionalFieldOf("display_name").forGetter(PredefinedRecipe::displayName),
-                RGB.CODEC.optionalFieldOf("iconColor").forGetter(PredefinedRecipe::color)
+                RGB.CODEC.optionalFieldOf("color").forGetter(PredefinedRecipe::color)
         ).apply(codec, PredefinedRecipe::new));
     }
 }

@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.alchemy.systems;
 
 import dev.obscuria.elixirum.api.codex.Alchemy;
 import dev.obscuria.elixirum.api.codex.AlchemyProfile;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import dev.obscuria.elixirum.common.alchemy.codex.components.KnownIngredients;
 import net.minecraft.world.item.Item;
 

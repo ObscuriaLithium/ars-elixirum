@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.server.alchemy;
 
+import dev.obscuria.elixirum.api.alchemy.AlchemyProperties;
 import dev.obscuria.elixirum.common.alchemy.codex.AbstractAlchemyIngredients;
-import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyProperties;
 import dev.obscuria.elixirum.server.alchemy.generation.IngredientReconciler;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;

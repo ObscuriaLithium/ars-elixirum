@@ -29,7 +29,8 @@ public class EssenceGenerator {
     public Optional<Essence> generateEssence(Holder.Reference<MobEffect> effect) {
         if (!effectToLimits.containsKey(effect.value())) return Optional.empty();
         var limits = effectToLimits.get(effect.value());
-        return Optional.of(new Essence(effect,
+        return Optional.of(Essence.create(
+                Optional.empty(), effect,
                 limits.maxAmplifier * 2,
                 limits.maxDuration * 2,
                 DEFAULT_MIN_QUALITY));

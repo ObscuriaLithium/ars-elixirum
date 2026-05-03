@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.network;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.obscuria.elixirum.client.ClientPayloadListener;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import dev.obscuria.fragmentum.FragmentumProxy;
 import dev.obscuria.fragmentum.network.PayloadCodec;
 import net.minecraft.core.registries.BuiltInRegistries;

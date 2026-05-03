@@ -1,7 +1,8 @@
 package dev.obscuria.elixirum.common.alchemy.codex;
 
+import dev.obscuria.elixirum.api.alchemy.AlchemyProperties;
 import dev.obscuria.elixirum.api.codex.AlchemyIngredients;
-import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyProperties;
+import dev.obscuria.elixirum.common.alchemy.Diff;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,6 +13,12 @@ import java.util.function.BiConsumer;
 public abstract class AbstractAlchemyIngredients implements AlchemyIngredients {
 
     protected final Map<Item, AlchemyProperties> propertiesMap = new HashMap<>();
+    protected Diff generationResult = Diff.empty();
+
+    public void unpack(PackedAlchemyIngredients packed) {
+        this.propertiesMap.clear();
+        this.propertiesMap.putAll(packed.properties());
+    }
 
     public PackedAlchemyIngredients pack() {
         return new PackedAlchemyIngredients(propertiesMap);
@@ -23,7 +30,7 @@ public abstract class AbstractAlchemyIngredients implements AlchemyIngredients {
 
     @Override
     public AlchemyProperties propertiesOf(Item item) {
-        return propertiesMap.getOrDefault(item, AlchemyProperties.EMPTY);
+        return propertiesMap.getOrDefault(item, AlchemyProperties.empty());
     }
 
     @Override
@@ -36,9 +43,9 @@ public abstract class AbstractAlchemyIngredients implements AlchemyIngredients {
         this.propertiesMap.forEach(consumer);
     }
 
-    protected void unpack(PackedAlchemyIngredients packed) {
-        this.propertiesMap.clear();
-        this.propertiesMap.putAll(packed.properties());
+    @Override
+    public Diff generationResult() {
+        return generationResult;
     }
 
     protected void register(Item item, AlchemyProperties properties) {

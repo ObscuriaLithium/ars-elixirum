@@ -1,46 +1,54 @@
 package dev.obscuria.elixirum.client.screen.toolkit.containers;
 
-import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
-import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
+import dev.obscuria.elixirum.client.Palette;
+import dev.obscuria.elixirum.client.screen.toolkit.GuiContext;
+import dev.obscuria.elixirum.client.screen.toolkit.Control;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.CommonComponents;
 
-public class SplitContainer extends HierarchicalControl {
+public class SplitContainer extends Control {
 
     private final float ratio;
     private final int separation;
     private final boolean drawSeparator;
 
     public SplitContainer(float ratio, int separation, boolean drawSeparator) {
-        super(0, 0, 0, 0, CommonComponents.EMPTY);
         this.ratio = ratio;
         this.separation = separation;
         this.drawSeparator = drawSeparator;
-        this.setUpdateFlags(UPDATE_BY_WIDTH);
+        setSizeHints(SIZE_HINT_WIDTH | SIZE_HINT_HEIGHT);
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
-        this.renderChildren(graphics, transform, mouseX, mouseY);
+    public void render(GuiGraphics graphics, GuiContext ctx, int mouseX, int mouseY) {
+
+        if (drawSeparator) {
+            int sx = getX() + (int) (getWidth() * ratio);
+            graphics.vLine(
+                    sx, getY() - 2, getY() + getHeight(),
+                    Palette.MODERATE.decimal());
+        }
+
+        renderChildren(graphics, ctx, mouseX, mouseY);
     }
 
     @Override
-    public void reorganize() {
+    protected void measure() {
+        var maxHeight = 0;
+        for (var child : getChildren()) {
+            maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
+        }
+        setMeasuredSize(0, maxHeight);
+    }
 
-        final var children = listChildren().toList();
+    @Override
+    protected void layout() {
+        var children = getChildren();
         if (children.size() != 2) return;
-        final var first = children.get(0);
-        final var second = children.get(1);
-        final var split = (int) (rect.width() * ratio);
+        var left = children.get(0);
+        var right = children.get(1);
+        int split = (int) (getWidth() * ratio);
 
-        first.rect.setX(rect.x());
-        first.rect.setY(rect.y());
-        first.rect.setWidth(split - separation);
-        first.rect.setHeight(rect.height());
-
-        second.rect.setX(rect.x() + split + 1 + separation);
-        second.rect.setY(rect.y());
-        second.rect.setWidth(rect.width() - split - 1 - separation);
-        second.rect.setHeight(rect.height());
+        placeChild(left, getX(), getY(), split - separation, getHeight());
+        placeChild(right, getX() + split + separation + 1, getY(), getWidth() - split - separation - 1, getHeight());
     }
 }

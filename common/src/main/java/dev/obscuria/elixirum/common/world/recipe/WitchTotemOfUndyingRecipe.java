@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.world.recipe;
 
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import dev.obscuria.elixirum.common.registry.ElixirumRecipeSerializers;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -39,11 +39,11 @@ public final class WitchTotemOfUndyingRecipe extends CustomRecipe {
 
     @Override
     public ItemStack assemble(CraftingContainer container, RegistryAccess registryAccess) {
-        var contents = ContentsHelper.elixir(container.getItems().stream()
+        var contents = ArsElixirumAPI.getElixirContents(container.getItems().stream()
                 .filter(stack -> stack.is(ElixirumItems.ELIXIR.asItem()))
                 .findFirst().orElse(ItemStack.EMPTY));
         var result = new ItemStack(ElixirumItems.WITCH_TOTEM_OF_UNDYING.asItem());
-        ContentsHelper.setElixir(result, contents);
+        ArsElixirumAPI.setElixirContents(result, contents);
         return result;
     }
 

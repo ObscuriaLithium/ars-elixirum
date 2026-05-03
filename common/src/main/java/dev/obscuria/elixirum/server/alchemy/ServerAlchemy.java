@@ -1,9 +1,11 @@
 package dev.obscuria.elixirum.server.alchemy;
 
 import dev.obscuria.elixirum.api.codex.Alchemy;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import dev.obscuria.elixirum.common.network.ClientboundAlchemyPayload;
+import dev.obscuria.elixirum.common.network.ClientboundDiffPayload;
+import dev.obscuria.elixirum.config.GenerationConfig;
 import dev.obscuria.elixirum.server.ServerExtensions;
-import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -44,9 +46,9 @@ public final class ServerAlchemy implements Alchemy {
     }
 
     public void onServerStart() {
+        GenerationConfig.refresh();
         this.essences.load(server);
         this.ingredients.load(server);
-        this.essences.reconcile();
         this.ingredients.reconcile();
     }
 
@@ -57,17 +59,19 @@ public final class ServerAlchemy implements Alchemy {
     }
 
     public void onServerStop() {
-
+        EssenceHolder.clearCache();
     }
 
     public void onPlayerJoin(ServerPlayer player) {
         var profile = getOrCreateProfile(player);
         profile.load();
-        FragmentumNetworking.sendTo(player,
-                new ClientboundAlchemyPayload(
-                        Optional.of(essences.pack()),
-                        Optional.of(ingredients.pack()),
-                        Optional.of(profile.pack())));
+        profile.sendToClient(new ClientboundAlchemyPayload(
+                Optional.of(essences.pack()),
+                Optional.of(ingredients.pack()),
+                Optional.of(profile.pack())));
+        profile.sendToClient(3, new ClientboundDiffPayload(
+                essences.generationResult(),
+                ingredients.generationResult()));
     }
 
     public void onPlayerLeave(ServerPlayer player) {

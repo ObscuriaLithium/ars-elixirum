@@ -1,155 +1,210 @@
 package dev.obscuria.elixirum.client.screen.toolkit.containers;
 
-import dev.obscuria.elixirum.client.ArsElixirumPalette;
-import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
-import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
+import dev.obscuria.elixirum.client.Palette;
+import dev.obscuria.elixirum.client.screen.toolkit.GuiContext;
+import dev.obscuria.elixirum.client.screen.toolkit.Control;
+import dev.obscuria.elixirum.client.screen.toolkit.GuiToolkit;
+import dev.obscuria.elixirum.client.screen.toolkit.tools.Label;
 import dev.obscuria.elixirum.common.registry.ElixirumSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
 
-public class ScrollContainer extends HierarchicalControl {
+public class ScrollContainer extends Control {
 
-    private @Nullable MultiLineLabel placeholderLabel;
-    private double scrollValue = 0.0;
-    private double scrollValueO = 0.0;
-    private double scroll = 0.0;
-    private int childrenHeight = 0;
-    private int visibleHeight = 0;
+    private Label placeholder = Label.EMPTY;
+
+    private double scrollTarget = 0.0;
+    private double scrollSmooth = 0.0;
+    private double scrollSmoothO = 0.0;
+    private int contentHeight = 0;
     private int tickCount = 0;
-    private int lastSoundTick = 0;
+    private int lastSoundTick = -999;
+
+    private boolean isDraggingScrollbar = false;
+    private double dragStartY = 0.0;
+    private double dragStartScroll = 0.0;
 
     public ScrollContainer(Component placeholder) {
         super(0, 0, 0, 0, placeholder);
-        this.setUpdateFlags(UPDATE_BY_HEIGHT);
-    }
-
-    private boolean isScrollEnabled() {
-        return childrenHeight > visibleHeight;
-    }
-
-    private double maxScroll() {
-        return (double) (childrenHeight - visibleHeight);
+        setSizeHints(SIZE_HINT_HEIGHT);
     }
 
     public void resetScroll() {
-        this.scrollValue = 0.0;
-        this.scrollValueO = 0.0;
-        this.scroll = 0.0;
-        consumeChanges();
+        this.scrollTarget = scrollSmooth = scrollSmoothO = 0;
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, GuiContext context, int mouseX, int mouseY) {
+        double scroll = lerpScroll();
 
-        final var scroll = lerpScroll();
-        graphics.enableScissor(
-                transform.region().left(),
-                transform.region().top(),
-                transform.region().right(),
-                transform.region().bottom());
+        context.pushScissor(graphics, getX(), getY(), getX() + getWidth(), getY() + getHeight());
         graphics.pose().pushPose();
         graphics.pose().translate(0.0, -scroll, 0.0);
-        this.listChildren().forEach(child -> {
-            final var offset = GlobalTransform.offset(child, transform.region(), 0, -(int) scroll);
-            child.render(graphics, offset, mouseX, mouseY);
-        });
+        context.pushScrollOffset(scroll);
+        renderChildren(graphics, context, mouseX, mouseY);
+        context.popScrollOffset();
         graphics.pose().popPose();
-        graphics.disableScissor();
+        context.popScissor(graphics);
 
-        if (isScrollEnabled()) {
-            graphics.fill(rect.right() - 1, rect.y(), rect.right() + 1, rect.bottom(), 0x2F000000);
-            double clampedScroll = Mth.clamp(scroll, 0.0, maxScroll());
-            float ratio = (float) (clampedScroll / maxScroll());
-            int height = (int) (rect.height() * (visibleHeight / (float) childrenHeight));
-            double offset = (rect.height() - height) * ratio;
-            graphics.pose().pushPose();
-            graphics.pose().translate(rect.right() - 1.0, rect.y() + offset, 0.0);
-            graphics.fill(0, 0, 2, height, ArsElixirumPalette.ACCENT.withAlpha(100 / 255f).decimal());
-            graphics.pose().popPose();
+        renderScrollbar(graphics, scroll);
+        renderFades(graphics, scroll);
+
+        if (!hasVisibleContent()) this.placeholder.drawHVCentered(graphics,
+                getCenterX(), getCenterY(),
+                Palette.LIGHT.decimal());
+    }
+
+    @Override
+    public boolean mouseClicked(GuiContext context, double mouseX, double mouseY, int button) {
+        if (button == 0 && scrollEnabled() && isOverScrollbar(mouseX, mouseY)) {
+            double scroll = lerpScroll();
+            double clamped = Mth.clamp(scroll, 0.0, maxScroll());
+            float ratio = (float) (clamped / maxScroll());
+            int barH = Math.max(8, (int) (getHeight() * ((double) getHeight() / contentHeight)));
+            int barOff = (int) ((getHeight() - barH) * ratio);
+            int barTop = getY() + barOff;
+            int barBottom = barTop + barH;
+
+            if (mouseY >= barTop && mouseY <= barBottom) {
+                isDraggingScrollbar = true;
+                dragStartY = mouseY - barTop;
+                dragStartScroll = scrollTarget;
+            } else {
+                double trackSize = getHeight() - barH;
+                double desiredBarTop = mouseY - getY() - barH / 2.0;
+                scrollTarget = Mth.clamp(desiredBarTop / trackSize * maxScroll(), 0.0, maxScroll());
+            }
+            return true;
         }
 
-        if (scroll > 5) {
-            graphics.fill(rect.left(), rect.top(), rect.right() - 1, rect.top() + 5, 0x6080788A);
+        if (!context.isMouseOver(this, mouseX, mouseY)) return false;
+        context.pushScrollOffset(lerpScroll());
+        var result = super.mouseClicked(context, mouseX, mouseY, button);
+        context.popScrollOffset();
+        return result;
+    }
+
+    @Override
+    public boolean mouseDragged(GuiContext context, double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (isDraggingScrollbar && button == 0 && scrollEnabled()) {
+            int barH = Math.max(8, (int) (getHeight() * ((double) getHeight() / contentHeight)));
+            double trackSize = getHeight() - barH;
+            if (trackSize > 0) {
+                double desiredBarTop = mouseY - getY() - dragStartY;
+                scrollTarget = Mth.clamp(desiredBarTop / trackSize * maxScroll(), 0.0, maxScroll());
+            }
+            return true;
         }
 
-        if (childrenHeight - scroll > rect.height() + 5) {
-            graphics.fill(rect.left(), rect.bottom() - 5, rect.right() - 1, rect.bottom(), 0x6080788A);
+        context.pushScrollOffset(lerpScroll());
+        var result = super.mouseDragged(context, mouseX, mouseY, button, dragX, dragY);
+        context.popScrollOffset();
+        return result;
+    }
+
+    @Override
+    public boolean mouseReleased(GuiContext context, double mouseX, double mouseY, int button) {
+        if (isDraggingScrollbar && button == 0) {
+            isDraggingScrollbar = false;
+            return true;
         }
 
-        if (hasVisibleContents()) return;
-        if (placeholderLabel != null) {
-            graphics.pose().pushPose();
-            graphics.pose().translate(rect.centerX(), rect.centerY() - placeholderLabel.getLineCount() * 5, 0f);
-            graphics.pose().scale(0.75f, 0.75f, 1f);
-            placeholderLabel.renderCentered(graphics, 0, 0);
-            graphics.pose().popPose();
-        }
+        context.pushScrollOffset(lerpScroll());
+        var result = super.mouseReleased(context, mouseX, mouseY, button);
+        context.popScrollOffset();
+        return result;
+    }
+
+    @Override
+    public boolean mouseScrolled(GuiContext context, double mouseX, double mouseY, double delta) {
+        if (!context.isMouseOver(this, mouseX, mouseY) || !scrollEnabled()) return false;
+        this.scrollTarget += delta * -16.0;
+        return true;
     }
 
     @Override
     public void tick() {
-        this.tickCount += 1;
-        this.scrollValueO = scrollValue;
-        this.scrollValue = Mth.lerp(0.5, scrollValue, scroll);
-        if (scroll < 0 || !isScrollEnabled()) {
-            this.scroll = Mth.lerp(0.75, scroll, 0.0);
-        } else if (scroll > maxScroll()) {
-            this.scroll = Mth.lerp(0.75, scroll, maxScroll());
+        tickCount++;
+        scrollSmoothO = scrollSmooth;
+        scrollSmooth = Mth.lerp(0.5, scrollSmooth, scrollTarget);
+
+        double scrollDelta = Math.abs(scrollSmooth - scrollSmoothO);
+        if (scrollDelta > 0.25) {
+            float t = (float) Mth.clamp((scrollDelta - 0.5) / (3.0 - 0.5), 0.0, 1.0);
+            int cooldown = Math.round(Mth.lerp(t, 10, 1));
+            if (tickCount - lastSoundTick >= cooldown) {
+                double dir = scrollSmooth - scrollSmoothO;
+                var soundInstance = SimpleSoundInstance.forUI(ElixirumSounds.UI_SCROLL, dir < 0 ? 0.9f : 1.1f);
+                Minecraft.getInstance().getSoundManager().play(soundInstance);
+                this.lastSoundTick = tickCount;
+            }
+        }
+        if (!isDraggingScrollbar) {
+            if (!scrollEnabled() || scrollTarget < 0)
+                scrollTarget = Mth.lerp(0.75, scrollTarget, 0.0);
+            else if (scrollTarget > maxScroll())
+                scrollTarget = Mth.lerp(0.75, scrollTarget, maxScroll());
         }
         super.tick();
     }
 
     @Override
-    public boolean mouseClicked(GlobalTransform transform, double mouseX, double mouseY, int button) {
-        double scroll = lerpScroll();
-        return listChildren().anyMatch(child -> {
-            final var offset = GlobalTransform.offset(child, transform.region(), 0, -(int) scroll);
-            return child.mouseClicked(offset, mouseX, mouseY, button);
-        });
+    protected void measure() {
+        this.placeholder = Label.create(getMessage(), getWidth() - 10, GuiToolkit.PARAGRAPH_SCALE);
+        setMeasuredSize(0, 0);
     }
 
     @Override
-    public boolean mouseScrolled(GlobalTransform transform, double mouseX, double mouseY, double scroll) {
-        if (transform.isMouseOver(mouseX, mouseY)) {
-            if (!isScrollEnabled()) return false;
-            this.scroll += scroll * -16.0;
-            if (Math.abs(scroll) > 0.1f && lastSoundTick < tickCount) {
-                var manager = Minecraft.getInstance().getSoundManager();
-                float pitch = (scroll > 0) ? 0.9f : 1.1f;
-                manager.play(SimpleSoundInstance.forUI(ElixirumSounds.UI_SCROLL, pitch));
-                this.lastSoundTick = tickCount;
-            }
-            return true;
+    protected void layout() {
+        this.contentHeight = 0;
+        int offsetY = getY() + 5;
+        for (var child : getChildren()) {
+            placeChild(child, getX(), offsetY, getWidth() - 2, child.getMeasuredHeight());
+            offsetY += child.getHeight() + 5;
+            this.contentHeight += child.getHeight() + 10;
         }
-        return super.mouseScrolled(transform, mouseX, mouseY, scroll);
     }
 
-    @Override
-    public void reorganize() {
+    private void renderScrollbar(GuiGraphics graphics, double scroll) {
+        if (!scrollEnabled()) return;
+        double clamped = Mth.clamp(scroll, 0.0, maxScroll());
+        float ratio = (float) (clamped / maxScroll());
+        int barH = Math.max(8, (int) (getHeight() * ((double) getHeight() / contentHeight)));
+        int barOff = (int) ((getHeight() - barH) * ratio);
+        int bx = getX() + getWidth() - 1;
 
-        this.visibleHeight = getHeight();
-        this.childrenHeight = 0;
+        graphics.fill(bx, getY(), bx + 2, getY() + getHeight(), 0x2F000000);
+        graphics.pose().pushPose();
+        graphics.pose().translate(bx, getY() + barOff, 0);
+        graphics.fill(0, 0, 2, barH, Palette.ACCENT.withAlpha(100 / 255f).decimal());
+        graphics.pose().popPose();
+    }
 
-        this.listChildren().forEach(it -> {
-            it.rect.setX(rect.x());
-            it.rect.setY(rect.y() + 5);
-            it.rect.setWidth(rect.width() - 2);
-            this.childrenHeight = Math.max(childrenHeight + 10, it.rect.height() + 10);
-        });
+    private void renderFades(GuiGraphics graphics, double scroll) {
+        if (scroll > 5)
+            graphics.fill(getX(), getY(), getX() + getWidth() - 1, getY() + 5, 0x6080788A);
+        if (contentHeight - scroll > getHeight() + 5)
+            graphics.fill(getX(), getY() + getHeight() - 5, getX() + getWidth() - 1, getY() + getHeight(), 0x6080788A);
+    }
 
-        final var font = Minecraft.getInstance().font;
-        final var placeholder = getMessage().copy().withStyle(Style.EMPTY.withColor(ArsElixirumPalette.LIGHT.decimal()));
-        this.placeholderLabel = MultiLineLabel.create(font, placeholder, (int) (rect.width() * 1.25));
+    private boolean isOverScrollbar(double mouseX, double mouseY) {
+        int bx = getX() + getWidth() - 1;
+        return mouseX >= bx - 1 && mouseX <= bx + 3
+                && mouseY >= getY() && mouseY <= getY() + getHeight();
     }
 
     private double lerpScroll() {
-        float delta = Minecraft.getInstance().getFrameTime();
-        return Mth.lerp(delta, scrollValueO, scrollValue);
+        return Mth.lerp(Minecraft.getInstance().getFrameTime(), scrollSmoothO, scrollSmooth);
+    }
+
+    private double maxScroll() {
+        return Math.max(0, contentHeight - getHeight());
+    }
+
+    private boolean scrollEnabled() {
+        return contentHeight > getHeight();
     }
 }

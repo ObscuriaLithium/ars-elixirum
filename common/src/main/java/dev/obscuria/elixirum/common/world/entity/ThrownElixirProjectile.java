@@ -1,8 +1,8 @@
 package dev.obscuria.elixirum.common.world.entity;
 
-import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
 import dev.obscuria.elixirum.common.alchemy.traits.Form;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.common.registry.ElixirumEntities;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import net.minecraft.core.BlockPos;
@@ -47,7 +47,7 @@ public final class ThrownElixirProjectile extends ThrowableItemProjectile {
     protected void onHitBlock(BlockHitResult hitResult) {
         super.onHitBlock(hitResult);
         if (!this.level().isClientSide) {
-            final var contents = ContentsHelper.elixir(getItem());
+            final var contents = ArsElixirumAPI.getElixirContents(getItem());
             final var direction = hitResult.getDirection();
             final var pos = hitResult.getBlockPos().relative(direction);
             if (contents.isEmpty()) {
@@ -63,7 +63,7 @@ public final class ThrownElixirProjectile extends ThrowableItemProjectile {
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
         if (!this.level().isClientSide) {
-            var contents = ContentsHelper.elixir(getItem());
+            var contents = ArsElixirumAPI.getElixirContents(getItem());
             if (contents.isEmpty()) {
                 this.applyWater();
             } else if (contents.form() == Form.EXPLOSIVE) {

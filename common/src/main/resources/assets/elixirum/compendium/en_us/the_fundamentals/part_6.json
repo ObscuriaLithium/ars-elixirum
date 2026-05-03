@@ -1,0 +1,18 @@
+{
+  "icon": "minecraft:writable_book",
+  "title": "Part VI: Reading the Alchemist's Journal",
+  "contents": [
+    {
+      "type": "paragraph",
+      "text": "Every elixir you brew is recorded in your [color=#EC8FFF]Recently Brewed[/color] section. It serves as both a record of your work and a reference for everything you have learned."
+    },
+    {
+      "type": "paragraph",
+      "text": "The [color=#EC8FFF]Discoveries[/color] section tracks your understanding of ingredients. As you extract essences with [color=#EC8FFF]Solvents[/color] and experiment through brewing, it gradually fills with known compositions, revealed effects, and observed properties. What was once hidden becomes structured knowledge."
+    },
+    {
+      "type": "paragraph",
+      "text": "The [color=#EC8FFF]Collection[/color] section stores your saved recipes. Any elixir can be recorded for later use, preserving its exact composition. When brewed again, saved recipes automatically apply their associated [color=#EC8FFF]style[/color], including bottle shape and chroma, ensuring consistent presentation."
+    }
+  ]
+}

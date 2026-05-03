@@ -1,0 +1,102 @@
+{
+  "icon": "elixirum:glass_cauldron",
+  "title": "Part I: Your First Elixir",
+  "contents": [
+    {
+      "type": "item_panel",
+      "item": "elixirum:glass_cauldron",
+      "contents": [
+        {
+          "type": "subheader",
+          "text": "Step 1 - Craft the Glass Cauldron"
+        },
+        {
+          "type": "paragraph",
+          "text": "The brewing stand will not be needed here. Ars Elixirum introduces the [color=#EC8FFF]Glass Cauldron[/color] - a transparent vessel designed for alchemical work. Place it somewhere convenient, you will return to it often. The cauldron requires [color=#EC8FFF]heat from below[/color]. A campfire, magma block, or similar source will work. Without heat, the process will not begin."
+        }
+      ]
+    },
+    {
+      "type": "item_panel",
+      "item": "minecraft:water_bucket",
+      "contents": [
+        {
+          "type": "subheader",
+          "text": "Step 2 - Fill it with Water"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use a [color=#EC8FFF]Water Bucket[/color] on the cauldron. The water will begin to heat. Wait until it [color=#EC8FFF]reaches a boil[/color] before adding anything. Bubbles and sound will let you know when it is ready."
+        }
+      ]
+    },
+    {
+      "type": "item_panel",
+      "item": "minecraft:beetroot",
+      "contents": [
+        {
+          "type": "subheader",
+          "text": "Step 3 - Add Three Ingredients"
+        },
+        {
+          "type": "paragraph",
+          "text": "Now the mixture takes shape. Most organic items carry alchemical properties - herbs, food, familiar potion ingredients, and more.\n\nThe cauldron accepts up to [color=#EC8FFF]three ingredients[/color]. Each contributes its own essences, while also taking on a specific role:"
+        },
+        {
+          "type": "table",
+          "columns": [
+            {
+              "header": "Slot",
+              "weight": 1.0
+            },
+            {
+              "header": "Name",
+              "content_color": "#ff8fe1ff",
+              "weight": 2.0
+            },
+            {
+              "header": "Role",
+              "h_align": "left",
+              "weight": 4.0
+            }
+          ],
+          "rows": [
+            [
+              "1st",
+              "Base",
+              "Provides essences like any ingredient. Also defines the [color=#EC8FFF]Focus[/color] of the elixir, how its effects lean between potency and duration."
+            ],
+            [
+              "2nd",
+              "Catalyst",
+              "Provides essences and shapes the mixture. Determines the [color=#EC8FFF]Form[/color] of the elixir, drinkable, splash, or lingering."
+            ],
+            [
+              "3rd",
+              "Inhibitor",
+              "Provides essences and influences stability. Defines the [color=#EC8FFF]Risk[/color], affecting both the chance of side effects and how stable the brew is during creation."
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Order matters. The first ingredient becomes the [color=#8fe1ff]Base[/color], the second the [color=#8fe1ff]Catalyst[/color], and the third the [color=#8fe1ff]Inhibitor[/color]."
+        }
+      ]
+    },
+    {
+      "type": "item_panel",
+      "item": "minecraft:glass_bottle",
+      "contents": [
+        {
+          "type": "subheader",
+          "text": "Step 4 - Collect Your Elixir"
+        },
+        {
+          "type": "paragraph",
+          "text": "Once all three ingredients are added, use a [color=#EC8FFF]Glass Bottle[/color] on the cauldron. One portion is drawn as an elixir. Each fill holds [color=#EC8FFF]three portions[/color], allowing you to bottle the same mixture multiple times. The result may not be perfect, but it is a beginning."
+        }
+      ]
+    }
+  ]
+}

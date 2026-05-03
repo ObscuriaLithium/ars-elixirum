@@ -3,7 +3,7 @@ package dev.obscuria.elixirum.server.alchemy.resources.providers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.obscuria.elixirum.common.alchemy.basics.Aspect;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolderMap;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolderMap;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 

@@ -2,8 +2,9 @@ package dev.obscuria.elixirum.common.alchemy.recipes;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
+import dev.obscuria.elixirum.api.alchemy.components.StyleVariant;
 import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
-import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -17,11 +18,11 @@ public record ConfiguredRecipe(
     public static final Codec<ConfiguredRecipe> CODEC;
 
     public static ConfiguredRecipe empty() {
-        return new ConfiguredRecipe(AlchemyRecipe.EMPTY, StyleVariant.DEFAULT, Chroma.NATURAL);
+        return new ConfiguredRecipe(AlchemyRecipe.empty(), StyleVariant.defaultVariant(), Chroma.NATURAL);
     }
 
     public ConfiguredRecipe(AlchemyRecipe recipe) {
-        this(recipe, StyleVariant.DEFAULT, Chroma.NATURAL);
+        this(recipe, StyleVariant.defaultVariant(), Chroma.NATURAL);
     }
 
     public ConfiguredRecipe(AlchemyRecipe recipe, StyleVariant style, Chroma chroma) {
@@ -50,8 +51,8 @@ public record ConfiguredRecipe(
 
     static {
         CODEC = RecordCodecBuilder.create(codec -> codec.group(
-                AlchemyRecipe.CODEC.fieldOf("recipe").forGetter(ConfiguredRecipe::recipe),
-                StyleVariant.PACKED_CODEC.optionalFieldOf("style", StyleVariant.DEFAULT).forGetter(ConfiguredRecipe::getStyle),
+                AlchemyRecipe.codec().fieldOf("recipe").forGetter(ConfiguredRecipe::recipe),
+                StyleVariant.packedCodec().optionalFieldOf("style", StyleVariant.defaultVariant()).forGetter(ConfiguredRecipe::getStyle),
                 Chroma.CODEC.optionalFieldOf("chroma", Chroma.NATURAL).forGetter(ConfiguredRecipe::getChroma)
         ).apply(codec, ConfiguredRecipe::new));
     }

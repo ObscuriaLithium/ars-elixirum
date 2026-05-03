@@ -1,9 +1,9 @@
 package dev.obscuria.elixirum.mixin;
 
 import dev.obscuria.elixirum.common.alchemy.systems.DiscoverySystem;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.common.network.ClientboundDiscoverEssencePayload;
-import dev.obscuria.elixirum.common.registry.ElixirumItems;
+import dev.obscuria.elixirum.helpers.BrewingHelper;
 import dev.obscuria.elixirum.server.alchemy.ServerAlchemy;
 import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,18 +16,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(targets = "net.minecraft.world.inventory.BrewingStandMenu$PotionSlot")
-public class MixinBrewingStandMenu_PotionSlot {
+public abstract class MixinBrewingStandMenu_PotionSlot {
 
-    @Inject(method = "mayPlaceItem", at = @At("RETURN"), cancellable = true)
-    private static void mayPlaceSolvent(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "mayPlace", at = @At("RETURN"), cancellable = true)
+    private void mayPlaceCustomInput(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) return;
-        if (!stack.is(ElixirumItems.HONEY_SOLVENT.asItem())) return;
+        if (!BrewingHelper.canPlaceInPotionSlot(stack)) return;
         cir.setReturnValue(true);
     }
 
     @Inject(method = "onTake", at = @At("HEAD"))
     private void takeExtract(Player player, ItemStack stack, CallbackInfo ci) {
-        var contents = ContentsHelper.extract(stack);
+        var contents = ArsElixirumAPI.getExtractContents(stack);
         if (contents.isEmpty()) return;
         if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.getServer() == null) return;

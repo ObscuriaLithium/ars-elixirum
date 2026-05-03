@@ -1,65 +1,74 @@
 package dev.obscuria.elixirum.client.screen.toolkit.containers;
 
-import dev.obscuria.elixirum.client.screen.toolkit.GlobalTransform;
-import dev.obscuria.elixirum.client.screen.toolkit.controls.HierarchicalControl;
+import dev.obscuria.elixirum.client.screen.toolkit.GuiContext;
+import dev.obscuria.elixirum.client.screen.toolkit.Control;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 
-public class GridContainer extends HierarchicalControl {
+public class GridContainer extends Control {
 
     private final int separation;
-
-    private final int marginLeft;
-    private final int marginRight;
-    private final int marginTop;
-    private final int marginBottom;
+    private final int marginLeft, marginRight, marginTop, marginBottom;
 
     public GridContainer(int separation) {
         this(separation, 0, 0, 0, 0);
     }
 
-    public GridContainer(int separation, int marginLeft, int marginRight, int marginTop, int marginBottom) {
-        super(0, 0, 0, 0, Component.empty());
+    public GridContainer(
+            int separation,
+            int marginLeft, int marginRight,
+            int marginTop, int marginBottom
+    ) {
         this.separation = separation;
         this.marginLeft = marginLeft;
         this.marginRight = marginRight;
         this.marginTop = marginTop;
         this.marginBottom = marginBottom;
-        this.setUpdateFlags(UPDATE_BY_WIDTH);
+        setSizeHints(SIZE_HINT_WIDTH);
     }
 
     @Override
-    public void render(GuiGraphics graphics, GlobalTransform transform, int mouseX, int mouseY) {
-        this.renderChildren(graphics, transform, mouseX, mouseY);
+    public void render(GuiGraphics graphics, GuiContext context, int mouseX, int mouseY) {
+        renderChildren(graphics, context, mouseX, mouseY);
     }
 
     @Override
-    public void reorganize() {
+    protected void measure() {
+        int offsetX = marginLeft;
+        int offsetY = 0;
+        int maxRowH = 0;
 
-        var offsetX = marginLeft;
-        var offsetY = marginTop;
-        var maxHeight = 0;
-
-        for (var child : listChildren().toList()) {
-            final var width = offsetX + separation + child.rect.width();
-
-            if (width > rect.width()) {
+        for (var child : getChildren()) {
+            int cw = child.getMeasuredWidth();
+            int ch = child.getMeasuredHeight();
+            if (offsetX + cw > getWidth() - marginRight && offsetX > marginLeft) {
                 offsetX = marginLeft;
-                offsetY += maxHeight + separation;
-                maxHeight = 0;
-            } else if (rect.width() < width + marginRight) {
-                rect.setWidth(width + marginRight - 1);
+                offsetY += maxRowH + separation;
+                maxRowH = 0;
             }
-
-            child.rect.setX(rect.x() + offsetX);
-            child.rect.setY(rect.y() + offsetY);
-
-            offsetX += separation + child.rect.width();
-            maxHeight = Math.max(maxHeight, child.rect.height());
+            offsetX += cw + separation;
+            maxRowH = Math.max(maxRowH, ch);
         }
 
-        rect.setHeight(hasChildren()
-                ? offsetY + maxHeight + marginBottom
-                : 0);
+        setRequiredHeight(marginTop + offsetY + maxRowH + marginBottom);
+    }
+
+    @Override
+    protected void layout() {
+        int offsetX = marginLeft;
+        int offsetY = marginTop;
+        int maxRowH = 0;
+
+        for (var child : getChildren()) {
+            int cw = child.getMeasuredWidth();
+            int ch = child.getMeasuredHeight();
+            if (offsetX + cw > getWidth() - marginRight && offsetX > marginLeft) {
+                offsetX = marginLeft;
+                offsetY += maxRowH + separation;
+                maxRowH = 0;
+            }
+            placeChild(child, getX() + offsetX, getY() + offsetY, cw, ch);
+            offsetX += cw + separation;
+            maxRowH = Math.max(maxRowH, ch);
+        }
     }
 }

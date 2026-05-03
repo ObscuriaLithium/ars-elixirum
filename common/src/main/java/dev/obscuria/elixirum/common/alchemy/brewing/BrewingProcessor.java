@@ -1,16 +1,21 @@
 package dev.obscuria.elixirum.common.alchemy.brewing;
 
+import dev.obscuria.elixirum.api.alchemy.AlchemyIngredient;
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
+import dev.obscuria.elixirum.api.alchemy.EffectProvider;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
 import dev.obscuria.elixirum.api.codex.Alchemy;
-import dev.obscuria.elixirum.common.alchemy.traits.Form;
-import dev.obscuria.elixirum.common.alchemy.basics.*;
-import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyIngredient;
-import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
+import dev.obscuria.elixirum.common.alchemy.basics.Aspect;
+import dev.obscuria.elixirum.common.alchemy.providers.PackedEffectProvider;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import dev.obscuria.elixirum.common.alchemy.traits.Focus;
+import dev.obscuria.elixirum.common.alchemy.traits.Form;
 import dev.obscuria.elixirum.common.alchemy.traits.Risk;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,26 +32,27 @@ public final class BrewingProcessor {
     public ElixirContents brew() {
 
         if (recipe.isEmpty()) {
-            return ElixirContents.EMPTY;
+            return ElixirContents.empty();
         }
 
         var weights = new HashMap<EssenceHolder, Double>(8);
         var contributors = new HashMap<EssenceHolder, Integer>(8);
 
-        appendEssences(weights, contributors, recipe.getBase());
-        appendEssences(weights, contributors, recipe.getCatalyst());
-        appendEssences(weights, contributors, recipe.getInhibitor());
+        appendEssences(weights, contributors, recipe.base());
+        appendEssences(weights, contributors, recipe.catalyst());
+        appendEssences(weights, contributors, recipe.inhibitor());
 
         if (weights.isEmpty()) {
-            return ElixirContents.EMPTY;
+            return ElixirContents.empty();
         }
 
-        if (recipe.getInhibitor().isPresent()) {
-            Aspect stabilizerQ = recipe.getInhibitor().get().properties(alchemy).aspect();
-            applyConcordance(weights, stabilizerQ);
-        }
+        var diversity = resolveDiversity();
+        var concordance = recipe.inhibitor()
+                .map(i -> i.properties(alchemy).aspect())
+                .map(this::resolveGlobalConcordance)
+                .orElse(Concordance.NONE);
 
-        var temper = resolveTemper(recipe.getBase().orElse(null));
+        var focus = resolveFocus(recipe.base().orElse(null));
         var effects = new ArrayList<EffectProvider>(weights.size());
 
         for (var entry : weights.entrySet()) {
@@ -55,18 +61,17 @@ public final class BrewingProcessor {
             if (weight <= 0.0) continue;
 
             var count = contributors.getOrDefault(essence, 1);
-            var effect = resolve(essence, weight, count, temper);
+            var effect = resolve(essence, weight, count, diversity, concordance, focus);
             effects.add(effect);
         }
 
-        return ElixirContents.create(effects,
-                recipe.getCatalyst().map(this::resolveApplicationMethod).orElse(Form.POTABLE),
-                recipe.getInhibitor().map(this::resolveStability).orElse(Risk.BALANCED),
-                temper);
+        return ElixirContents.create(effects, focus,
+                recipe.catalyst().map(this::resolveApplicationMethod).orElse(Form.POTABLE),
+                recipe.inhibitor().map(this::resolveStability).orElse(Risk.BALANCED));
     }
 
     private Form resolveApplicationMethod(AlchemyIngredient ingredient) {
-        return ingredient.properties(alchemy).application();
+        return ingredient.properties(alchemy).form();
     }
 
     private Risk resolveStability(AlchemyIngredient ingredient) {
@@ -98,35 +103,64 @@ public final class BrewingProcessor {
         }
     }
 
-    private Focus resolveTemper(@Nullable AlchemyIngredient ingredient) {
+    private Focus resolveFocus(@Nullable AlchemyIngredient ingredient) {
         if (ingredient == null) return Focus.BALANCED;
         return ingredient.properties(alchemy).focus();
     }
 
-    private void applyConcordance(Map<EssenceHolder, Double> weights, Aspect stabilizer) {
-        for (var entry : weights.entrySet()) {
-            var essence = entry.getKey();
-            ConcordanceTier tier = getConcordance(essence.aspect(), stabilizer);
-            entry.setValue(tier.apply(entry.getValue()));
+    private Diversity resolveDiversity() {
+        var slots = List.of(recipe.base(), recipe.catalyst(), recipe.inhibitor());
+
+        var present = slots.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+
+        long uniqueCount = present.stream().distinct().count();
+
+        if (uniqueCount == present.size()) return Diversity.DISTINCT;
+        if (uniqueCount == 1) return Diversity.UNIFORM;
+        return Diversity.REPEATED;
+    }
+
+    private Concordance resolveGlobalConcordance(Aspect inhibitorAspect) {
+        int matches = 0;
+
+        for (var slot : List.of(recipe.base(), recipe.catalyst(), recipe.inhibitor())) {
+            if (slot.isEmpty()) continue;
+            var aspect = slot.get().properties(alchemy).aspect();
+            if (aspect == inhibitorAspect) matches++;
         }
-    }
 
-    private EffectProvider resolve(EssenceHolder essence, double weight, int contributors, Focus focus) {
-        var tier = getManifestationTier(contributors);
-        var finalWeight = Math.round(tier.apply(weight) * 100.0) / 100.0;
-        return new EffectProvider.Packed(essence, finalWeight, focus.value);
-    }
-
-    private ManifestationTier getManifestationTier(int contributors) {
-        return switch (contributors) {
-            case 3 -> ManifestationTier.DOMINANT;
-            case 2 -> ManifestationTier.PRIMARY;
-            default -> ManifestationTier.TRACE;
+        return switch (matches) {
+            case 3 -> Concordance.PERFECT;
+            case 2 -> Concordance.PARTIAL;
+            default -> Concordance.NONE;
         };
     }
 
-    private ConcordanceTier getConcordance(Aspect a, Aspect b) {
-        if (a == b) return ConcordanceTier.PERFECT;
-        return ConcordanceTier.PARTIAL;
+    private EffectProvider resolve(
+            EssenceHolder essence,
+            double weight,
+            int contributors,
+            Diversity diversity,
+            Concordance concordance,
+            Focus focus
+    ) {
+        weight = getManifestationTier(contributors).apply(weight);
+        weight = diversity.apply(weight);
+        weight = concordance.apply(weight);
+        weight = Math.min(weight, 100.0);
+
+        var finalWeight = Math.round(weight * 100.0) / 100.0;
+        return new PackedEffectProvider(essence, finalWeight, focus.value);
+    }
+
+    private Manifestation getManifestationTier(int contributors) {
+        return switch (contributors) {
+            case 3 -> Manifestation.DOMINANT;
+            case 2 -> Manifestation.PRIMARY;
+            default -> Manifestation.TRACE;
+        };
     }
 }

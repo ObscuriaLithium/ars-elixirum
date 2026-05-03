@@ -1,0 +1,19 @@
+{
+  "is_homepage": true,
+  "icon": "elixirum:alchemist_eye",
+  "title": "About Ars Elixirum",
+  "contents": [
+    {
+      "type": "paragraph",
+      "text": "If you opened this compendium expecting a list of recipes - simple combinations like [i]\"A + B + C = Potion\"[/i] - you may want to set that idea aside."
+    },
+    {
+      "type": "subheader",
+      "text": "Ars Elixirum works differently"
+    },
+    {
+      "type": "paragraph",
+      "text": "This mod does not provide fixed recipes. Instead, it introduces an [color=#EC8FFF]alchemical environment[/color], where each ingredient carries its own properties, and the result depends on how you combine them, the roles they take, and the decisions you make along the way.\n\nDifferent players arrive at different solutions. The same ingredient can behave differently depending on its context. Outcomes are not predefined - they are discovered.\n\nThis compendium is here to help you understand and navigate that system. Not to tell you what to make, but to show you how it works."
+    }
+  ]
+}

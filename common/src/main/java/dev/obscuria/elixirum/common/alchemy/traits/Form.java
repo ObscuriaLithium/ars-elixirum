@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.alchemy.traits;
 
 import com.mojang.serialization.Codec;
 import dev.obscuria.elixirum.helpers.CodecHelper;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.helpers.IdRepresentable;
 import dev.obscuria.elixirum.common.alchemy.ElixirQuality;
 import dev.obscuria.elixirum.common.alchemy.traits.application.ApplicationBehavior;
@@ -48,7 +48,7 @@ public enum Form implements Trait, ApplicationBehavior, IdRepresentable, StringR
     }
 
     public Component makeElixirName(ItemStack stack) {
-        var contents = ContentsHelper.elixir(stack);
+        var contents = ArsElixirumAPI.getElixirContents(stack);
         var quality = ElixirQuality.fromContents(contents);
         var isMixture = quality == ElixirQuality.MIXTURE;
         var isPotable = this == POTABLE;

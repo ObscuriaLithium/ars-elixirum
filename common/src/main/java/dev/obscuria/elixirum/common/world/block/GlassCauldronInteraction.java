@@ -2,7 +2,7 @@ package dev.obscuria.elixirum.common.world.block;
 
 import com.google.common.collect.ImmutableList;
 import dev.obscuria.elixirum.api.codex.Alchemy;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.helpers.StyleHelper;
 import dev.obscuria.elixirum.common.network.ClientboundElixirBrewedPayload;
 import dev.obscuria.elixirum.server.alchemy.ServerAlchemy;
@@ -94,10 +94,10 @@ public interface GlassCauldronInteraction {
                 stack.shrink(1);
 
                 var profile = ServerAlchemy.get(serverLevel.getServer()).profileOf(player);
-                profile.knownRecipes().update(recipe.getUuid(), ContentsHelper.elixir(result));
+                profile.knownRecipes().update(recipe.uuid(), ArsElixirumAPI.getElixirContents(result));
                 profile.knownIngredients().discoverAll(recipe);
-                profile.mastery().grantXp(profile, recipe.getUuid(), 1);
-                profile.recipeCollection().findConfig(recipe.getUuid()).ifPresent(config -> {
+                profile.mastery().grantXp(profile, recipe.uuid(), 1);
+                profile.recipeCollection().findConfig(recipe.uuid()).ifPresent(config -> {
                     StyleHelper.setStyleIfNotDefault(result, config.getStyle());
                     StyleHelper.setChromaIfNotDefault(result, config.getChroma());
                 });

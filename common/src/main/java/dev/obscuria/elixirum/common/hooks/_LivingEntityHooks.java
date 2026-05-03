@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.common.hooks;
 
 import dev.obscuria.elixirum.api.codex.Alchemy;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.common.registry.ElixirumItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +40,7 @@ public final class _LivingEntityHooks {
 
             entity.setHealth(1.0F);
             entity.removeAllEffects();
-            ContentsHelper.elixir(totem).apply(entity, entity, entity);
+            ArsElixirumAPI.getElixirContents(totem).apply(entity, entity, entity);
             entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0));

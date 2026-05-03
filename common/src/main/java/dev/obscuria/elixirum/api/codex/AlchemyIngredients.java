@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.api.codex;
 
-import dev.obscuria.elixirum.common.alchemy.ingredient.AlchemyProperties;
+import dev.obscuria.elixirum.api.alchemy.AlchemyProperties;
+import dev.obscuria.elixirum.common.alchemy.Diff;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -13,4 +14,6 @@ public interface AlchemyIngredients {
     AlchemyProperties propertiesOf(ItemStack stack);
 
     void forEach(BiConsumer<Item, AlchemyProperties> consumer);
+
+    Diff generationResult();
 }

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public class PotionShelfRenderer implements BlockEntityRenderer<PotionShelfEntity> {
+public final class PotionShelfRenderer implements BlockEntityRenderer<PotionShelfEntity> {
 
     private final ItemRenderer itemRenderer;
 

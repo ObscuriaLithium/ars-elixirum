@@ -1,9 +1,11 @@
 package dev.obscuria.elixirum.helpers;
 
+import com.mojang.datafixers.types.Func;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
+import dev.obscuria.fragmentum.registry.DelegatedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -16,6 +18,13 @@ import java.util.function.Function;
 public final class CodecHelper {
 
     public static final Codec<Item> STRICT_ITEM;
+
+    public static <T extends Codec<? extends V>, V> Codec<V> registryDispatch(
+            DelegatedRegistry<T> registry,
+            Function<V, ? extends T> type
+    ) {
+        return registry.byNameCodec().dispatch(type, Function.identity());
+    }
 
     public static <T> Codec<T> alternative(Codec<T> first, Codec<T> second) {
         return Codec.either(first, second).xmap(CodecHelper::unwrap, Either::left);

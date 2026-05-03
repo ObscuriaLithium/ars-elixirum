@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class BubbleParticle extends Particle {
+public final class BubbleParticle extends Particle {
 
     private static final List<Vec3> CORNERS;
 

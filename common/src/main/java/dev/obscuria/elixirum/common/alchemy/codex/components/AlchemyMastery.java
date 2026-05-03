@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.obscuria.elixirum.api.codex.AlchemyProfile;
 import dev.obscuria.elixirum.api.events.AlchemyEvents;
 import dev.obscuria.elixirum.helpers.MasteryHelper;
+import dev.obscuria.elixirum.server.VersionedCodec;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.minecraft.core.UUIDUtil;
@@ -17,6 +18,8 @@ import java.util.UUID;
 public final class AlchemyMastery {
 
     public static final Codec<AlchemyMastery> CODEC;
+
+    public static final int MAX_RECIPE_XP = 30;
 
     @Getter(AccessLevel.PRIVATE) private final Map<UUID, Integer> xpByRecipe;
     @Getter(AccessLevel.PUBLIC) private int level;
@@ -39,8 +42,8 @@ public final class AlchemyMastery {
     public boolean grantXp(AlchemyProfile profile, UUID recipeUid, int amount) {
         if (amount <= 0) return false;
         int currentXp = getRecipeXp(recipeUid);
-        if (currentXp >= 100) return false;
-        var xpToAdd = Math.min(amount, 100 - currentXp);
+        if (currentXp >= MAX_RECIPE_XP) return false;
+        var xpToAdd = Math.min(amount, MAX_RECIPE_XP - currentXp);
         this._setRecipeXp(recipeUid, currentXp + xpToAdd);
         AlchemyEvents.MASTERY.onRecipeXpGrant(profile, this, recipeUid, xpToAdd);
         this.grantXp(profile, xpToAdd);
@@ -98,10 +101,10 @@ public final class AlchemyMastery {
     }
 
     static {
-        CODEC = RecordCodecBuilder.create(codec -> codec.group(
+        CODEC = VersionedCodec.<AlchemyMastery>of(RecordCodecBuilder.create(codec -> codec.group(
                 Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.INT).optionalFieldOf("xp_by_recipe", Map.of()).forGetter(AlchemyMastery::getXpByRecipe),
                 Codec.INT.optionalFieldOf("level", 1).forGetter(AlchemyMastery::getLevel),
                 Codec.INT.optionalFieldOf("xp", 0).forGetter(AlchemyMastery::getXp)
-        ).apply(codec, AlchemyMastery::new));
+        ).apply(codec, AlchemyMastery::new))).build();
     }
 }

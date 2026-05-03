@@ -1,0 +1,22 @@
+{
+  "icon": "minecraft:experience_bottle",
+  "title": "Part V: The Alchemy Mastery System",
+  "contents": [
+    {
+      "type": "paragraph",
+      "text": "Each time you collect an elixir, you gain [color=#EC8FFF]Mastery XP[/color] for that exact combination of ingredients. Repeating the same recipe increases your familiarity with it, gradually refining your understanding of how its components behave together. This progress is stored per-recipe, creating a record of your experience with specific brews."
+    },
+    {
+      "type": "paragraph",
+      "text": "All recipe mastery contributes to your overall [color=#EC8FFF]Alchemy Mastery level[/color]. This represents your broader experience as an alchemist and grows as you explore new combinations rather than relying on a single formula."
+    },
+    {
+      "type": "paragraph",
+      "text": "Each individual recipe has a cap of [color=#EC8FFF]30 XP[/color]. Once reached, further brewing of that combination no longer grants mastery, encouraging experimentation and discovery over repetition."
+    },
+    {
+      "type": "paragraph",
+      "text": "Increasing your Mastery level unlocks [color=#EC8FFF]cosmetic styles[/color] for your elixirs - alternative bottle shapes, cap designs, and chroma effects. These do not alter gameplay, but make your creations visually distinct and recognizable."
+    }
+  ]
+}

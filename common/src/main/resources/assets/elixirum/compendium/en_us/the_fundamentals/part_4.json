@@ -1,0 +1,219 @@
+{
+  "icon": "minecraft:writable_book",
+  "title": "Part IV: How Elixir Quality Works",
+  "contents": [
+    {
+      "type": "paragraph",
+      "text": "When you collect an elixir, it receives a quality rating based on the final manifested strength of its essences. This is determined by the resulting [color=#EC8FFF]weight[/color] after all modifiers have been applied."
+    },
+    {
+      "type": "table",
+      "columns": [
+        {
+          "header": "Weight",
+          "weight": 2.0
+        },
+        {
+          "header": "Quality",
+          "weight": 3.0
+        },
+        {
+          "header": "Rarity",
+          "weight": 3.0
+        }
+      ],
+      "rows": [
+        [
+          "0-29",
+          "Pale",
+          "[color=#FFFFFF]Common[/color]"
+        ],
+        [
+          "30-39",
+          "Cloudy",
+          "[color=#FFFFFF]Common[/color]"
+        ],
+        [
+          "40-49",
+          "Weak",
+          "[color=#FFFFFF]Common[/color]"
+        ],
+        [
+          "50-59",
+          "Minor",
+          "[color=#FFFFFF]Common[/color]"
+        ],
+        [
+          "60-69",
+          "Moderate",
+          "[color=#FFFFFF]Common[/color]"
+        ],
+        [
+          "70-79",
+          "Grand",
+          "[color=#FFFFFF]Common[/color]"
+        ],
+        [
+          "80-89",
+          "Intense",
+          "[color=#FFFF55]Uncommon[/color]"
+        ],
+        [
+          "90-99",
+          "Supreme",
+          "[color=#55FFFF]Rare[/color]"
+        ],
+        [
+          "100",
+          "Legendary",
+          "[color=#FF5FFF]Epic[/color]"
+        ]
+      ]
+    },
+    {
+      "type": "blank"
+    },
+    {
+      "type": "subheader",
+      "text": "Manifestation"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Manifestation[/color] measures how many different ingredients contribute the same essence. It is calculated separately for each essence. Shared contributions reinforce manifestation, while isolated essences remain weak."
+    },
+    {
+      "type": "table",
+      "columns": [
+        {
+          "header": "Tier",
+          "content_color": "#FFEC8FFF",
+          "weight": 2.0
+        },
+        {
+          "header": "Distinct Sources",
+          "weight": 2.0
+        },
+        {
+          "header": "Multiplier",
+          "weight": 2.0
+        }
+      ],
+      "rows": [
+        [
+          "Dominant",
+          "3",
+          "×1.2"
+        ],
+        [
+          "Primary",
+          "2",
+          "×1.0"
+        ],
+        [
+          "Trace",
+          "1",
+          "×0.2"
+        ]
+      ]
+    },
+    {
+      "type": "blank"
+    },
+    {
+      "type": "subheader",
+      "text": "Diversity"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Diversity[/color] measures ingredient repetition across the entire brew. Unlike Manifestation, it does not examine essences individually. Repeating ingredients globally reduces the strength of all outcomes."
+    },
+    {
+      "type": "table",
+      "columns": [
+        {
+          "header": "Tier",
+          "content_color": "#FFEC8FFF",
+          "weight": 2.0
+        },
+        {
+          "header": "Ingredient Pattern",
+          "weight": 3.0
+        },
+        {
+          "header": "Multiplier",
+          "weight": 2.0
+        }
+      ],
+      "rows": [
+        [
+          "Distinct",
+          "3 different ingredients",
+          "×1.0"
+        ],
+        [
+          "Repeated",
+          "2 identical, 1 different",
+          "×0.6"
+        ],
+        [
+          "Uniform",
+          "3 identical ingredients",
+          "×0.2"
+        ]
+      ]
+    },
+    {
+      "type": "blank"
+    },
+    {
+      "type": "subheader",
+      "text": "Concordance"
+    },
+    {
+      "type": "paragraph",
+      "text": "[color=#EC8FFF]Concordance[/color] reflects how closely the brew aligns with the [color=#8fe1ff]Inhibitor[/color]'s Aspect. It is applied globally as a final multiplier to all manifested essences."
+    },
+    {
+      "type": "table",
+      "columns": [
+        {
+          "header": "Tier",
+          "content_color": "#FFEC8FFF",
+          "weight": 2.0
+        },
+        {
+          "header": "Aspect Alignment",
+          "weight": 3.0
+        },
+        {
+          "header": "Multiplier",
+          "weight": 2.0
+        }
+      ],
+      "rows": [
+        [
+          "Perfect",
+          "Full alignment",
+          "×1.4"
+        ],
+        [
+          "Partial",
+          "Some alignment",
+          "×1.2"
+        ],
+        [
+          "None",
+          "No alignment",
+          "×1.0"
+        ]
+      ]
+    },
+    {
+      "type": "blank"
+    },
+    {
+      "type": "paragraph",
+      "text": "The strongest elixirs emerge when these systems reinforce one another: shared essences create strong [color=#EC8FFF]Manifestation[/color], varied ingredients preserve [color=#EC8FFF]Diversity[/color], and aligned Aspects maximize [color=#EC8FFF]Concordance[/color]."
+    }
+  ]
+}

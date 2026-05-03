@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import dev.obscuria.elixirum.common.hooks._ItemStackHooks;
 import dev.obscuria.elixirum.common.world.ItemStackCache;
 import dev.obscuria.fragmentum.world.tooltip.GroupTooltip;

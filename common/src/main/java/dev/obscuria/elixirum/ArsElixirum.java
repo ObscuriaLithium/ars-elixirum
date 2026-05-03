@@ -4,6 +4,7 @@ import dev.obscuria.elixirum.api.events.AlchemyEvents;
 import dev.obscuria.elixirum.api.events.MasteryListener;
 import dev.obscuria.elixirum.common.events._CommonMasteryListener;
 import dev.obscuria.elixirum.common.network.*;
+import dev.obscuria.elixirum.config.GenerationConfig;
 import dev.obscuria.elixirum.server.alchemy.AlchemyCodex;
 import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
 import dev.obscuria.elixirum.server.alchemy.ServerAlchemy;
@@ -31,6 +32,7 @@ public final class ArsElixirum {
 
     public static final ResourceLocation FONT = identifier(MODID);
     public static final TagKey<MobEffect> IGNORED_EFFECTS;
+    public static final TagKey<MobEffect> ALLOWED_EFFECTS;
     public static final TagKey<Item> IGNORED_ITEMS;
     public static final TagKey<Item> POTION_SHELF_PLACEABLE_ITEMS;
     public static final TagKey<Block> HEAT_SOURCE_BLOCKS;
@@ -48,6 +50,7 @@ public final class ArsElixirum {
 
         ElixirumRegistries.init();
         AlchemyCodex.init();
+        GenerationConfig.init();
 
         BuiltInPackBuilder.dataPack("packs/classic_alchemy")
                 .displayName(Component.literal("Classic Alchemy"))
@@ -61,6 +64,11 @@ public final class ArsElixirum {
     private static void registerPayloads() {
         var registrar = FragmentumNetworking.registrar(MODID);
 
+        registrar.registerClientbound(
+                ClientboundDiffPayload.class,
+                ClientboundDiffPayload::encode,
+                ClientboundDiffPayload::decode,
+                ClientboundDiffPayload::handle);
         registrar.registerClientbound(
                 ClientboundElixirBrewedPayload.class,
                 ClientboundElixirBrewedPayload::encode,
@@ -127,6 +135,7 @@ public final class ArsElixirum {
 
     static {
         IGNORED_EFFECTS = TagKey.create(Registries.MOB_EFFECT, identifier("ignored"));
+        ALLOWED_EFFECTS = TagKey.create(Registries.MOB_EFFECT, identifier("allowed"));
         HEAT_SOURCE_BLOCKS = TagKey.create(Registries.BLOCK, identifier("heat_source"));
         IGNORED_ITEMS = TagKey.create(Registries.ITEM, identifier("ignored"));
         POTION_SHELF_PLACEABLE_ITEMS = TagKey.create(Registries.ITEM, identifier("potion_shelf_placeable"));

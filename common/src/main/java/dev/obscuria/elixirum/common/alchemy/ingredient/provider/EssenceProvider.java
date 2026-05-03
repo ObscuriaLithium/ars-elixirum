@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import dev.obscuria.elixirum.api.codex.Alchemy;
-import dev.obscuria.elixirum.common.alchemy.basics.EssenceHolder;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import dev.obscuria.elixirum.common.alchemy.ingredient.IngredientQuality;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;

@@ -2,8 +2,8 @@ package dev.obscuria.elixirum.common.alchemy.styles;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
 import dev.obscuria.elixirum.client.ArsElixirumClient;
-import dev.obscuria.elixirum.common.alchemy.basics.ElixirContents;
 import dev.obscuria.fragmentum.util.color.Colors;
 import dev.obscuria.fragmentum.util.color.RGB;
 import dev.obscuria.fragmentum.util.easing.Easing;

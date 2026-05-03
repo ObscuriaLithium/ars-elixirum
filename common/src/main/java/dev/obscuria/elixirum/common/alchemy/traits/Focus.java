@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.common.alchemy.traits;
 
 import com.mojang.serialization.Codec;
-import dev.obscuria.elixirum.client.ArsElixirumPalette;
+import dev.obscuria.elixirum.client.Palette;
 import dev.obscuria.elixirum.helpers.CodecHelper;
 import dev.obscuria.elixirum.helpers.IdRepresentable;
 import dev.obscuria.fragmentum.util.color.RGB;
@@ -12,17 +12,17 @@ import net.minecraft.util.StringRepresentable;
 import java.util.Locale;
 
 public enum Focus implements Trait, IdRepresentable, StringRepresentable {
-    MAX_DURATION(-5, -1.0, Icon.FOCUS_DURATION, ArsElixirumPalette.FOCUS_BLUE),
-    VERY_HIGH_DURATION(-4, -0.8, Icon.FOCUS_DURATION, ArsElixirumPalette.FOCUS_BLUE),
-    HIGH_DURATION(-3, -0.6, Icon.FOCUS_DURATION, ArsElixirumPalette.FOCUS_BLUE),
-    MODERATE_DURATION(-2, -0.4, Icon.FOCUS_DURATION, ArsElixirumPalette.FOCUS_BLUE),
-    SLIGHTLY_DURATION(-1, -0.2, Icon.FOCUS_DURATION, ArsElixirumPalette.FOCUS_BLUE),
-    BALANCED(0, 0.0, Icon.BALANCE, ArsElixirumPalette.FOCUS_GREEN),
-    SLIGHTLY_POTENCY(1, 0.2, Icon.FOCUS_POTENCY, ArsElixirumPalette.FOCUS_YELLOW),
-    MODERATE_POTENCY(2, 0.4, Icon.FOCUS_POTENCY, ArsElixirumPalette.FOCUS_YELLOW),
-    HIGH_POTENCY(3, 0.6, Icon.FOCUS_POTENCY, ArsElixirumPalette.FOCUS_YELLOW),
-    VERY_HIGH_POTENCY(4, 0.8, Icon.FOCUS_POTENCY, ArsElixirumPalette.FOCUS_YELLOW),
-    MAX_POTENCY(5, 1.0, Icon.FOCUS_POTENCY, ArsElixirumPalette.FOCUS_YELLOW);
+    MAX_DURATION(-5, -1.0, Icon.FOCUS_DURATION, Palette.FOCUS_BLUE),
+    VERY_HIGH_DURATION(-4, -0.8, Icon.FOCUS_DURATION, Palette.FOCUS_BLUE),
+    HIGH_DURATION(-3, -0.6, Icon.FOCUS_DURATION, Palette.FOCUS_BLUE),
+    MODERATE_DURATION(-2, -0.4, Icon.FOCUS_DURATION, Palette.FOCUS_BLUE),
+    SLIGHTLY_DURATION(-1, -0.2, Icon.FOCUS_DURATION, Palette.FOCUS_BLUE),
+    BALANCED(0, 0.0, Icon.BALANCE, Palette.FOCUS_GREEN),
+    SLIGHTLY_POTENCY(1, 0.2, Icon.FOCUS_POTENCY, Palette.FOCUS_YELLOW),
+    MODERATE_POTENCY(2, 0.4, Icon.FOCUS_POTENCY, Palette.FOCUS_YELLOW),
+    HIGH_POTENCY(3, 0.6, Icon.FOCUS_POTENCY, Palette.FOCUS_YELLOW),
+    VERY_HIGH_POTENCY(4, 0.8, Icon.FOCUS_POTENCY, Palette.FOCUS_YELLOW),
+    MAX_POTENCY(5, 1.0, Icon.FOCUS_POTENCY, Palette.FOCUS_YELLOW);
 
     public static final Codec<Focus> CODEC;
     public static final Codec<Focus> ID_CODEC;

@@ -1,7 +1,7 @@
 package dev.obscuria.elixirum.common.world.item;
 
 import dev.obscuria.elixirum.common.alchemy.ElixirQuality;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.common.world.tooltip.ElixirContentsTooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -33,7 +33,7 @@ public class WitchTotemOfUndyingItem extends Item {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return Optional.of(new ElixirContentsTooltip(stack, ContentsHelper.elixir(stack)));
+        return Optional.of(new ElixirContentsTooltip(stack, ArsElixirumAPI.getElixirContents(stack)));
     }
 
     @Override

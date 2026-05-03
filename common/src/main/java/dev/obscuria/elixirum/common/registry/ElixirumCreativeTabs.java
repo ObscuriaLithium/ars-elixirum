@@ -1,16 +1,18 @@
 package dev.obscuria.elixirum.common.registry;
 
 import dev.obscuria.elixirum.ArsElixirum;
+import dev.obscuria.elixirum.api.alchemy.components.ElixirContents;
+import dev.obscuria.elixirum.api.alchemy.components.StyleVariant;
 import dev.obscuria.elixirum.api.codex.Alchemy;
+import dev.obscuria.elixirum.common.alchemy.providers.PackedEffectProvider;
+import dev.obscuria.elixirum.common.alchemy.registry.EssenceHolder;
 import dev.obscuria.elixirum.common.alchemy.traits.Form;
-import dev.obscuria.elixirum.common.alchemy.basics.*;
 import dev.obscuria.elixirum.common.alchemy.traits.Focus;
 import dev.obscuria.elixirum.common.alchemy.traits.Risk;
 import dev.obscuria.elixirum.common.alchemy.styles.Cap;
 import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
 import dev.obscuria.elixirum.common.alchemy.styles.Shape;
-import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
-import dev.obscuria.elixirum.helpers.ContentsHelper;
+import dev.obscuria.elixirum.api.ArsElixirumAPI;
 import dev.obscuria.elixirum.helpers.StyleHelper;
 import dev.obscuria.fragmentum.registry.DeferredItem;
 import net.minecraft.core.registries.Registries;
@@ -29,22 +31,22 @@ public enum ElixirumCreativeTabs {
             (parameters, output) -> Contents.generate(output,
                     ElixirumItems.ELIXIR,
                     Form.POTABLE,
-                    StyleVariant.ELIXIR)),
+                    StyleVariant.elixirVariant())),
     SPLASH_ELIXIRS("splash_elixirs", Icons::splashElixir,
             (parameters, output) -> Contents.generate(output,
                     ElixirumItems.ELIXIR,
                     Form.EXPLOSIVE,
-                    StyleVariant.SPLASH_ELIXIR)),
+                    StyleVariant.splashElixirVariant())),
     LINGERING_ELIXIRS("lingering_elixirs", Icons::lingeringElixir,
             (parameters, output) -> Contents.generate(output,
                     ElixirumItems.ELIXIR,
                     Form.LINGERING,
-                    StyleVariant.LINGERING_ELIXIR)),
+                    StyleVariant.lingeringElixirVariant())),
     TOTEMS("totems", Icons::totem,
             (parameters, output) -> Contents.generate(output,
                     ElixirumItems.WITCH_TOTEM_OF_UNDYING,
                     Form.POTABLE,
-                    StyleVariant.DEFAULT));
+                    StyleVariant.defaultVariant()));
 
     private static final double[] WEIGHTS = {50.0, 75.0, 100.0};
     private static final Focus[] FOCUSES = {Focus.MAX_DURATION, Focus.BALANCED, Focus.MAX_POTENCY};
@@ -65,15 +67,15 @@ public enum ElixirumCreativeTabs {
         }
 
         static ItemStack elixir() {
-            return styledElixir(new StyleVariant(Cap.FORGED, Shape.FLASK_2));
+            return styledElixir(StyleVariant.of(Cap.FORGED, Shape.FLASK_2));
         }
 
         static ItemStack splashElixir() {
-            return styledElixir(new StyleVariant(Cap.LID, Shape.FLASK_2));
+            return styledElixir(StyleVariant.of(Cap.LID, Shape.FLASK_2));
         }
 
         static ItemStack lingeringElixir() {
-            return styledElixir(new StyleVariant(Cap.CROWN, Shape.FLASK_2));
+            return styledElixir(StyleVariant.of(Cap.CROWN, Shape.FLASK_2));
         }
 
         static ItemStack styledElixir(StyleVariant style) {
@@ -118,13 +120,13 @@ public enum ElixirumCreativeTabs {
                 EssenceHolder essence,
                 double weight,
                 Focus focus,
-                Form application,
+                Form form,
                 StyleVariant style
         ) {
             var stack = item.instantiate();
-            var effect = new EffectProvider.Packed(essence, weight, focus.value);
-            var contents = ElixirContents.create(List.of(effect), application, Risk.BALANCED, focus);
-            ContentsHelper.setElixir(stack, contents);
+            var effect = new PackedEffectProvider(essence, weight, focus.value);
+            var contents = ElixirContents.create(List.of(effect), focus, form, Risk.BALANCED);
+            ArsElixirumAPI.setElixirContents(stack, contents);
             StyleHelper.setStyle(stack, style);
             return stack;
         }

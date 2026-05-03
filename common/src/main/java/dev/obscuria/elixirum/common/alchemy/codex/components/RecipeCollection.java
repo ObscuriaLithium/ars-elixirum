@@ -2,9 +2,9 @@ package dev.obscuria.elixirum.common.alchemy.codex.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.obscuria.elixirum.api.alchemy.components.StyleVariant;
 import dev.obscuria.elixirum.common.alchemy.recipes.ConfiguredRecipe;
 import dev.obscuria.elixirum.common.alchemy.styles.Chroma;
-import dev.obscuria.elixirum.common.alchemy.styles.StyleVariant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.minecraft.core.UUIDUtil;
@@ -63,9 +63,9 @@ public final class RecipeCollection {
     }
 
     public boolean save(ConfiguredRecipe recipe) {
-        if (configByRecipe.containsKey(recipe.recipe().getUuid())) return false;
-        this.configByRecipe.put(recipe.recipe().getUuid(), recipe);
-        this.recipeOrder.add(recipe.recipe().getUuid());
+        if (configByRecipe.containsKey(recipe.recipe().uuid())) return false;
+        this.configByRecipe.put(recipe.recipe().uuid(), recipe);
+        this.recipeOrder.add(recipe.recipe().uuid());
         return true;
     }
 

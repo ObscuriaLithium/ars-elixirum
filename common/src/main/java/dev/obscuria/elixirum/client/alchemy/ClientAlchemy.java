@@ -1,9 +1,9 @@
 package dev.obscuria.elixirum.client.alchemy;
 
+import dev.obscuria.elixirum.api.alchemy.AlchemyRecipe;
 import dev.obscuria.elixirum.api.codex.Alchemy;
 import dev.obscuria.elixirum.client.alchemy.cache.AlchemyCache;
 import dev.obscuria.elixirum.client.alchemy.cache.CachedElixir;
-import dev.obscuria.elixirum.common.alchemy.recipes.AlchemyRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 
@@ -30,9 +30,9 @@ public final class ClientAlchemy implements Alchemy {
         recentlyBrewed.removeIf(cached -> cached.recipe().equals(recipe));
         recentlyBrewed.add(0, elixir);
 
-        localProfile.mastery()._addRecipeXp(recipe.getUuid(), 1);
+        localProfile.mastery()._addRecipeXp(recipe.uuid(), 1);
         localProfile.knownIngredients().discoverAll(recipe);
-        localProfile.knownRecipes().update(recipe.getUuid(), elixir.contents());
+        localProfile.knownRecipes().update(recipe.uuid(), elixir.contents());
     }
 
     @Override

@@ -1,0 +1,143 @@
+{
+  "icon": "elixirum:honey_solvent",
+  "title": "Part II: Understanding What You Just Brewed",
+  "contents": [
+    {
+      "type": "paragraph",
+      "text": "Every ingredient used in alchemy carries [color=#EC8FFF]Essences[/color] - invisible properties that determine what effects it can contribute to a brew. Each essence is tied to a specific effect (such as Speed or Regeneration) and has a weight that defines how strongly it manifests. At first, these properties are unknown, and uncovering them is the foundation of all alchemical work."
+    },
+    {
+      "type": "subheader",
+      "text": "Discovering Ingredients"
+    },
+    {
+      "type": "paragraph",
+      "text": "Alchemy is built on observation. Different tools and actions reveal different parts of an ingredient, and these methods [color=#EC8FFF]do not replace each other[/color] - each uncovers a specific layer of information, gradually forming a complete understanding."
+    },
+    {
+      "type": "item_panel",
+      "item": "elixirum:alchemist_eye",
+      "contents": [
+        {
+          "type": "subheader",
+          "text": "The Alchemist's Eye"
+        },
+        {
+          "type": "paragraph",
+          "text": "The [color=#EC8FFF]Alchemist's Eye[/color] is worn as a helmet and allows you to inspect ingredients directly in their tooltip. It does not reveal new information on its own, but instead displays everything you have already discovered - including known [color=#EC8FFF]Essences[/color] and revealed [color=#EC8FFF]Traits[/color] - as a live, readable summary."
+        }
+      ]
+    },
+    {
+      "type": "item_panel",
+      "item": "elixirum:honey_solvent",
+      "contents": [
+        {
+          "type": "subheader",
+          "text": "Solvents - Extracting Essences"
+        },
+        {
+          "type": "paragraph",
+          "text": "[color=#EC8FFF]Solvents[/color] are used to uncover the hidden essences within an ingredient. Using one in a Brewing Stand with an ingredient produces an [color=#EC8FFF]Extract[/color] containing a single random essence. Picking up the extract permanently reveals that essence, and repeated use gradually uncovers the full composition. Once all essences are known, the ingredient's [color=#EC8FFF]Aspect[/color] becomes visible."
+        }
+      ]
+    },
+    {
+      "type": "item_panel",
+      "item": "elixirum:glass_cauldron",
+      "contents": [
+        {
+          "type": "subheader",
+          "text": "Brewing - Revealing Traits"
+        },
+        {
+          "type": "paragraph",
+          "text": "Using an ingredient in a cauldron reveals how it behaves in practice. Each ingredient has different [color=#EC8FFF]Traits[/color] depending on the role it takes - [color=#8fe1ff]Base, Catalyst, or Inhibitor[/color]. When an ingredient is used in a specific slot for the first time, its trait for that role becomes permanently known, meaning that full understanding requires experimenting with it in [color=#EC8FFF]all three roles[/color]."
+        }
+      ]
+    },
+    {
+      "type": "subheader",
+      "text": "The Aspects"
+    },
+    {
+      "type": "paragraph",
+      "text": "Every fully analyzed ingredient belongs to an [color=#EC8FFF]Aspect[/color] - a category reflecting its nature. Aspects are only revealed once all essences of an ingredient have been discovered and play an important role in advanced brewing."
+    },
+    {
+      "type": "table",
+      "h_align": "left",
+      "v_padding": 4,
+      "columns": [
+        {
+          "header": "",
+          "texture_width": 18,
+          "texture_height": 18
+        },
+        {
+          "header": "Aspect",
+          "content_color": "#ff8fe1ff",
+          "weight": 2.0
+        },
+        {
+          "header": "Latin meaning",
+          "weight": 2.0
+        },
+        {
+          "header": "Character",
+          "weight": 4.0
+        }
+      ],
+      "rows": [
+        [
+          "elixirum:textures/gui/aspect/corpus.png",
+          "Corpus",
+          "Body",
+          "Physical health, endurance"
+        ],
+        [
+          "elixirum:textures/gui/aspect/anima.png",
+          "Anima",
+          "Spirit",
+          "Inner strength, emotions"
+        ],
+        [
+          "elixirum:textures/gui/aspect/venenum.png",
+          "Venenum",
+          "Venom",
+          "Toxicity, danger"
+        ],
+        [
+          "elixirum:textures/gui/aspect/medela.png",
+          "Medela",
+          "Healing",
+          "Regeneration, purification"
+        ],
+        [
+          "elixirum:textures/gui/aspect/crescere.png",
+          "Crescere",
+          "Growth",
+          "Improvement, evolution"
+        ],
+        [
+          "elixirum:textures/gui/aspect/mutatio.png",
+          "Mutatio",
+          "Change",
+          "Instability, mutation"
+        ],
+        [
+          "elixirum:textures/gui/aspect/fortuna.png",
+          "Fortuna",
+          "Fortune",
+          "Luck, chance"
+        ],
+        [
+          "elixirum:textures/gui/aspect/tenebrae.png",
+          "Tenebrae",
+          "Darkness",
+          "Hidden, otherworldly"
+        ]
+      ]
+    }
+  ]
+}

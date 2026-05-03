@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.renderer.RenderType;
 
-public class ModelGlassCauldron extends Model {
+public final class ModelGlassCauldron extends Model {
 
     public final ModelPart main;
 
