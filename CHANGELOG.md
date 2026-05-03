@@ -1,5 +1,5 @@
 * Added **data-driven compendium with formatting and table support**; content and structure can be customized per language, including adding new sections and pages
-* Added **"The Foundations"** compendium section with detailed explanations of core mechanics
+* Added **"The Fundamentals"** compendium section with detailed explanations of core mechanics
 * Added **search fields** to the recipe collection and compendium; recipe search covers both elixir names and effect names
 * Added **font scale snapping** to ensure **pixel-perfect** font sizes in fullscreen mode, eliminating flickering
 * Improved visuals and informativeness of the **elixir contents graph**, added effect weight display and quality tier indicators
