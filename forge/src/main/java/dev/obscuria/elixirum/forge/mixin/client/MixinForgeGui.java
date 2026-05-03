@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ForgeGui.class, remap = false)
+@Mixin(ForgeGui.class)
 public abstract class MixinForgeGui {
 
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void hideGuiOnScreen(GuiGraphics guiGraphics, float partialTick, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("HEAD"), require = 0, cancellable = true)
+    private void disableGuiOverlay(GuiGraphics guiGraphics, float partialTick, CallbackInfo ci) {
         if (Minecraft.getInstance().screen instanceof AlchemyScreen) ci.cancel();
     }
 }
