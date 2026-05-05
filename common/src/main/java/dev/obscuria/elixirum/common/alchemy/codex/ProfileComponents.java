@@ -2,13 +2,14 @@ package dev.obscuria.elixirum.common.alchemy.codex;
 
 import com.mojang.serialization.Codec;
 import dev.obscuria.archivist.api.v1.components.ComponentKey;
+import dev.obscuria.elixirum.api.codex.profile.AlchemyMastery;
 import dev.obscuria.elixirum.common.alchemy.codex.components.*;
 import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
 import dev.obscuria.fragmentum.registry.BootstrapContext;
 
 public final class ProfileComponents {
 
-    public static final ComponentKey<AlchemyMastery> MASTERY = ComponentKey.create(AlchemyMastery.CODEC);
+    public static final ComponentKey<AlchemyMastery> MASTERY = ComponentKey.create(AlchemyMastery.codec());
     public static final ComponentKey<KnownEffects> KNOWN_EFFECTS = ComponentKey.create(KnownEffects.CODEC);
     public static final ComponentKey<KnownRecipes> KNOWN_RECIPES = ComponentKey.create(KnownRecipes.CODEC);
     public static final ComponentKey<KnownIngredients> KNOWN_INGREDIENTS = ComponentKey.create(KnownIngredients.CODEC);

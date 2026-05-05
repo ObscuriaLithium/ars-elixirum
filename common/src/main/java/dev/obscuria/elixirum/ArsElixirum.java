@@ -8,9 +8,11 @@ import dev.obscuria.elixirum.config.GenerationConfig;
 import dev.obscuria.elixirum.server.alchemy.AlchemyCodex;
 import dev.obscuria.elixirum.common.registry.ElixirumRegistries;
 import dev.obscuria.elixirum.server.alchemy.ServerAlchemy;
+import dev.obscuria.elixirum.server.commands.MasteryCommand;
 import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import dev.obscuria.fragmentum.packs.BuiltInPackBuilder;
 import dev.obscuria.fragmentum.server.FragmentumServer;
+import dev.obscuria.fragmentum.server.FragmentumServerRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -43,6 +45,8 @@ public final class ArsElixirum {
     }
 
     public static void init() {
+
+        FragmentumServerRegistry.registerCommand(MasteryCommand::register);
 
         FragmentumServer.SERVER_STARTING.connect(ArsElixirum::onServerStart);
         FragmentumServer.SERVER_SAVING.connect(ArsElixirum::onServerSave);

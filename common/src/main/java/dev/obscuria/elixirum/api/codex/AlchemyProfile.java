@@ -1,6 +1,7 @@
 package dev.obscuria.elixirum.api.codex;
 
 import dev.obscuria.archivist.api.v1.components.ComponentHolder;
+import dev.obscuria.elixirum.api.codex.profile.AlchemyMastery;
 import dev.obscuria.elixirum.common.alchemy.codex.ProfileComponents;
 import dev.obscuria.elixirum.common.alchemy.codex.components.*;
 

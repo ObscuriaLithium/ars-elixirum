@@ -40,8 +40,8 @@ public class StylePicker<T> extends GridContainer {
     }
 
     private boolean isLocked(T value) {
-        var level = ClientAlchemy.localProfile().mastery().getLevel();
-        return adapter.requiredLevel(value) >= level;
+        var level = ClientAlchemy.localProfile().mastery().level();
+        return adapter.requiredLevel(value) > level;
     }
 
     private void apply(T value) {

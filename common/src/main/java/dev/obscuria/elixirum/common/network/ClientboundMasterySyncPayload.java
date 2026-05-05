@@ -1,14 +1,14 @@
 package dev.obscuria.elixirum.common.network;
 
+import dev.obscuria.elixirum.api.codex.profile.AlchemyMastery;
 import dev.obscuria.elixirum.client.ClientPayloadListener;
-import dev.obscuria.elixirum.common.alchemy.codex.components.AlchemyMastery;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 public record ClientboundMasterySyncPayload(int level, int xp) {
 
     public ClientboundMasterySyncPayload(AlchemyMastery mastery) {
-        this(mastery.getLevel(), mastery.getXp());
+        this(mastery.level(), mastery.xp());
     }
 
     public static void encode(ClientboundMasterySyncPayload payload, FriendlyByteBuf byteBuf) {

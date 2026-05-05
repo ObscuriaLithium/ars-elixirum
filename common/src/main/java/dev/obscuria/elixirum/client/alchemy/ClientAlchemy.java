@@ -30,7 +30,7 @@ public final class ClientAlchemy implements Alchemy {
         recentlyBrewed.removeIf(cached -> cached.recipe().equals(recipe));
         recentlyBrewed.add(0, elixir);
 
-        localProfile.mastery()._addRecipeXp(recipe.uuid(), 1);
+        localProfile.mastery().addRecipeXpNoEvent(recipe.uuid(), 1);
         localProfile.knownIngredients().discoverAll(recipe);
         localProfile.knownRecipes().update(recipe.uuid(), elixir.contents());
     }

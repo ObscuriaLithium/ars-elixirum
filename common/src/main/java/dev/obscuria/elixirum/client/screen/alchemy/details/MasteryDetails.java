@@ -11,7 +11,7 @@ import dev.obscuria.elixirum.client.screen.toolkit.GuiContext;
 import dev.obscuria.elixirum.client.screen.toolkit.GuiToolkit;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.text.FootnoteControl;
 import dev.obscuria.elixirum.client.screen.toolkit.controls.layout.HSpacingControl;
-import dev.obscuria.elixirum.common.alchemy.codex.components.AlchemyMastery;
+import dev.obscuria.elixirum.common.alchemy.codex.components._AlchemyMastery;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.CommonComponents;
@@ -37,8 +37,8 @@ public class MasteryDetails extends AbstractDetails {
 
         public Progress(AlchemyRecipe recipe) {
             super(0, 0, 10, 4, CommonComponents.EMPTY);
-            this.xp = ClientAlchemy.localProfile().mastery().getRecipeXp(recipe.uuid());
-            this.progress = Mth.clamp(xp / (float) AlchemyMastery.MAX_RECIPE_XP, 0f, 1f);
+            this.xp = ClientAlchemy.localProfile().mastery().recipeXp(recipe.uuid());
+            this.progress = Mth.clamp(xp / (float) _AlchemyMastery.MAX_RECIPE_XP, 0f, 1f);
             this.scale = GuiToolkit.snapScale(GuiToolkit.FOOTNOTE_SCALE);
         }
 
@@ -73,7 +73,7 @@ public class MasteryDetails extends AbstractDetails {
                 value = Component.literal("✔ Mastered");
                 valueColor = Palette.POSITIVE.decimal();
             } else {
-                value = Component.literal(xp + " / " + AlchemyMastery.MAX_RECIPE_XP);
+                value = Component.literal(xp + " / " + _AlchemyMastery.MAX_RECIPE_XP);
                 valueColor = Palette.MODERATE.decimal();
             }
 

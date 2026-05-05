@@ -7,6 +7,13 @@
   "keyCategory.elixirum": "Ars Elixirum",
   "key.elixirum.collection": "Open Collection",
 
+  "commands.elixirum.mastery.query.levels": "%s has %s mastery levels",
+  "commands.elixirum.mastery.query.points": "%s has %s mastery points",
+  "commands.elixirum.mastery.add.levels": "Gave %s mastery levels to %s",
+  "commands.elixirum.mastery.add.points": "Gave %s mastery points to %s",
+  "commands.elixirum.mastery.set.levels": "Set %s mastery levels on %s",
+  "commands.elixirum.mastery.set.points": "Set %s mastery points on %s",
+
   "attribute.elixirum.generic.potion_mastery": "Potion Mastery",
   "attribute.elixirum.generic.potion_resistance": "Potion Resistance",
   "attribute.elixirum.generic.corpus_mastery": "Corpus Mastery",
@@ -279,6 +286,12 @@
 
   "toast.elixirum.level_up.title": "Mastery Level Up!",
   "toast.elixirum.level_up.description": "New possibilities await",
+  "toast.elixirum.new_cap.single": "New Cap Unlocked!",
+  "toast.elixirum.new_cap.multiple": "New Caps Unlocked!",
+  "toast.elixirum.new_shape.single": "New Shape Unlocked!",
+  "toast.elixirum.new_shape.multiple": "New Shapes Unlocked!",
+  "toast.elixirum.new_chroma.single": "New Chroma Unlocked!",
+  "toast.elixirum.new_chroma.multiple": "New Chromas Unlocked!",
 
   "potion.potency.10": "X",
   "potion.potency.11": "XI",

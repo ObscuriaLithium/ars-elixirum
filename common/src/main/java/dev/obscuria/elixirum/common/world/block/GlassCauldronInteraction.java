@@ -96,7 +96,7 @@ public interface GlassCauldronInteraction {
                 var profile = ServerAlchemy.get(serverLevel.getServer()).profileOf(player);
                 profile.knownRecipes().update(recipe.uuid(), ArsElixirumAPI.getElixirContents(result));
                 profile.knownIngredients().discoverAll(recipe);
-                profile.mastery().grantXp(profile, recipe.uuid(), 1);
+                profile.mastery().addRecipeXp(profile, recipe.uuid(), 1);
                 profile.recipeCollection().findConfig(recipe.uuid()).ifPresent(config -> {
                     StyleHelper.setStyleIfNotDefault(result, config.getStyle());
                     StyleHelper.setChromaIfNotDefault(result, config.getChroma());

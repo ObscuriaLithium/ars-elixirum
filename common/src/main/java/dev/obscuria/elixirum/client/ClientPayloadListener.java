@@ -31,8 +31,8 @@ public final class ClientPayloadListener {
     }
 
     public static void handle(Player player, ClientboundMasterySyncPayload payload) {
-        ClientAlchemy.localProfile().mastery()._setLevel(payload.level());
-        ClientAlchemy.localProfile().mastery()._setXp(payload.xp());
+        ClientAlchemy.localProfile().mastery().setLevelNoEvent(payload.level());
+        ClientAlchemy.localProfile().mastery().setXpNoEvent(payload.xp());
     }
 
     public static void handle(Player player, ClientboundDiscoverEssencePayload payload) {
@@ -41,18 +41,18 @@ public final class ClientPayloadListener {
 
     public static void handle(Player player, ClientboundMasteryLevelUpPayload payload) {
         var toasts = Minecraft.getInstance().getToasts();
-        toasts.addToast(new MasteryLevelUpToast(payload.masteryLevel()));
+        MasteryLevelUpToast.addOrUpdate(toasts, payload.masteryLevel());
         for (var cap : Cap.values()) {
             if (cap.mastery != payload.masteryLevel()) continue;
-            toasts.addToast(new NewCapToast(cap));
+            NewCapToast.addOrUpdate(toasts, cap);
         }
         for (var shape : Shape.values()) {
             if (shape.mastery != payload.masteryLevel()) continue;
-            toasts.addToast(new NewShapeToast(shape));
+            NewShapeToast.addOrUpdate(toasts, shape);
         }
         for (var chroma : Chroma.values()) {
             if (chroma.mastery != payload.masteryLevel()) continue;
-            toasts.addToast(new NewChromaToast(chroma));
+            NewChromaToast.addOrUpdate(toasts, chroma);
         }
     }
 }

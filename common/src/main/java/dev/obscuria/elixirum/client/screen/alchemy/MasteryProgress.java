@@ -17,6 +17,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class MasteryProgress extends AbstractWidget {
 
@@ -36,10 +37,10 @@ public class MasteryProgress extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        int level = ClientAlchemy.localProfile().mastery().getLevel();
-        int current = ClientAlchemy.localProfile().mastery().getXp();
+        int level = ClientAlchemy.localProfile().mastery().level();
+        int current = ClientAlchemy.localProfile().mastery().xp();
         int total = MasteryHelper.calculateXpForLevel(level + 1);
-        double ratio = (double) current / total;
+        double ratio = Mth.clamp((double) current / total, 0.0, 1.0);
 
         GuiToolkit.setShaderColor(Palette.DARK);
         GuiToolkit.draw(graphics, Textures.PROGRESS, getX(), getY() + 10, width, 4);

@@ -8,24 +8,24 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public enum Cap implements StringRepresentable {
-    WOOD(1, 0, "cap/wood"),
-    BLUE_WOOD(2, 3, "cap/blue_wood"),
-    OPEN(3, 6, "cap/open"),
-    GLASS(4, 9, "cap/glass"),
-    AMETHYST(5, 12, "cap/amethyst"),
-    EMERALD(6, 15, "cap/emerald"),
-    HEART(7, 18, "cap/heart"),
-    PIPETTE(8, 21, "cap/pipette"),
-    LID(9, 24, "cap/lid"),
-    PIN(10, 27, "cap/pin"),
-    CROWN(11, 30, "cap/crown"),
-    SPRAY(12, 33, "cap/spray"),
-    SCREW_CAP(13, 36, "cap/screw_cap"),
-    HOLY(14, 39, "cap/holy"),
-    SKULL(15, 42, "cap/skull"),
-    WITHER(16, 45, "cap/wither"),
-    FORGED(17, 48, "cap/forged"),
-    MOON(18, 51, "cap/moon");
+    WOOD(1, 1, "cap/wood"),
+    BLUE_WOOD(2, 2, "cap/blue_wood"),
+    OPEN(3, 5, "cap/open"),
+    GLASS(4, 8, "cap/glass"),
+    AMETHYST(5, 11, "cap/amethyst"),
+    EMERALD(6, 14, "cap/emerald"),
+    HEART(7, 17, "cap/heart"),
+    PIPETTE(8, 20, "cap/pipette"),
+    LID(9, 23, "cap/lid"),
+    PIN(10, 26, "cap/pin"),
+    CROWN(11, 29, "cap/crown"),
+    SPRAY(12, 32, "cap/spray"),
+    SCREW_CAP(13, 35, "cap/screw_cap"),
+    HOLY(14, 38, "cap/holy"),
+    SKULL(15, 41, "cap/skull"),
+    WITHER(16, 44, "cap/wither"),
+    FORGED(17, 47, "cap/forged"),
+    MOON(18, 50, "cap/moon");
 
     public static final Cap DEFAULT;
     public static final Codec<Cap> CODEC;
