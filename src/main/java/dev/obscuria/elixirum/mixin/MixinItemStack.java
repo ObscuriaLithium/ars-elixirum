@@ -66,8 +66,7 @@ public abstract class MixinItemStack implements ItemStackCache.Provider {
     public boolean elixirum$isBrewFlag() {
         return elixirum$brewFlag;
     }
-    //TODO: Add tooltip image injection for 1.21+ when MixinExtras is updated to support it
-    //? if >=1.21 {    
+    //? if >=1.21 {
     /*@ModifyReturnValue(method = "getRarity", at = @At("RETURN"))
     private net.minecraft.world.item.Rarity elixirum$rarity(net.minecraft.world.item.Rarity original) {
         var stack = (ItemStack) (Object) this;
@@ -76,17 +75,15 @@ public abstract class MixinItemStack implements ItemStackCache.Provider {
                 ? dev.obscuria.elixirum.common.alchemy.ElixirQuality.fromStack(stack).getRarity() : original;
     }
     */
-    //? } else {
+    //? }
 
-    /*@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @ModifyReturnValue(method = "getTooltipImage", at = @At("RETURN"))
     private Optional<TooltipComponent> injectTooltipImages(Optional<TooltipComponent> original) {
         final var self = (ItemStack) (Object) this;
         final @Nullable var image = _ItemStackHooks.injectTooltipImage(self);
         if (image == null) return original;
         return Optional.of(GroupTooltip.maybeGroup(original.orElse(null), image));
-    }*/
-
-    //? }
+    }
 
 }

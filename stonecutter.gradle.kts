@@ -80,6 +80,7 @@ stonecutter parameters {
 		replace("builder.push(", "builder.pushCategory(")
 		replace("builder.pop()", "builder.popCategory()")
 		replace("dev.obscuria.fragmentum.world.tooltip.GroupTooltip", "dev.obscuria.fragmentum.api.common.tooltip.CompositeTooltipComponent")
+		replace("GroupTooltip.maybeGroup(", "CompositeTooltipComponent.Companion.of(")
 		replace("dev.obscuria.fragmentum.world.tooltip.", "dev.obscuria.fragmentum.api.common.tooltip.")
 		replace("TooltipOptions.builder()", "TooltipOptions.Companion.builder()")
 		for (preset in listOf("DESCRIPTION", "LORE"))
