@@ -74,7 +74,6 @@ public final class ArsElixirumClient {
     }
 
     private static int pickElixirColor(ItemStack stack, int layer) {
-        // Minecraft 1.21+ reads tint alpha; RGB alone makes the liquid transparent.
         return layer != 1 ? -1 : 0xFF000000 | elixirColorOf(stack).decimal();
     }
 
