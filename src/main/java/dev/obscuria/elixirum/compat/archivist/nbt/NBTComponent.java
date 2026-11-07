@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.archivist.nbt;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.archivist.nbt;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponents;
@@ -97,3 +98,4 @@ public final class NBTComponent<T> {
         }
     }
 }
+*///? }

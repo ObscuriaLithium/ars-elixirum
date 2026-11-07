@@ -181,7 +181,6 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 			sourceSets.named("main") {
 				for (loader in listOf("fabric", "forge", "neoforge").filter { it != ctx.loader.id })
 					java.exclude("dev/obscuria/elixirum/platform/$loader/**")
-				java.srcDir(rootProject.file("src/${ctx.currentMcVersion}/java"))
 				resources.srcDir(rootProject.file("src/generated/resources"))
 			}
 		}
@@ -224,6 +223,7 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 			inputs.file(jar.flatMap { it.archiveFile })
 			doLast {
 				ZipFile(jar.get().archiveFile.get().asFile).use { zip ->
+					check((zip.getEntry("dev/obscuria/elixirum/compat/network/FragmentumNetworking.class") != null) == ctx.stonecutter.eval(ctx.currentMcVersion, ">=1.21")) { "Incorrect compatibility backend in ${zip.name}" }
 					val platformPath = "dev/obscuria/elixirum/platform"
 					val entrypoint = when (ctx.loader) { Loader.Fabric -> "Fabric"; Loader.NeoForge -> "NeoForge"; else -> "Forge" }
 					check(zip.getEntry("$platformPath/${ctx.loader.id}/${entrypoint}ArsElixirum.class") != null) { "Missing platform entrypoint from ${zip.name}" }

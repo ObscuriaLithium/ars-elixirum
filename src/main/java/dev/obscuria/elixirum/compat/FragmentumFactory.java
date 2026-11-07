@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -27,3 +28,4 @@ public final class FragmentumFactory {
         return BlockEntityType.Builder.of(factory::apply, blocks);
     }
 }
+*///? }

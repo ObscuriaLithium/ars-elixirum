@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.network;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.network;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.RegistryAccess;
@@ -23,3 +24,4 @@ public record PayloadCodec<T>(Codec<T> codec, Supplier<RegistryAccess> registrie
         return codec.parse(RegistryOps.create(NbtOps.INSTANCE, registries.get()), tag).getOrThrow();
     }
 }
+*///? }

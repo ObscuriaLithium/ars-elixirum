@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -23,3 +24,4 @@ public final class ItemStackMigration {
         return ItemStack.parse(registries, tag).orElseThrow(() -> new IllegalArgumentException("Invalid potion shelf item stack"));
     }
 }
+*///? }

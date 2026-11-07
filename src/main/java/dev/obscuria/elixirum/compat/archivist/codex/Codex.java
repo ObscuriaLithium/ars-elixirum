@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.archivist.codex;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.archivist.codex;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -120,3 +121,4 @@ public final class Codex {
         }
     }
 }
+*///? }

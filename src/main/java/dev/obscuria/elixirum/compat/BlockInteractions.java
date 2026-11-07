@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat;
 
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -14,3 +15,4 @@ public final class BlockInteractions {
         };
     }
 }
+*///? }

@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.network;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.network;
 
 import dev.obscuria.fragmentum.api.network.PacketPayload;
 import dev.obscuria.fragmentum.api.network.PayloadRegistrar;
@@ -73,3 +74,4 @@ public final class FragmentumNetworking {
         }
     }
 }
+*///? }

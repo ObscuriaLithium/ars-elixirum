@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.archivist.codex;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.archivist.codex;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.server.MinecraftServer;
@@ -6,14 +7,14 @@ import net.minecraft.server.MinecraftServer;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class CodexEntry<T> {
+public final class CodexArchive<T> {
 
     private final Codex parent;
     private final Codec<T> codec;
     private final Supplier<T> defaultValue;
     private final String path;
 
-    private CodexEntry(Codex parent, Codec<T> codec, Supplier<T> defaultValue, String path) {
+    private CodexArchive(Codex parent, Codec<T> codec, Supplier<T> defaultValue, String path) {
         this.parent = parent;
         this.codec = Objects.requireNonNull(codec, "Entry codec must not be null");
         this.defaultValue = Objects.requireNonNull(defaultValue, "Default supplier must not be null");
@@ -24,12 +25,21 @@ public final class CodexEntry<T> {
         return new Builder<>();
     }
 
-    public T load(MinecraftServer server) {
-        return parent.load(Codex.root(server), path, codec, defaultValue, Codex.ops(server));
+    private String entryPath(String name) {
+        if (name == null || !name.matches("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")) {
+            throw new IllegalArgumentException("Archive entry must be a UUID: " + name);
+        }
+        return path + "/" + name;
     }
 
-    public void save(MinecraftServer server, T value) {
-        parent.save(Codex.root(server), path, codec, value, Codex.ops(server));
+    public T loadEntry(MinecraftServer server, String name) {
+        var entry = entryPath(name);
+        return parent.load(Codex.root(server), entry, codec, defaultValue, Codex.ops(server));
+    }
+
+    public void saveEntry(MinecraftServer server, String name, T value) {
+        var entry = entryPath(name);
+        parent.save(Codex.root(server), entry, codec, value, Codex.ops(server));
     }
 
     public static final class Builder<T> {
@@ -49,13 +59,14 @@ public final class CodexEntry<T> {
             return this;
         }
 
-        public Builder<T> entryPath(String path) {
+        public Builder<T> archivePath(String path) {
             this.path = path;
             return this;
         }
 
-        CodexEntry<T> build(Codex parent) {
-            return new CodexEntry<>(parent, codec, defaultValue, path);
+        CodexArchive<T> build(Codex parent) {
+            return new CodexArchive<>(parent, codec, defaultValue, path);
         }
     }
 }
+*///? }

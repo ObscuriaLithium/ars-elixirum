@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.archivist.components;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.archivist.components;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -35,3 +36,4 @@ public final class ComponentMap {
         return new IdentityHashMap<>(values);
     }
 }
+*///? }

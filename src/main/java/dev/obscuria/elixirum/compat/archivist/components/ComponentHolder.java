@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.archivist.components;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.archivist.components;
 
 import java.util.function.Supplier;
 
@@ -10,3 +11,4 @@ public interface ComponentHolder {
         return getComponents().getOrCreate(key, supplier);
     }
 }
+*///? }

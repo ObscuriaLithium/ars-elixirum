@@ -1,4 +1,5 @@
-package dev.obscuria.elixirum.compat.archivist.components;
+//? if >=1.21 {
+/*package dev.obscuria.elixirum.compat.archivist.components;
 
 import com.mojang.serialization.Codec;
 
@@ -21,3 +22,4 @@ public final class ComponentKey<T> {
         return Codec.dispatchedMap(keyCodec, key -> key.codec);
     }
 }
+*///? }
