@@ -13,24 +13,6 @@ public abstract class MixinPlayer {
 
     @Inject(method = "createAttributes", at = @At("RETURN"))
     private static void injectCustomAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
-        cir.getReturnValue()
-                .add(ElixirumAttributes.POTION_MASTERY)
-                .add(ElixirumAttributes.POTION_RESISTANCE)
-                .add(ElixirumAttributes.CORPUS_MASTERY)
-                .add(ElixirumAttributes.CORPUS_RESISTANCE)
-                .add(ElixirumAttributes.ANIMA_MASTERY)
-                .add(ElixirumAttributes.ANIMA_RESISTANCE)
-                .add(ElixirumAttributes.VENENUM_MASTERY)
-                .add(ElixirumAttributes.VENENUM_RESISTANCE)
-                .add(ElixirumAttributes.MEDELA_MASTERY)
-                .add(ElixirumAttributes.MEDELA_RESISTANCE)
-                .add(ElixirumAttributes.CRESCERE_MASTERY)
-                .add(ElixirumAttributes.CRESCERE_RESISTANCE)
-                .add(ElixirumAttributes.MUTATIO_MASTERY)
-                .add(ElixirumAttributes.MUTATIO_RESISTANCE)
-                .add(ElixirumAttributes.FORTUNA_MASTERY)
-                .add(ElixirumAttributes.FORTUNA_RESISTANCE)
-                .add(ElixirumAttributes.TENEBRAE_MASTERY)
-                .add(ElixirumAttributes.TENEBRAE_RESISTANCE);
+        ElixirumAttributes.addTo(cir.getReturnValue());
     }
 }

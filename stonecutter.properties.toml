@@ -1,5 +1,3 @@
-loomx.loom_version="1.16-SNAPSHOT"
-
 mod.id = "elixirum"
 mod.name = "Ars Elixirum"
 mod.group = "dev.obscuria"
@@ -8,14 +6,16 @@ mod.channel_tag = ""
 mod.description = "Ultimate extension of potion crafting, applications, and diversity!"
 mod.authors = ["Obscuria"]
 mod.contributors = []
+mod.credits = "SquARzY_"
 mod.inception_year = "2026"
-mod.license.name = "Obscuria Modding License (OML)"
+mod.license.name = "Obscuria Ecosystem License (OEL)"
 mod.license.url = "https://obscurialithium.github.io/license/"
 mod.license.dist = "repo"
 mod.environment = "client_and_server"
-mod.sources_url = "https://github.com/ObscuriaLithium/fragmentum"
-mod.homepage_url = "https://modrinth.com/mod/fragmentum"
-mod.issues_url = "https://github.com/ObscuriaLithium/fragmentum/issues"
+mod.sources_url = "https://github.com/ObscuriaLithium/ars-elixirum"
+mod.homepage_url = "https://modrinth.com/mod/ars-elixirum"
+mod.issues_url = "https://github.com/ObscuriaLithium/ars-elixirum/issues"
+mod.update_url = "https://raw.githubusercontent.com/ObscuriaLithium/modding/main/versions/ars-elixirum.json"
 mod.discord_url = "https://dsc.gg/obscuria"
 
 [[mod.pom.developers]]
@@ -24,65 +24,38 @@ name = "Obscuria"
 url = "https://obscurialithium.github.io"
 
 [fabric]
-deps.fabric-loader = "0.19.2"
-deps.fabric-language-kotlin = "1.13.9+kotlin.2.3.10"
+deps.fabric-loader = "0.16.9"
 
 [fabric."1.20.1"]
 deps.minecraft = "1.20.1"
 deps.fabric-api = "0.92.1+1.20.1"
 deps.forge-config-api-port = "8.0.0"
-deps.yacl = "3.6.6+1.20.1-fabric"
 deps.modmenu = "7.2.2"
 deps.fragmentum = "1.2.3"
 deps.archivist = "1.1.12"
+deps.fragmentum-artifact = "qvLpVUyD"
+deps.archivist-artifact = "z0XU8hDm"
+deps.parchment = "1.20.1:2023.09.03"
 
 [fabric."1.21.1"]
 deps.minecraft = "1.21.1"
+deps.fragmentum = "2.4.4"
+deps.fragmentum-artifact = "Hig6ZAV9"
 deps.fabric-api = "0.109.0+1.21.1"
 deps.forge-config-api-port = "21.1.4"
-deps.yacl = "3.6.6+1.21.1-fabric"
 deps.modmenu = "11.0.3"
-deps.fragmentum = "1.2.3"
-deps.archivist = "1.1.12"
-
-[fabric."1.21.11"]
-deps.minecraft = "1.21.11"
-deps.fabric-api = "0.139.5+1.21.11"
-deps.forge-config-api-port = "8.0.0"
-deps.modmenu = "15.0.0"
-publish.additionalVersions = ["1.21.6"]
-
-[fabric."26.1"]
-deps.minecraft = "26.1"
-deps.fabric-api = "0.144.0+26.1"
-deps.forge-config-api-port = "8.0.0"
-deps.modmenu = "18.0.0-beta.1"
-publish.additionalVersions = ["26.1.1", "26.1.2"]
-
-[forge]
-deps.kotlinforforge = "4.11.0"
 
 [forge."1.20.1"]
 deps.minecraft = "1.20.1"
-deps.forge = "47.2.0"
-deps.yacl = "3.6.6+1.20.1-forge"
+deps.forge = "47.2.30"
 deps.fragmentum = "1.2.3"
 deps.archivist = "1.1.12"
-
-[neoforge]
-deps.kotlinforforge = "5.3.0"
+deps.fragmentum-artifact = "cSw95u8R"
+deps.archivist-artifact = "jZr8aTOF"
+deps.parchment = "1.20.1:2023.09.03"
 
 [neoforge."1.21.1"]
 deps.minecraft = "1.21.1"
 deps.neoforge = "21.1.80"
-deps.yacl = "3.6.6+1.21.1-neoforge"
-
-[neoforge."1.21.11"]
-deps.minecraft = "1.21.11"
-deps.neoforge = "21.11.3-beta"
-publish.additionalVersions = ["1.21.6"]
-
-[neoforge."26.1"]
-deps.minecraft = "26.1"
-deps.neoforge = "26.1.0.1-beta"
-publish.additionalVersions = ["26.1.1", "26.1"]
+deps.fragmentum = "2.4.4"
+deps.fragmentum-artifact = "A7zWreFf"

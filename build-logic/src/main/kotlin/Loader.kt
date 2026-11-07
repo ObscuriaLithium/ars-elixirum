@@ -21,7 +21,7 @@ sealed class Loader(val id: String) {
 		override val modManifestPath = "fabric.mod.json"
 		override val nestedLibrariesPath = "META-INF/jars/"
 		override val excludedResources = listOf(
-			"META-INF/mods.toml", "META-INF/neoforge.mods.toml", "aw/*.cfg", ".cache", "pack.mcmeta"
+			"META-INF/mods.toml", "META-INF/neoforge.mods.toml", "META-INF/accesstransformer.cfg", ".cache"
 		)
 
 		override fun generateManifest(ctx: Context, includeBundled: Boolean): String {
@@ -44,7 +44,7 @@ sealed class Loader(val id: String) {
 					}
 				},
 				description = ctx.description,
-				icon = "assets/icon.png",
+				icon = "${ctx.modId}.png",
 				license = ctx.licenseName,
 				environment = when (ctx.environment) {
 					ModrinthEnvironment.CLIENT_ONLY, ModrinthEnvironment.SINGLEPLAYER_ONLY -> "client"
@@ -55,13 +55,12 @@ sealed class Loader(val id: String) {
 					ModrinthEnvironment.CLIENT_ONLY_SERVER_OPTIONAL, ModrinthEnvironment.CLIENT_AND_SERVER,
 					ModrinthEnvironment.CLIENT_OR_SERVER_PREFERS_BOTH, ModrinthEnvironment.CLIENT_OR_SERVER -> "*"
 				},
-				accessWidener = "aw/${ctx.currentMcVersion}.accesswidener",
+				accessWidener = if (ctx.currentMcVersion == "1.20.1") "${ctx.modId}.accesswidener" else null,
 				entrypoints = mapOf(
-					"main" to listOf("${ctx.modGroup}.${ctx.modId}.platform.fabric.FabricEntrypoint"),
-					"client" to listOf("${ctx.modGroup}.${ctx.modId}.platform.fabric.FabricClientEntrypoint"),
-					"fabric-datagen" to listOf("${ctx.modGroup}.${ctx.modId}.platform.fabric.datagen.FabricDataGeneratorEntrypoint")
+					"main" to listOf("${ctx.modGroup}.${ctx.modId}.fabric.FabricArsElixirum"),
+					"client" to listOf("${ctx.modGroup}.${ctx.modId}.fabric.client.FabricArsElixirumClient")
 				),
-				mixins = listOf("${ctx.modId}.mixins.json"),
+				mixins = listOf("${ctx.modId}.mixins.json", "${ctx.modId}.fabric.mixins.json"),
 				depends = ctx.extension.dependencies.requiredFor(includeBundled).associate { it.modid.get() to it.fabricLikeVersionRange.get() },
 				recommends = ctx.extension.dependencies.optional.associate { it.modid.get() to it.fabricLikeVersionRange.get() },
 				breaks = ctx.extension.dependencies.incompatible.associate { it.modid.get() to it.fabricLikeVersionRange.get() },
@@ -73,7 +72,7 @@ sealed class Loader(val id: String) {
 
 	sealed class ForgeLike(id: String) : Loader(id) {
 		override val excludedResources = listOf(
-			"fabric.mod.json", "aw/*.accesswidener", ".cache"
+			"fabric.mod.json", "*.accesswidener", ".cache"
 		)
 
 		override val nestedLibrariesPath = "META-INF/jarjar/"
@@ -105,7 +104,7 @@ sealed class Loader(val id: String) {
 			val manifest = ForgeManifest(
 				modLoader = modLoaderId,
 				//loaderVersion = "[${ctx.project.prop("deps.kotlinforforge")},)",
-				loaderVersion = "[1,)",
+				loaderVersion = if (this is Forge) "[47,)" else "[4,)",
 				license = ctx.licenseName,
 				issueTrackerURL = ctx.issuesUrl,
 				clientSideOnly = !ctx.environmentPhysicalServer,
@@ -115,16 +114,17 @@ sealed class Loader(val id: String) {
 						displayName = ctx.modName,
 						version = ctx.baseVersion,
 						displayURL = ctx.homepageUrl,
+						updateJSONURL = ctx.updateUrl,
 						modUrl = ctx.homepageUrl,
-						logoFile = "assets/icon.png",
+						logoFile = "${ctx.modId}.png",
 						authors = ctx.authors.joinToString(", "),
-						credits = "${ctx.authors.joinToString(", ")} Contributors: ${ctx.contributors.joinToString(", ")}",
+						credits = ctx.credits,
 						description = ctx.description
 					)
 				),
 				dependencies = mapOf(ctx.modId to forgeDeps),
-				mixins = listOf(ForgeMixin("${ctx.modId}.mixins.json")),
-				accessTransformers = listOf(ForgeAccessTransformer("aw/${ctx.stonecutter.current.version}.cfg"))
+				mixins = listOf(ForgeMixin("${ctx.modId}.mixins.json"), ForgeMixin("${ctx.modId}.${id}.mixins.json")),
+				accessTransformers = if (this is Forge) listOf(ForgeAccessTransformer("META-INF/accesstransformer.cfg")) else emptyList()
 			)
 
 			return TOML.encodeToString(manifest)
@@ -133,7 +133,7 @@ sealed class Loader(val id: String) {
 
 	object NeoForge : ForgeLike("neoforge") {
 		override val modManifestPath = "META-INF/neoforge.mods.toml"
-		override val excludedResources = (super.excludedResources + "META-INF/mods.toml") + "pack.mcmeta"
+		override val excludedResources = super.excludedResources + listOf("META-INF/mods.toml", "META-INF/accesstransformer.cfg")
 	}
 
 	object Forge : ForgeLike("forge") {

@@ -10,21 +10,12 @@ pluginManagement {
 		maven("https://maven.parchmentmc.org") { name = "ParchmentMC" }
     }
 
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "dev.kikugie.loom-back-compat") {
-                useModule("dev.kikugie:loomx:${requested.version}")
-            }
-        }
-    }
-
     includeBuild("build-logic")
 }
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
     id("dev.kikugie.stonecutter") version "0.9.7"
-    id("dev.kikugie.loom-back-compat") version "0.4.1"
 }
 
 rootProject.name = "Ars Elixirum"

@@ -1,7 +1,7 @@
 @file:Suppress("unused", "DuplicatedCode")
 
 import com.vanniktech.maven.publish.JavadocJar
-import com.vanniktech.maven.publish.KotlinJvm
+import com.vanniktech.maven.publish.JavaLibrary
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import me.modmuss50.mpp.ModPublishExtension
 import org.gradle.api.Project
@@ -84,7 +84,7 @@ fun Project.configureMavenCentralPublishing(ctx: Context) {
 	env("PUB_MAVEN_CENTRAL_PASSWORD")?.let { extensions.extraProperties["mavenCentralPassword"] = it }
 
 	extensions.configure<MavenPublishBaseExtension>("mavenPublishing") {
-		configure(KotlinJvm(javadocJar = JavadocJar.None(), sourcesJar = false))
+		configure(JavaLibrary(javadocJar = JavadocJar.None(), sourcesJar = false))
 
 		if (!ctx.isSnapshot || envTrue("PUB_MAVEN_CENTRAL_SNAPSHOTS")) {
 			publishToMavenCentral()

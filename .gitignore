@@ -17,8 +17,13 @@ out
 # gradle
 build
 .gradle
+.kotlin
 
 # other
 eclipse
 releases
 run
+
+.vscode/
+
+versions/

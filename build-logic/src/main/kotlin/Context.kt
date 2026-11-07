@@ -26,6 +26,7 @@ class Context(
 	val modVersion: String by lazy { require("mod.version") }
 	val channelTag: String by lazy { optional("mod.channel_tag") }
 	val description: String by lazy { optional("mod.description") }
+	val credits: String by lazy { optional("mod.credits") }
 	val licenseName: String by lazy { require("mod.license.name") }
 	val licenseUrl: String by lazy { require("mod.license.url") }
 	val licenseDist: String by lazy { optional("mod.license.dist", "repo") }
@@ -88,6 +89,7 @@ class Context(
 	val homepageUrl: String by lazy { require("mod.homepage_url") }
 	val discordUrl: String by lazy { optional("mod.discord_url") }
 	val issuesUrl: String by lazy { optional("mod.issues_url", "$sourcesUrl/issues") }
+	val updateUrl: String by lazy { optional("mod.update_url") }
 
 	val isSnapshot: Boolean by lazy { !project.envTrue("MOD_IS_RELEASE") }
 	val baseVersion: String by lazy { "$modVersion$channelTag" }
