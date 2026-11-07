@@ -31,7 +31,7 @@ public final class NineSliceBlitter {
     private static void repeat(GuiGraphics graphics, ResourceLocation texture, int x, int y, int width, int height,
                                int u, int v, int sourceWidth, int sourceHeight) {
         if (width <= 0 || height <= 0) return;
-        // Match 1.20's evenly divided, centered texture tiles instead of stretching the panel edges.
+
         var columns = new Divisor(width, Mth.positiveCeilDiv(width, sourceWidth));
         while (columns.hasNext()) {
             int w = columns.nextInt();

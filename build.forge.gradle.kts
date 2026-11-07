@@ -24,7 +24,7 @@ legacyForge {
 		register("data") {
 			data()
 			programArguments.addAll("--mod", prop("mod.id"), "--all", "--output",
-				rootProject.file("forge/src/generated/resources").absolutePath,
+				rootProject.file("src/generated/resources").absolutePath,
 				"--existing", rootProject.file("src/main/resources").absolutePath)
 		}
 	}

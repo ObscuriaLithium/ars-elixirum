@@ -17,7 +17,7 @@ public final class ItemStackMigration {
             if (!tag.contains("Count", Tag.TAG_ANY_NUMERIC)) throw new IllegalArgumentException("Invalid legacy potion shelf item count");
             if (tag.getByte("Count") <= 0 || tag.getString("id").equals("minecraft:air")) return ItemStack.EMPTY;
         }
-        // Vanilla cannot find the item stacks stored in the shelf's custom Slot1/2/3 fields.
+
         if (tag.contains("Count")) tag = (CompoundTag) DataFixers.getDataFixer().update(References.ITEM_STACK,
                 new Dynamic<>(NbtOps.INSTANCE, tag), 3465, SharedConstants.getCurrentVersion().getDataVersion().getVersion()).getValue();
         return ItemStack.parse(registries, tag).orElseThrow(() -> new IllegalArgumentException("Invalid potion shelf item stack"));

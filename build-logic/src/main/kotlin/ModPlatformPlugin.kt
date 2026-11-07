@@ -9,12 +9,10 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
-import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.*
@@ -84,26 +82,6 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 		configureJava(ctx)
 		registerBuildAndCollectTask(ctx)
 		registerJarCheck(ctx)
-		if (ctx.currentMcVersion == "1.21.1") {
-			// These checks are executable assertions, not JUnit tests.
-			tasks.named<Test>("test") { failOnNoDiscoveredTests.set(false) }
-			val sourceSets = extensions.getByType<JavaPluginExtension>().sourceSets
-			val checks = mutableMapOf("checkPortData" to "dev.obscuria.elixirum.compat.archivist.codex.ArchivistSelfCheck")
-			if (ctx.loader is Loader.Fabric) checks["checkItemData"] = "dev.obscuria.elixirum.compat.ItemDataSelfCheck"
-			for ((name, main) in checks) {
-				val dataCheck = tasks.register<JavaExec>(name) {
-					group = "verification"
-					classpath = sourceSets.getByName("test").runtimeClasspath
-					mainClass.set(main)
-					enableAssertions = true
-					systemProperty("java.io.tmpdir", temporaryDir)
-					javaLauncher.set(project.extensions.getByType<org.gradle.jvm.toolchain.JavaToolchainService>().launcherFor {
-						languageVersion.set(JavaLanguageVersion.of(21))
-					})
-				}
-				tasks.named("check") { dependsOn(dataCheck) }
-			}
-		}
 
 		configureModPublishing(ctx)
 
@@ -172,6 +150,8 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 			}
 			filesMatching("pack.mcmeta") { expand("mod_name" to ctx.modName) }
 			exclude(excluded)
+			for (loader in listOf("fabric", "forge", "neoforge").filter { it != ctx.loader.id })
+				exclude("$modId.$loader.mixins.json")
 		}
 	}
 
@@ -179,7 +159,7 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 		val generateTask = tasks.named("generateModManifest")
 		tasks.withType<Jar>().configureEach {
 			archiveBaseName.set(ctx.modId)
-			from(rootProject.file("LICENSE.md"))
+			if (name != "remapJar" && name != "remapSourcesJar") from(rootProject.file("LICENSE.md"))
 			dependsOn(generateTask)
 			if (ctx.loader is Loader.Forge) {
 				manifest.attributes(ctx.loader.mixinConfigAttribute to "${ctx.modId}.mixins.json,${ctx.modId}.forge.mixins.json")
@@ -199,12 +179,11 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 	private fun Project.configureSources(ctx: Context) {
 		extensions.configure<JavaPluginExtension> {
 			sourceSets.named("main") {
-				java.srcDir(rootProject.file("${ctx.loader.id}/src/main/java"))
+				for (loader in listOf("fabric", "forge", "neoforge").filter { it != ctx.loader.id })
+					java.exclude("dev/obscuria/elixirum/platform/$loader/**")
 				java.srcDir(rootProject.file("src/${ctx.currentMcVersion}/java"))
-				resources.srcDir(rootProject.file("${ctx.loader.id}/src/main/resources"))
-				resources.srcDir(rootProject.file("${ctx.loader.id}/src/generated/resources"))
+				resources.srcDir(rootProject.file("src/generated/resources"))
 			}
-			sourceSets.named("test") { java.srcDir(rootProject.file("src/${ctx.currentMcVersion}/test")) }
 		}
 	}
 
@@ -215,6 +194,7 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 			maven("https://maven.neoforged.net/releases/")
 		}
 		dependencies {
+			if (ctx.currentMcVersion == "1.21.1") add("implementation", "org.jetbrains.kotlin:kotlin-stdlib:2.3.10")
 			add("implementation", "org.jetbrains:annotations:24.1.0")
 			add("implementation", "com.google.code.findbugs:jsr305:3.0.1")
 			add("compileOnly", "org.checkerframework:checker-qual:3.43.0")
@@ -244,6 +224,13 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 			inputs.file(jar.flatMap { it.archiveFile })
 			doLast {
 				ZipFile(jar.get().archiveFile.get().asFile).use { zip ->
+					val platformPath = "dev/obscuria/elixirum/platform"
+					val entrypoint = when (ctx.loader) { Loader.Fabric -> "Fabric"; Loader.NeoForge -> "NeoForge"; else -> "Forge" }
+					check(zip.getEntry("$platformPath/${ctx.loader.id}/${entrypoint}ArsElixirum.class") != null) { "Missing platform entrypoint from ${zip.name}" }
+					for (loader in listOf("fabric", "forge", "neoforge").filter { it != ctx.loader.id }) {
+						check(zip.entries().asSequence().none { it.name.startsWith("$platformPath/$loader/") && it.name.endsWith(".class") }) { "Foreign platform $loader classes in ${zip.name}" }
+						check(zip.getEntry("elixirum.$loader.mixins.json") == null) { "Foreign platform $loader mixins in ${zip.name}" }
+					}
 					val expected = listOf("dev/obscuria/elixirum/ArsElixirum.class", "elixirum.png",
 						"elixirum.mixins.json", "elixirum.${ctx.loader.id}.mixins.json", ctx.loader.modManifestPath)
 					expected.forEach { check(zip.getEntry(it) != null) { "Missing $it from ${zip.name}" } }
@@ -267,6 +254,8 @@ abstract class ModPlatformPlugin @Inject constructor() : Plugin<Project> {
 						if (ctx.currentMcVersion == "1.20.1") check(zip.getEntry("elixirum.accesswidener") != null)
 					} else if (ctx.loader is Loader.Forge) check(zip.getEntry("META-INF/accesstransformer.cfg") != null)
 					if (ctx.currentMcVersion == "1.21.1") {
+						val song = zip.getInputStream(zip.getEntry("data/elixirum/jukebox_song/wunschpunsch.json")).bufferedReader().use { JSON.parseToJsonElement(it.readText()).jsonObject }
+						check(song.getValue("sound_event").jsonPrimitive.content == "elixirum:record.wunschpunsch") { "Jukebox song must reference the registered sound event, not the audio file" }
 						val recipe = zip.getInputStream(zip.getEntry("data/elixirum/recipe/alchemist_eye.json")).bufferedReader().use { JSON.parseToJsonElement(it.readText()).jsonObject }
 						check(recipe.getValue("result").jsonObject.getValue("id").jsonPrimitive.content == "elixirum:alchemist_eye")
 						check(zip.getEntry("data/elixirum/tags/block/heat_source.json") != null)

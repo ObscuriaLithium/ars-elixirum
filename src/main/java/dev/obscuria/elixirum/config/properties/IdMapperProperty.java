@@ -29,9 +29,19 @@ public final class IdMapperProperty<T> implements ConfigProperty<List<T>> {
     }
 
     private void rebake() {
+        //? if >=1.21 {
+        /*this.bakedValue = ((List<?>) configValue.get()).stream()
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .map(ResourceLocation::tryParse)
+                .filter(java.util.Objects::nonNull)
+                .map(registry::get)
+                .toList();
+        *///? } else {
         this.bakedValue = configValue.get().stream()
                 .map(ResourceLocation::new)
                 .map(registry::get)
                 .toList();
+        //? }
     }
 }

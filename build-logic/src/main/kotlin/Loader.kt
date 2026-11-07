@@ -57,8 +57,8 @@ sealed class Loader(val id: String) {
 				},
 				accessWidener = if (ctx.currentMcVersion == "1.20.1") "${ctx.modId}.accesswidener" else null,
 				entrypoints = mapOf(
-					"main" to listOf("${ctx.modGroup}.${ctx.modId}.fabric.FabricArsElixirum"),
-					"client" to listOf("${ctx.modGroup}.${ctx.modId}.fabric.client.FabricArsElixirumClient")
+					"main" to listOf("${ctx.modGroup}.${ctx.modId}.platform.fabric.FabricArsElixirum"),
+					"client" to listOf("${ctx.modGroup}.${ctx.modId}.platform.fabric.client.FabricArsElixirumClient")
 				),
 				mixins = listOf("${ctx.modId}.mixins.json", "${ctx.modId}.fabric.mixins.json"),
 				depends = ctx.extension.dependencies.requiredFor(includeBundled).associate { it.modid.get() to it.fabricLikeVersionRange.get() },

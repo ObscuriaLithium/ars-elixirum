@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import dev.obscuria.elixirum.ArsElixirum;
 import dev.obscuria.elixirum.client.screen.alchemy.guide.contents.ContentBlock;
 import dev.obscuria.fragmentum.registry.BootstrapContext;
+//? if <1.21
 import dev.obscuria.fragmentum.registry.DelegatedRegistry;
 import dev.obscuria.fragmentum.registry.FragmentumRegistry;
 import dev.obscuria.fragmentum.registry.Registrar;

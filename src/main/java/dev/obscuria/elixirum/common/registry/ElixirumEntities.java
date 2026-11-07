@@ -1,3 +1,4 @@
+//~ if >=1.21 'DeferredEntity' -> 'Deferred' {
 package dev.obscuria.elixirum.common.registry;
 
 import dev.obscuria.elixirum.ArsElixirum;
@@ -21,3 +22,4 @@ public interface ElixirumEntities {
 
     static void init() {}
 }
+//~}

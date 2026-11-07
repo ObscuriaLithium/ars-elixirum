@@ -37,4 +37,12 @@ public final class MixinMinecraftServer implements ServerExtensions {
         assert elixirum$alchemy != null;
         return elixirum$alchemy;
     }
+
+    //? if >=1.21 {
+    /*@Inject(method = "saveAllChunks", at = @At("HEAD"))
+    private void elixirum$saveAlchemy(boolean suppressLog, boolean flush, boolean forced,
+                                    org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<Boolean> callback) {
+        elixirum$getAlchemy().onServerSave();
+    }
+    *///? }
 }

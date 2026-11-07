@@ -1,5 +1,5 @@
 {
-  "sound_event": "elixirum:record_wunschpunsch",
+  "sound_event": "elixirum:record.wunschpunsch",
   "description": {
     "translate": "item.elixirum.music_disc_wunschpunsch.desc"
   },

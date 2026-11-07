@@ -2,7 +2,7 @@
 stonecutter = "0.9.7"
 stonecutter-postprocess = "2.1-beta.8"
 mod-publish = "2.1.1"
-loom = "1.11.8"
+loom = "1.16.3"
 neoforge-moddev = "2.0.141"
 foojay = "1.0.0"
 moulberry-mixinconstraints = "1.1.0"

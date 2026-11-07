@@ -14,6 +14,7 @@ import dev.obscuria.elixirum.server.alchemy.resources.providers.IEssenceProvider
 import dev.obscuria.elixirum.server.alchemy.resources.providers.IFocusProvider;
 import dev.obscuria.elixirum.server.alchemy.resources.providers.IRiskProvider;
 import dev.obscuria.fragmentum.registry.BootstrapContext;
+//? if <1.21
 import dev.obscuria.fragmentum.registry.DelegatedRegistry;
 import dev.obscuria.fragmentum.registry.FragmentumRegistry;
 import dev.obscuria.fragmentum.registry.Registrar;

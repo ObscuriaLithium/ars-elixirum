@@ -11,7 +11,10 @@ platform.dependencies {
 
 loom {
 	if (sc.current.version == "1.20.1") accessWidenerPath = rootProject.file("src/main/resources/elixirum.accesswidener")
-	mixin { defaultRefmapName = "${prop("mod.id")}.refmap.json" }
+	mixin {
+		useLegacyMixinAp = true
+		defaultRefmapName = "${prop("mod.id")}.refmap.json"
+	}
 	runs {
 		named("client") {
 			programArgs("--username", "Dev")

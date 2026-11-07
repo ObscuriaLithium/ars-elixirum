@@ -1,3 +1,4 @@
+//~ if >=1.21 'DeferredParticle' -> 'Deferred' {
 package dev.obscuria.elixirum.common.registry;
 
 import dev.obscuria.elixirum.ArsElixirum;
@@ -26,3 +27,4 @@ public interface ElixirumParticles {
 
     static void init() {}
 }
+//~}

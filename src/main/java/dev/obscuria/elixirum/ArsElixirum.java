@@ -11,6 +11,7 @@ import dev.obscuria.elixirum.server.alchemy.ServerAlchemy;
 import dev.obscuria.elixirum.server.commands.MasteryCommand;
 import dev.obscuria.fragmentum.network.FragmentumNetworking;
 import dev.obscuria.fragmentum.packs.BuiltInPackBuilder;
+//? if <1.21
 import dev.obscuria.fragmentum.server.FragmentumServer;
 import dev.obscuria.fragmentum.server.FragmentumServerRegistry;
 import net.minecraft.core.registries.Registries;
@@ -48,9 +49,11 @@ public final class ArsElixirum {
 
         FragmentumServerRegistry.registerCommand(MasteryCommand::register);
 
+        //? if <1.21 {
         FragmentumServer.SERVER_STARTING.connect(ArsElixirum::onServerStart);
         FragmentumServer.SERVER_SAVING.connect(ArsElixirum::onServerSave);
         FragmentumServer.SERVER_STOPPING.connect(ArsElixirum::onServerStop);
+        //? }
 
         ElixirumRegistries.init();
         AlchemyCodex.init();

@@ -1,3 +1,4 @@
+//~ if >=1.21 'DeferredBlock' -> 'Deferred' {
 package dev.obscuria.elixirum.common.registry;
 
 import dev.obscuria.elixirum.ArsElixirum;
@@ -31,3 +32,4 @@ public interface ElixirumBlocks {
 
     static void init() {}
 }
+//~}
