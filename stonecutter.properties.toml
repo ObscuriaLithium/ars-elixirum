@@ -1,0 +1,62 @@
+mod.id = "elixirum"
+mod.name = "Ars Elixirum"
+mod.group = "dev.obscuria"
+mod.version = "0.12.0"
+mod.channel_tag = ""
+mod.description = "Ultimate extension of potion crafting, applications, and diversity!"
+mod.authors = ["Obscuria"]
+mod.contributors = []
+mod.credits = "SquARzY_"
+mod.inception_year = "2026"
+mod.license.name = "Obscuria Ecosystem License (OEL)"
+mod.license.url = "https://obscurialithium.github.io/license/"
+mod.license.dist = "repo"
+mod.environment = "client_and_server"
+mod.sources_url = "https://github.com/ObscuriaLithium/ars-elixirum"
+mod.homepage_url = "https://modrinth.com/mod/ars-elixirum"
+mod.issues_url = "https://github.com/ObscuriaLithium/ars-elixirum/issues"
+mod.update_url = "https://raw.githubusercontent.com/ObscuriaLithium/modding/main/versions/ars-elixirum.json"
+mod.discord_url = "https://dsc.gg/obscuria"
+
+[[mod.pom.developers]]
+id = "obscuria"
+name = "Obscuria"
+url = "https://obscurialithium.github.io"
+
+[fabric]
+deps.fabric-loader = "0.16.9"
+
+[fabric."1.20.1"]
+deps.minecraft = "1.20.1"
+deps.fabric-api = "0.92.1+1.20.1"
+deps.forge-config-api-port = "8.0.0"
+deps.modmenu = "7.2.2"
+deps.fragmentum = "1.2.3"
+deps.archivist = "1.1.12"
+deps.fragmentum-artifact = "qvLpVUyD"
+deps.archivist-artifact = "z0XU8hDm"
+deps.parchment = "1.20.1:2023.09.03"
+
+[fabric."1.21.1"]
+deps.minecraft = "1.21.1"
+deps.fabric-loader = "0.19.2"
+deps.fragmentum = "5.4.0"
+deps.fragmentum-artifact = "xaaQmZf2"
+deps.fabric-api = "0.109.0+1.21.1"
+deps.forge-config-api-port = "21.1.4"
+deps.modmenu = "11.0.3"
+
+[forge."1.20.1"]
+deps.minecraft = "1.20.1"
+deps.forge = "47.2.30"
+deps.fragmentum = "1.2.3"
+deps.archivist = "1.1.12"
+deps.fragmentum-artifact = "cSw95u8R"
+deps.archivist-artifact = "jZr8aTOF"
+deps.parchment = "1.20.1:2023.09.03"
+
+[neoforge."1.21.1"]
+deps.minecraft = "1.21.1"
+deps.neoforge = "21.1.80"
+deps.fragmentum = "5.4.0"
+deps.fragmentum-artifact = "kCXNhuIV"

@@ -1,0 +1,8 @@
+{
+  "sound_event": "elixirum:record.wunschpunsch",
+  "description": {
+    "translate": "item.elixirum.music_disc_wunschpunsch.desc"
+  },
+  "length_in_seconds": 60.0,
+  "comparator_output": 6
+}
